@@ -2,11 +2,12 @@
     "use strict";
 
     var constants = {
-        maxPlayers: 1,
+        maxPlayers: 4,
         handHeight: 76,
         handWidth: 60,
         instructionsDuration: 5000,
-        resetTimeout: 30000
+        tooManyTimeoutDuration: 30000,
+        resetTimeoutDuration: 30000
     };
 
     var drawCanvas = WinJS.Class.define(
@@ -103,7 +104,7 @@
                       lastConfidentPlayers = {};
                       that._activeReset = false;
                       console.log("No players present, reseting the game.");
-                  }, constants.resetTimeout);
+                  }, constants.resetTimeoutDuration);
               }
               // Run this method often, checks to see if we have too many people
               this._totalBodies = count;
@@ -209,10 +210,14 @@
                   console.log('Show "too many players" alert.');
                   this._activeTooManyPlayers = true;
 
-                  setTimeout(function () {
+                  this.tooManyTimeout = setTimeout(function () {
                       console.log('Remove "too many players" alert.');
                       this._activeTooManyPlayers = false;
-                  }, constants.alertTimeout);
+                  }, constants.tooManyTimeoutDuration);
+              }
+              if (count <= constants.maxPlayers && this._activeTooManyPlayers == true) {
+                  window.clearTimeout(this.tooManyTimeout);
+                  this._activeTooManyPlayers = false;
               }
           },
           calculateAngleDistance: function (deltaX, deltaY) {
@@ -242,7 +247,8 @@
           _activeReset: false,
 
           _newPlayerTimeout: null,
-          _resetAllTimeout: null
+          _resetAllTimeout: null,
+          _tooManyTimeout: null
       }
     );
 
