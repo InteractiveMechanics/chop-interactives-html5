@@ -56,7 +56,6 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="default.html" />
-    <Content Include="images\arrow.png" />
     <Content Include="images\logo.scale-100.png" />
     <Content Include="images\P0_instruction_01.png" />
     <Content Include="images\P0_instruction_02.png" />

@@ -1,7 +1,11 @@
-﻿#kinectCanvas {
+﻿#instructionsCanvas {
+    z-index: 20;
+}
+#kinectCanvas {
     z-index: 10;
 }
 
+#instructionsCanvas,
 #kinectCanvas,
 #paintingCanvas {
     position: absolute;

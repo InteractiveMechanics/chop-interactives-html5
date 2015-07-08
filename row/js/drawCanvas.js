@@ -2,11 +2,11 @@
     "use strict";
 
     var constants = {
-        maxPlayers: 4,
+        maxPlayers: 1,
         handHeight: 76,
         handWidth: 60,
         instructionsDuration: 5000,
-        alertTimeout: 30000
+        resetTimeout: 30000
     };
 
     var drawCanvas = WinJS.Class.define(
@@ -15,16 +15,22 @@
       {
           init: function () {
               this._canvas = document.getElementById('kinectCanvas');
+              this._instructionsCanvas = document.getElementById('instructionsCanvas');
+
               this._context = this._canvas.getContext('2d');
+              this._instructionsContext = this._instructionsCanvas.getContext('2d');
+
               this._width = this._canvas.width;
               this._height = this._canvas.height;
+
               this._activePlayers = [];
               this._pendingPlayers = [];
               this._lastPlayers = {};
               this._lastConfidentPlayers = {};
           },
-          clearScreen: function () {
-              this._context.clearRect(0, 0, this._width, this._height);
+          clearScreen: function (context) {
+              var context = context;
+              context.clearRect(0, 0, this._width, this._height);
           },
           draw: function (players) {
               var that = this;
@@ -34,10 +40,12 @@
               var lastPlayers = this._lastPlayers;
               var lastConfidentPlayers = this._lastConfidentPlayers;
 
-              this.clearScreen();
+              this.clearScreen(this._context);
               for (var p in players) {
                   // I think we're going to need a check here where we add p to the pending players array first, then
                   // use that information to decide if we have too many players 
+                  window.clearTimeout(this._resetAllTimeout);
+                  this._activeReset = false;
                   count++;
 
                   // when a new player enters the area, start a timer for 5 seconds before creating them on screen
@@ -51,7 +59,7 @@
                           pendingPlayers.push(p);
                           console.log("Player " + p + " joined the game.")
 
-                          setTimeout(function () {
+                          this._newPlayerTimeout = setTimeout(function () {
                               pendingPlayers.splice(pending, 1);
                               if (players[p]) {
                                   activePlayers.push(p);
@@ -69,6 +77,34 @@
                       this.drawHands(p, players[p], this._lastPlayers[p]);
                   }
               }
+              for (var l in lastPlayers) {
+                  if (!players[l]) {
+                      var index = activePlayers.indexOf(l);
+                      var pending = pendingPlayers.indexOf(l);
+
+                      if (index > -1) {
+                          activePlayers.splice(index, 1);
+                          console.log("Player " + l + " left the game.");
+                      }
+                      if (pending > -1) {
+                          pendingPlayers.splice(pending, 1);
+                          window.clearTimeout(this._newPlayerTimeout);
+                          console.log("Canceled player " + l + " instructions.")
+                      }
+                  }
+              }
+              if (!players[0] && !players[1] && !players[2] && !players[3] && !players[4] && !players[5] && this._activeReset == false) {
+                  this._activeReset = true;
+
+                  this._resetAllTimeout = setTimeout(function () {
+                      activePlayers = [];
+                      pendingPlayers = [];
+                      lastPlayers = {};
+                      lastConfidentPlayers = {};
+                      that._activeReset = false;
+                      console.log("No players present, reseting the game.");
+                  }, constants.resetTimeout);
+              }
               // Run this method often, checks to see if we have too many people
               this._totalBodies = count;
               this.showTooManyPlayers(this._totalBodies);
@@ -84,6 +120,10 @@
               // if the kinect is not confident and is not able to accurately track the hand, then use the last set of confident data that was stored
 
               context.save();
+              context.shadowColor = '#444444';
+              context.shadowBlur = 5;
+              context.shadowOffsetX = 0;
+              context.shadowOffsetY = 5;
               if (player['right']['confidence'] === 1) {
                   if (player['right']['status'] === 'closed') {
                       rightHand.src = 'images/P' + p + '_closed.png';
@@ -110,6 +150,10 @@
               context.restore();
 
               context.save();
+              context.shadowColor = '#444444';
+              context.shadowBlur = 5;
+              context.shadowOffsetX = 0;
+              context.shadowOffsetY = 5;
               if (player['left']['confidence'] === 1) {
                   if (player['left']['status'] === 'closed') {
                       leftHand.src = 'images/P' + p + '_closed.png';
@@ -133,28 +177,53 @@
               context.restore();
           },
           showInstructions: function (p) {
-              console.log('Show instructions for Player ' + p);
+              var context = this._instructionsContext;
+              var image = new Image();
+              var that = this;
+
+              if (this._activeAlert == false) {
+                  this.clearScreen(context);
+                  this._activeAlert = true;
+
+                  console.log('Show instructions for Player ' + p);
+                  image.src = 'images/P' + p + '_instruction_01.png';
+                  context.save();
+                  context.shadowColor = '#444444';
+                  context.shadowBlur = 5;
+                  context.shadowOffsetX = 0;
+                  context.shadowOffsetY = 5;
+                  context.drawImage(image, 832, 912, 128, 128);
+                  context.restore();
+
+                  setTimeout(function () {
+                      that._activeAlert = false;
+                      that.clearScreen(context);
+                      console.log('Clear instructions for Player ' + p);
+                  }, 5000);
+              }
           },
           showTooManyPlayers: function (count) {
               // if our alert active variable is false, then show the message, fade it out after five seconds, and don't show it again for thirty seconds
               // if the alert active variable is true, then do nothing
               if (count > constants.maxPlayers && this._activeTooManyPlayers == false) {
-                  console.log('Too many players');
+                  console.log('Show "too many players" alert.');
                   this._activeTooManyPlayers = true;
 
                   setTimeout(function () {
-                      console.log('Timer ended for "Too many players"');
+                      console.log('Remove "too many players" alert.');
                       this._activeTooManyPlayers = false;
                   }, constants.alertTimeout);
               }
           },
           calculateAngleDistance: function (deltaX, deltaY) {
-              var angle = Math.atan2(deltaX, deltaY) - 45 / Math.PI;
+              var angle = Math.atan2(deltaX, deltaY) / Math.PI; 
               var distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
               return [angle, distance];
           },
           _canvas: null,
+          _instructionsCanvas: null,
           _context: null,
+          _instructionsContext: null,
           _width: null,
           _height: null,
 
@@ -169,7 +238,11 @@
 
           // For alerts and messages
           _activeAlert: false,
-          _activeTooManyPlayers: false
+          _activeTooManyPlayers: false,
+          _activeReset: false,
+
+          _newPlayerTimeout: null,
+          _resetAllTimeout: null
       }
     );
 
