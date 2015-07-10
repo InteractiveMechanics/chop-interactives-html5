@@ -11,7 +11,8 @@
     };
 
     var drawCanvas = WinJS.Class.define(
-      function () {
+      function (rowCanvas) {
+          this._rowCanvas = rowCanvas
       },
       {
           init: function () {
@@ -42,6 +43,8 @@
               var lastConfidentPlayers = this._lastConfidentPlayers;
 
               this.clearScreen(this._context);
+              this._rowCanvas.update();
+
               for (var p in players) {
                   // I think we're going to need a check here where we add p to the pending players array first, then
                   // use that information to decide if we have too many players 
@@ -66,7 +69,9 @@
                                   activePlayers.push(p);
                                   lastConfidentPlayers[p] = players[p];
                                   lastPlayers[p] = players[p];
+
                                   that.showInstructions(p);
+                                  that._rowCanvas.createBoat(p, players[p]);
                               }
                           }, 5000);
                       }
@@ -76,6 +81,7 @@
                   // draw their hands and do everything we need to do on-screen
                   if (activePlayers.length <= constants.maxPlayers && index > -1) {
                       this.drawHands(p, players[p], this._lastPlayers[p]);
+                      this._rowCanvas.moveBoat(p, players[p]);
                   }
               }
               for (var l in lastPlayers) {
@@ -85,6 +91,7 @@
 
                       if (index > -1) {
                           activePlayers.splice(index, 1);
+                          this._rowCanvas.removeBoat(index);
                           console.log("Player " + l + " left the game.");
                       }
                       if (pending > -1) {
@@ -106,6 +113,8 @@
                       console.log("No players present, reseting the game.");
                   }, constants.resetTimeoutDuration);
               }
+              this._rowCanvas.draw();
+
               // Run this method often, checks to see if we have too many people
               this._totalBodies = count;
               this.showTooManyPlayers(this._totalBodies);
@@ -127,16 +136,16 @@
               context.shadowOffsetY = 5;
               if (player['right']['confidence'] === 1) {
                   if (player['right']['status'] === 'closed') {
-                      rightHand.src = 'images/P' + p + '_closed.png';
+                      rightHand.src = 'images/shared/P' + p + '_closed.png';
                   } else {
-                      rightHand.src = 'images/P' + p + '_open.png';
+                      rightHand.src = 'images/shared/P' + p + '_open.png';
                   }
                   this._lastConfidentPlayers[p]['right'] = player['right'];
               } else {
                   if (this._lastConfidentPlayers[p]['right']['status'] === 'closed') {
-                      rightHand.src = 'images/P' + p + '_closed.png';
+                      rightHand.src = 'images/shared/P' + p + '_closed.png';
                   } else {
-                      rightHand.src = 'images/P' + p + '_open.png';
+                      rightHand.src = 'images/shared/P' + p + '_open.png';
                   }
               }
               context.scale(-1, 1);
@@ -157,16 +166,16 @@
               context.shadowOffsetY = 5;
               if (player['left']['confidence'] === 1) {
                   if (player['left']['status'] === 'closed') {
-                      leftHand.src = 'images/P' + p + '_closed.png';
+                      leftHand.src = 'images/shared/P' + p + '_closed.png';
                   } else {
-                      leftHand.src = 'images/P' + p + '_open.png';
+                      leftHand.src = 'images/shared/P' + p + '_open.png';
                   }
                   this._lastConfidentPlayers[p]['left'] = player['left'];
               } else {
                   if (this._lastConfidentPlayers[p]['left']['status'] === 'closed') {
-                      leftHand.src = 'images/P' + p + '_closed.png';
+                      leftHand.src = 'images/shared/P' + p + '_closed.png';
                   } else {
-                      leftHand.src = 'images/P' + p + '_open.png';
+                      leftHand.src = 'images/shared/P' + p + '_open.png';
                   }
               }
               if (player['left']['trackingState'] === 2) {
@@ -187,7 +196,7 @@
                   this._activeAlert = true;
 
                   console.log('Show instructions for Player ' + p);
-                  image.src = 'images/P' + p + '_instruction_01.png';
+                  image.src = 'images/instructions/P' + p + '_instruction_01.png';
                   context.save();
                   context.shadowColor = '#444444';
                   context.shadowBlur = 5;
@@ -219,11 +228,6 @@
                   window.clearTimeout(this.tooManyTimeout);
                   this._activeTooManyPlayers = false;
               }
-          },
-          calculateAngleDistance: function (deltaX, deltaY) {
-              var angle = Math.atan2(deltaX, deltaY) / Math.PI; 
-              var distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
-              return [angle, distance];
           },
           _canvas: null,
           _instructionsCanvas: null,

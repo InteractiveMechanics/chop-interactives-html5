@@ -4,10 +4,25 @@
 #kinectCanvas {
     z-index: 10;
 }
+#drawingCanvas {
+    z-index: 4;
+}
+#drawingCanvas2 {
+    z-index: 3;
+}
+#pennyCanvas {
+    z-index: 2;
+}
+#pondCanvas {
+    z-index: 1;
+}
 
 #instructionsCanvas,
 #kinectCanvas,
-#paintingCanvas {
+#drawingCanvas,
+#drawingCanvas2,
+#pennyCanvas,
+#pondCanvas {
     position: absolute;
     top: 0;
     left: 0;
