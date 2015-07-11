@@ -132,10 +132,10 @@
               // if the kinect is not confident and is not able to accurately track the hand, then use the last set of confident data that was stored
 
               context.save();
-              context.shadowColor = '#444444';
-              context.shadowBlur = 5;
-              context.shadowOffsetX = 0;
-              context.shadowOffsetY = 5;
+              //context.shadowColor = '#444444';
+              //context.shadowBlur = 5;
+              //context.shadowOffsetX = 0;
+              //context.shadowOffsetY = 5;
               if (player['right']['confidence'] === 1) {
                   if (player['right']['status'] === 'closed') {
                       rightHand.src = 'images/shared/P' + p + '_closed.png';
@@ -162,10 +162,10 @@
               context.restore();
 
               context.save();
-              context.shadowColor = '#444444';
-              context.shadowBlur = 5;
-              context.shadowOffsetX = 0;
-              context.shadowOffsetY = 5;
+              //context.shadowColor = '#444444';
+              //context.shadowBlur = 5;
+              //context.shadowOffsetX = 0;
+              //context.shadowOffsetY = 5;
               if (player['left']['confidence'] === 1) {
                   if (player['left']['status'] === 'closed') {
                       leftHand.src = 'images/shared/P' + p + '_closed.png';

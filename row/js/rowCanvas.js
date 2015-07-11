@@ -90,10 +90,9 @@
               });
               this._lilypads.forEach(function (lilypad) {
                     var boatData = that._canvasContext.getImageData(that._boats[p].x, that._boats[p].y, that._boats[p].width, that._boats[p].height);
-                    var lilypadData = that._pennyContext.getImageData(lilypad.x, lilypad.y, lilypad.width, lilypad.height);
+                    var lilypadData = that._canvas2Context.getImageData(lilypad.x, lilypad.y, lilypad.width, lilypad.height);
 
                     if (that.isPixelCollision(boatData, that._boats[p].x, that._boats[p].y, lilypadData, lilypad.x, lilypad.y, false)) {
-                        console.log('Player ' + p + ' hit a lilypad.');
                     }
               });
           },
@@ -199,7 +198,7 @@
 
                 // if the area is really small,
                 // then just perform a normal image collision check
-                if ( xDiff < 4 && yDiff < 4 ) {
+                if ( xDiff < 10 && yDiff < 10 ) {
                     for ( var pixelX = xMin; pixelX < xMax; pixelX++ ) {
                         for ( var pixelY = yMin; pixelY < yMax; pixelY++ ) {
                             if (
@@ -226,8 +225,8 @@
                     // Work out the increments,
                     // it's a third, but ensure we don't get a tiny
                     // slither of an area for the last iteration (using fast ceil).
-                    var incX = xDiff / 3.0,
-                        incY = yDiff / 3.0;
+                    var incX = xDiff / 2.0,
+                        incY = yDiff / 2.0;
                     incX = (~~incX === incX) ? incX : (incX+1 | 0);
                     incY = (~~incY === incY) ? incY : (incY+1 | 0);
 
