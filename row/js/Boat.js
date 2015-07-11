@@ -5,6 +5,7 @@ function Boat(I) {
     I.y = 50;
     I.width = 54;
     I.height = 168;
+    I.angle = 0;
 
     I.sprite = new Sprite('boat', {
         paint: function (sprite, context, i) {
@@ -22,8 +23,7 @@ function Boat(I) {
                     };
                 }
                 else {
-                    context.drawImage(this.image, sprite.left, sprite.top,
-                                      sprite.width, sprite.height);
+                    context.drawImage(this.image, sprite.left, sprite.top, sprite.width, sprite.height);
                 }
             }
         }
@@ -31,10 +31,12 @@ function Boat(I) {
     I.draw = function (context, index) {
 	    this.sprite.width = this.width;
 	    this.sprite.height = this.height;
-	    this.sprite.left = this.x;
-	    this.sprite.top = this.y;
+	    this.sprite.left = 0 - this.width/2;
+	    this.sprite.top = 0 - this.height/2;
 
 	    context.save();
+        context.translate(this.x, this.y);
+	    //context.rotate(this.angle - Math.PI/2);
 	    this.sprite.paint(context, index);
 	    context.restore();
 	}

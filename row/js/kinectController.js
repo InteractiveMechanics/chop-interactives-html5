@@ -18,12 +18,15 @@
               this._sensorColourFrameDimensions = {};
               this._sensorColourFrameDimensions.width = this._sensor.colorFrameSource.frameDescription.width;
               this._sensorColourFrameDimensions.height = this._sensor.colorFrameSource.frameDescription.height;
+              console.log("Kinect body reader #" + index + " opened.")
           },
           getSensor: function () {
+              var that = this;
               var bodyCount = 0;
 
               this._sensor = nsKinect.KinectSensor.getDefault();
               this._sensor.open();
+              console.log("Kinect sensor opened.");
 
               this._bodies = new Array(constants.bodyCount);
               this._bodyDrawers = new Array(constants.bodyCount);
@@ -31,11 +34,25 @@
               for (bodyCount = 0; bodyCount < constants.bodyCount; bodyCount++) {
                   this.init(bodyCount, this._sensor);
               }
+
+              // We need a timeout so the sensor has time to spool up
+              // before we start trying to get data from the Kinect
+              setTimeout(function () { that.openReader() }, 2000);
           },
           openReader: function () {
               this._boundHandler = this._onFrameArrived.bind(this);
               this._reader = this._sensor.bodyFrameSource.openReader();
               this._reader.addEventListener('framearrived', this._boundHandler);
+
+              var isActive = this._sensor.bodyFrameSource.isActive;
+              if (!isActive) {
+                  // If we're not able to get data from the sensor, let's refresh the page
+                  // and try again...
+                  console.log("Kinect sensor isn't active...");
+                  WinJS.Navigation.navigate('default.html');
+              } else {
+                  console.log("Kinect reader opened.");
+              }
           },
           closeReader: function () {
               this._reader.removeEventListener('framearrived', this._boundHandler);
@@ -60,13 +77,12 @@
                       }
                   }
                   this._canvas.draw(players);
+                  this._
                   frame.close();
-              } else {
-                  // If we're not able to get data from the Kinect anymore, then we should close/reopen the reader
-                  // not sure if this is 100% successful yet
-                  this.closeReader();
-                  this.openReader();
               }
+          },
+          _compareTime: function () {
+
           },
           _getPlayerData: function (i, body) {
               var right = this._getJointPositions(body, 11);
@@ -171,7 +187,10 @@
           _sensorColourFrameDimensions: null,
           _reader: null,
           _bodyDrawers: null,
-          _bodies: null
+          _bodies: null,
+
+          // Because sometimes we don't get the Kinect frames...
+          _kinectResetTimeout: null
       }
     );
 

@@ -23,6 +23,7 @@
               this._pondContext.drawImage(background, 0, 0, 1920, 1080);
 
               this.populateCircleArray();
+              console.log('Game canvases initialized.')
           },
           clearScreen: function (context) {
               var context = context;
@@ -43,7 +44,7 @@
               this._pennies.forEach(function (penny) {
                   penny.draw(that._pennyContext);
               });
-              /*
+              
               this._pennies.forEach(function (penny) {
                   that._boats.forEach(function (boat) {
                       if (that.collides(boat, penny)) {
@@ -51,7 +52,7 @@
                       }
                   });
               });
-              */
+              
               this.collidingCircles();
               /*
               this._lilypads.forEach(function (lilypad) {
@@ -74,7 +75,7 @@
                   lilypad.update();
               });
 
-              if(this._pennies.length < 12) {
+              if(this._pennies.length < 4) {
                   this._pennies.push(new Penny());
               }
           },
@@ -82,14 +83,15 @@
               this._boats[p] = new Boat();
           },
           moveBoat: function (p, playerData) {
-              var xDistance = playerData['right']['pos']['x'] - this._boats[p].x;
-              var yDistance = playerData['right']['pos']['y'] - this._boats[p].y;
-              var distance = Math.sqrt(xDistance * xDistance + yDistance * yDistance);
+              var xDistance = (playerData['right']['pos']['x'] - 30) - (this._boats[p].x - 27);
+              var yDistance = (playerData['right']['pos']['y'] - 38) - (this._boats[p].y - 84);
+              var angleDistance = this.calculateAngleDistance(xDistance, yDistance);
     
-              if (distance > 1) {
+              if (angleDistance[1] > 1) {
                   this._boats[p].x += xDistance * .025;
                   this._boats[p].y += yDistance * .025;
               }
+              this._boats[p].angle = angleDistance[0];
           },
           removeBoat: function (p) {
               this._boats.splice(p, 1);
@@ -115,7 +117,7 @@
               };
           },
           populateCircleArray: function () {
-                for(var i = 0; i < 20; i++) {
+                for(var i = 0; i < 10; i++) {
                     var weight = Math.floor(Math.random() * 10);
 
                     if((weight > 0) && (weight <= 3)) {
@@ -132,7 +134,7 @@
     
                 }
 
-                for(var i = 0; i < 12; i++) {
+                for(var i = 0; i < 4; i++) {
                     this._pennies.push(new Penny());
                 }
           },
@@ -152,7 +154,7 @@
                 return false;
           },
           calculateAngleDistance: function (deltaX, deltaY) {
-              var angle = Math.atan2(deltaX, deltaY) / Math.PI;
+              var angle = Math.atan2(deltaY, deltaX) * Math.PI;
               var distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
               return [angle, distance];
           },

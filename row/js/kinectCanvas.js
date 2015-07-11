@@ -29,6 +29,7 @@
               this._pendingPlayers = [];
               this._lastPlayers = {};
               this._lastConfidentPlayers = {};
+              console.log('Kinect canvases initialized.');
           },
           clearScreen: function (context) {
               var context = context;
@@ -110,6 +111,7 @@
                       lastPlayers = {};
                       lastConfidentPlayers = {};
                       that._activeReset = false;
+                      that._rowCanvas._boats = [];
                       console.log("No players present, reseting the game.");
                   }, constants.resetTimeoutDuration);
               }
