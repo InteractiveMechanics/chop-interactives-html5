@@ -92,7 +92,7 @@
 
                       if (index > -1) {
                           activePlayers.splice(index, 1);
-                          this._rowCanvas.removeBoat(index);
+                          this._rowCanvas.removeBoat(l);
                           console.log("Player " + l + " left the game.");
                       }
                       if (pending > -1) {

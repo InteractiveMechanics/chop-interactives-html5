@@ -3,8 +3,8 @@ function Boat(I) {
 
     I.x = 50;
     I.y = 50;
-    I.width = 54;
-    I.height = 168;
+    I.width = 168;
+    I.height = 54;
     I.angle = 0;
 
     I.sprite = new Sprite('boat', {
@@ -31,12 +31,16 @@ function Boat(I) {
     I.draw = function (context, index) {
 	    this.sprite.width = this.width;
 	    this.sprite.height = this.height;
-	    this.sprite.left = 0 - this.width/2;
-	    this.sprite.top = 0 - this.height/2;
+	    this.sprite.left = 0 - this.width / 2;
+	    this.sprite.top = 0 - this.height / 2;
 
 	    context.save();
         context.translate(this.x, this.y);
-	    //context.rotate(this.angle - Math.PI/2);
+        context.rotate(this.angle / Math.PI);
+        context.shadowColor = '#444444';
+        context.shadowBlur = 6;
+        context.shadowOffsetX = 3;
+        context.shadowOffsetY = 3;
 	    this.sprite.paint(context, index);
 	    context.restore();
 	}

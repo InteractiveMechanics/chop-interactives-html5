@@ -88,8 +88,8 @@
               var angleDistance = this.calculateAngleDistance(xDistance, yDistance);
     
               if (angleDistance[1] > 1) {
-                  this._boats[p].x += xDistance * .025;
-                  this._boats[p].y += yDistance * .025;
+                  this._boats[p].x += xDistance * .015;
+                  this._boats[p].y += yDistance * .015;
               }
               this._boats[p].angle = angleDistance[0];
           },
@@ -105,7 +105,7 @@
 
                         var circle2 = this._lilypads[j];
 
-                        if ( Math.sqrt( ( circle1.x-circle2.x ) * ( circle1.x-circle2.x )  + ( circle1.y-circle2.y ) * ( circle1.y-circle2.y ) ) < 97) 
+                        if ( Math.sqrt( ( circle1.x-circle2.x ) * ( circle1.x-circle2.x )  + ( circle1.y-circle2.y ) * ( circle1.y-circle2.y ) ) < 197) 
                         {
                             circle1.dx = (circle1.weight / 10) * ((circle1.x-(circle2.x+circle2.width/2))/circle2.width);
                             circle1.dy = -circle1.dy;
@@ -140,9 +140,9 @@
           },
           collides: function (a, b) {
                 return a.x < b.x + (b.width) &&
-                a.x + (a.width * .25) > b.x &&
+                a.x + (a.width * .5) > b.x &&
                 a.y < b.y + (b.height) &&
-                a.y + (a.height * .25) > b.y;
+                a.y + (a.height * .5) > b.y;
           },
           lilyPadvPlayerCollides: function (object1, object2) {
                 //return player.x < lilypad.x + (lilypad.width) && player.x + (player.width * .25) > lilypad.x && player.y < lilypad.y + (lilypad.heigh) && player.y + (player.height * .25) > lilypad.y;

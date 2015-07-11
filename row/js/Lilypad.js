@@ -22,6 +22,7 @@ function HeavyLilyPad(I) {
 
         this.x += this.dx;
         this.y += this.dy;
+        this.angle += this.dr;
     };
 
     I.sprite = new Sprite('lilypad2', new ImagePainter('images/lilypad_2@2x.png'));
@@ -32,6 +33,10 @@ function HeavyLilyPad(I) {
         this.sprite.top = this.y;
 
         context.save();
+        context.shadowColor = '#444444';
+        context.shadowBlur = 6;
+        context.shadowOffsetX = 3;
+        context.shadowOffsetY = 3;
         this.sprite.paint(context);
         context.restore();
     }
@@ -73,6 +78,10 @@ function LilyPad(I) {
         this.sprite.top = this.y;
 
         context.save();
+        context.shadowColor = '#444444';
+        context.shadowBlur = 6;
+        context.shadowOffsetX = 3;
+        context.shadowOffsetY = 3;
         this.sprite.paint(context);
         context.restore();
     }
@@ -114,6 +123,10 @@ function Flower(I) {
         this.sprite.top = this.y;
 
         context.save();
+        context.shadowColor = '#444444';
+        context.shadowBlur = 6;
+        context.shadowOffsetX = 3;
+        context.shadowOffsetY = 3;
         this.sprite.paint(context);
         context.restore();
     }
