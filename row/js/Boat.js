@@ -37,10 +37,10 @@ function Boat(I) {
 	    context.save();
         context.translate(this.x, this.y);
         context.rotate(this.angle / Math.PI);
-        context.shadowColor = '#444444';
-        context.shadowBlur = 6;
-        context.shadowOffsetX = 3;
-        context.shadowOffsetY = 3;
+        context.shadowColor = '#679FAC';
+        context.shadowBlur = 4;
+        context.shadowOffsetX = 0;
+        context.shadowOffsetY = 0;
 	    this.sprite.paint(context, index);
 	    context.restore();
 	}
