@@ -34,7 +34,7 @@ function Penny(I) {
 
         context.save();
         if (this.hasBeenHit) {
-            context.globalAlpha = 0.35;
+            context.globalAlpha = 0.25;
         }
         this.sprite.paint(context);
         context.restore();

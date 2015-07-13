@@ -33,10 +33,10 @@ function HeavyLilyPad(I) {
         this.sprite.top = this.y;
 
         context.save();
-        //context.shadowColor = '#679FAC';
-        //context.shadowBlur = 4;
-        //context.shadowOffsetX = 0;
-        //context.shadowOffsetY = 0;
+        context.shadowColor = '#679FAC';
+        context.shadowBlur = 4;
+        context.shadowOffsetX = 0;
+        context.shadowOffsetY = 0;
         this.sprite.paint(context);
         context.restore();
     }
@@ -78,11 +78,11 @@ function LilyPad(I) {
         this.sprite.top = this.y;
 
         context.save();
-        //context.shadowColor = '#679FAC';
-        //context.shadowBlur = 4;
-        //context.shadowOffsetX = 0;
-        //context.shadowOffsetY = 0;
-        //this.sprite.paint(context);
+        context.shadowColor = '#679FAC';
+        context.shadowBlur = 4;
+        context.shadowOffsetX = 0;
+        context.shadowOffsetY = 0;
+        this.sprite.paint(context);
         context.restore();
     }
     return I;
@@ -123,10 +123,10 @@ function Flower(I) {
         this.sprite.top = this.y;
 
         context.save();
-        //context.shadowColor = '#679FAC';
-        //context.shadowBlur = 4;
-        //context.shadowOffsetX = 0;
-        //context.shadowOffsetY = 0;
+        context.shadowColor = '#679FAC';
+        context.shadowBlur = 4;
+        context.shadowOffsetX = 0;
+        context.shadowOffsetY = 0;
         this.sprite.paint(context);
         context.restore();
     }

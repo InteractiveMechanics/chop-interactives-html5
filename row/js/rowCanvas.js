@@ -50,7 +50,7 @@
               for (i = 0; i < this._pennies.length; ++i) {
                   if (this._pennies[i].isActive) {
                       this._pennies.splice(i--, 1);
-                  } else {
+                  } else { 
                       this._pennies[i].update();
                   }
               }
@@ -78,23 +78,27 @@
               }
               this._boats[p].angle = angleDistance[0];
 
+              /*
               this._pennies.forEach(function (penny) {
                   if (!penny.hasBeenHit) {
                       var boatData = that._canvasContext.getImageData(that._boats[p].x, that._boats[p].y, that._boats[p].width, that._boats[p].height);
                       var pennyData = that._pennyContext.getImageData(penny.x, penny.y, penny.width, penny.height);
-
+                      
                       if (that.isPixelCollision(boatData, that._boats[p].x, that._boats[p].y, pennyData, penny.x, penny.y, false)) {
                           penny.hasBeenHit = true;
                       }
                   }
               });
+              
               this._lilypads.forEach(function (lilypad) {
                     var boatData = that._canvasContext.getImageData(that._boats[p].x, that._boats[p].y, that._boats[p].width, that._boats[p].height);
                     var lilypadData = that._canvas2Context.getImageData(lilypad.x, lilypad.y, lilypad.width, lilypad.height);
 
                     if (that.isPixelCollision(boatData, that._boats[p].x, that._boats[p].y, lilypadData, lilypad.x, lilypad.y, false)) {
+
                     }
               });
+              */
           },
           removeBoat: function (p) {
               this._boats.splice(p, 1);
@@ -134,7 +138,6 @@
                     if((weight > 6) && (weight <= 9)) {
                         this._lilypads.push(new HeavyLilyPad());
                     }
-    
                 }
 
                 for(var i = 0; i < 4; i++) {
@@ -142,19 +145,10 @@
                 }
           },
           collides: function (a, b) {
-                return a.x < b.x + (b.width) &&
-                a.x + (a.width * .5) > b.x &&
-                a.y < b.y + (b.height) &&
-                a.y + (a.height * .5) > b.y;
-          },
-          lilyPadvPlayerCollides: function (object1, object2) {
-                //return player.x < lilypad.x + (lilypad.width) && player.x + (player.width * .25) > lilypad.x && player.y < lilypad.y + (lilypad.heigh) && player.y + (player.height * .25) > lilypad.y;
-                if (object1.x < object2.x + object2.width  && object1.x + object1.width  > object2.x &&
-                object1.y < object2.y + object2.height && object1.y + object1.height > object2.y) {
-                console.log('hit');
-                }
-
-                return false;
+              if (a.x < b.x + b.width &&
+                  a.x + a.width > b.x &&
+                  a.y < b.y + b.height &&
+                  a.y + a.height > b.y) return true;
           },
           isPixelCollision: function ( first, x, y, other, x2, y2, isCentred ) {
                 // we need to avoid using floats, as were doing array lookups
@@ -225,8 +219,8 @@
                     // Work out the increments,
                     // it's a third, but ensure we don't get a tiny
                     // slither of an area for the last iteration (using fast ceil).
-                    var incX = xDiff / 2.0,
-                        incY = yDiff / 2.0;
+                    var incX = xDiff / 3.0,
+                        incY = yDiff / 3.0;
                     incX = (~~incX === incX) ? incX : (incX+1 | 0);
                     incY = (~~incY === incY) ? incY : (incY+1 | 0);
 
