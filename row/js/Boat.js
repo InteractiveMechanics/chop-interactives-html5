@@ -1,12 +1,27 @@
 function Boat(I) {
     I = I || {};
 
-    I.x = 50;
-    I.y = 50;
+    I.x = randomInRange(1900, 20);
+    I.y = randomInRange(1060, 20);
+    I.dx = 0;
+    I.dy = 0;
+
     I.width = 168;
     I.height = 54;
     I.angle = 0;
 
+    I.update = function () {
+        if (this.x < 0 || this.x > window.innerWidth) {
+            this.dx = -this.dx
+        }
+
+        if (this.y < 0 || this.y > window.innerHeight) {
+            this.dy = -this.dy;
+        }
+
+        this.x += this.dx;
+        this.y += this.dy;
+    };
     I.sprite = new Sprite('boat', {
         paint: function (sprite, context, i) {
             this.image = new Image;

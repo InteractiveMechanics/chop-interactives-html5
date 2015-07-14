@@ -2,8 +2,8 @@ function HeavyLilyPad(I) {
     I = I || {};
 
     I.color = '#FF0000';
-    I.x = randomInRange();
-    I.y = randomInRange();
+    I.x = randomInRange(1900, 20);
+    I.y = randomInRange(1060, 20);
     I.dx = random_dx_dy();
     I.dy = random_dx_dy();
 
@@ -12,11 +12,11 @@ function HeavyLilyPad(I) {
     I.weight = 10;
 
     I.update = function () {
-        if (this.x < 0 || this.x > window.innerWidth - 110) {
+        if (this.x < 0 || this.x > window.innerWidth) {
             this.dx = -this.dx
         }
 
-        if (this.y < 0 || this.y > window.innerHeight - 110) {
+        if (this.y < 0 || this.y > window.innerHeight) {
             this.dy = -this.dy;
         }
 
@@ -47,8 +47,8 @@ function LilyPad(I) {
     I = I || {};
 
     I.color = '#FF0000';
-    I.x = randomInRange();
-    I.y = randomInRange();
+    I.x = randomInRange(1900, 20);
+    I.y = randomInRange(1060, 20);
     I.dx = random_dx_dy();
     I.dy = random_dx_dy();
 
@@ -58,11 +58,11 @@ function LilyPad(I) {
 
     I.update = function () {
 
-        if (this.x < 0 || this.x > window.innerWidth - 110) {
+        if (this.x < 0 || this.x > window.innerWidth) {
             this.dx = -this.dx
         }
 
-        if (this.y < 0 || this.y > window.innerHeight - 110) {
+        if (this.y < 0 || this.y > window.innerHeight) {
             this.dy = -this.dy;
         }
 
@@ -92,8 +92,8 @@ function Flower(I) {
     I = I || {};
 
     I.color = '#FF0000';
-    I.x = randomInRange();
-    I.y = randomInRange();
+    I.x = randomInRange(1900, 20);
+    I.y = randomInRange(1060, 20);
     I.dx = random_dx_dy();
     I.dy = random_dx_dy();
 
@@ -103,11 +103,11 @@ function Flower(I) {
 
     I.update = function () {
 
-        if (this.x < 0 || this.x > window.innerWidth - 100) {
+        if (this.x < 0 || this.x > window.innerWidth) {
             this.dx = -this.dx
         }
 
-        if (this.y < 0 || this.y > window.innerHeight - 100) {
+        if (this.y < 0 || this.y > window.innerHeight) {
             this.dy = -this.dy;
         }
 
@@ -133,9 +133,9 @@ function Flower(I) {
     return I;
 }
 
-function randomInRange() {
+function randomInRange(limit, offset) {
     var r = Math.random();
-    return Math.floor(r * (0 - window.innerWidth) + window.innerWidth);
+    return Math.floor(r * limit + offset);
 }
 
 function random_dx_dy() {
