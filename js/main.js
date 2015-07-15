@@ -172,33 +172,34 @@ window.requestAnimationFrame = window.requestAnimationFrame
 function draw(delta) {
     totalSeconds += delta;
 
-    var vx = 25; // the background scrolls with a speed of 100 pixels/sec
+    var vx = 15; // the background scrolls with a speed of 100 pixels/sec
     var numImages = Math.ceil(canvas_left.height / img.height) + 1;
     var xpos = totalSeconds * vx % img.height;
     
     canvas_left.getContext('2d').save();
-    canvas_left.getContext('2d').translate(0, -xpos);
+    canvas_left.getContext('2d').translate(0, xpos);
     
     for (var i = 0; i < numImages; i++) {
-        canvas_left.getContext('2d').drawImage(img, 0, -1 * i * img.height);
+    	console.log(numImages);
+        canvas_left.getContext('2d').drawImage(img, 0, -7500);
     }
     
     canvas_left.getContext('2d').restore();
 
     canvas_center.getContext('2d').save();
-    canvas_center.getContext('2d').translate(0, -xpos);
+    canvas_center.getContext('2d').translate(0, xpos);
     
     for (var i = 0; i < numImages; i++) {
-        canvas_center.getContext('2d').drawImage(img, 0, -1 * i * img.height);
+        canvas_center.getContext('2d').drawImage(img, 0,  -7700);
     }
     
     canvas_center.getContext('2d').restore();
 
     canvas_right.getContext('2d').save();
-    canvas_right.getContext('2d').translate(0, -xpos);
+    canvas_right.getContext('2d').translate(0, xpos);
     
     for (var i = 0; i < numImages; i++) {
-        canvas_right.getContext('2d').drawImage(img, 0, -1 * i * img.height);
+        canvas_right.getContext('2d').drawImage(img, 0,  -7300);
     }
     
     canvas_right.getContext('2d').restore();
