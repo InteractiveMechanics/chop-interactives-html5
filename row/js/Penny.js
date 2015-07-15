@@ -52,7 +52,7 @@ function Penny(I) {
                     that.lastAdvance = milli;
                     that.frames++;
                 }
-                if (that.frames == 12s) {
+                if (that.frames == 11) {
                     that.paused = true;
                 }
             }

@@ -90,14 +90,14 @@
               var angleDistance = this.calculateAngleDistance(xDistance, yDistance);
 
               var boatX = that._boats[p].x - that._boats[p].width / 2;
-              var boatY = that._boats[p].y - that._boats[p].height / 2;
+              var boatY = that._boats[p].y - that._boats[p].width / 2;
 
               var isColliding = false;
 
               this._pennies.forEach(function (penny) {
                   if (!penny.hasBeenHit) {
                       if (that.collides(penny, that._boats[p])) {
-                          var boatData = that._canvasContext.getImageData(boatX, boatY, that._boats[p].width, that._boats[p].height);
+                          var boatData = that._canvasContext.getImageData(boatX, boatY, that._boats[p].width, that._boats[p].width);
                           var pennyData = that._pennyContext.getImageData(penny.x, penny.y, penny.width, penny.height);
 
                           if (that.isPixelCollision(boatData, boatX, boatY, pennyData, penny.x, penny.y, false)) {
@@ -110,7 +110,7 @@
               
               this._lilypads.forEach(function (lilypad) {
                   if (that.collides(lilypad, that._boats[p])) {
-                      var boatData = that._canvasContext.getImageData(boatX, boatY, that._boats[p].width, that._boats[p].height);
+                      var boatData = that._canvasContext.getImageData(boatX, boatY, that._boats[p].width, that._boats[p].width);
                       var lilypadData = that._canvas2Context.getImageData(lilypad.x, lilypad.y, lilypad.width, lilypad.height);
 
                       if (that.isPixelCollision(boatData, boatX, boatY, lilypadData, lilypad.x, lilypad.y, false)) {
@@ -207,7 +207,7 @@
                 y2 = Math.round( y2 );
 
                 var w  = first.width,
-                    h  = first.height,
+                    h  = first.width,
                     w2 = other.width,
                     h2 = other.height ;
 
