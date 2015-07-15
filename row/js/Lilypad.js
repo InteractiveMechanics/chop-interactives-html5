@@ -12,11 +12,11 @@ function HeavyLilyPad(I) {
     I.weight = 10;
 
     I.update = function () {
-        if (this.x < 0 || this.x > window.innerWidth) {
+        if (this.x < -20 || this.x > 1940) {
             this.dx = -this.dx
         }
 
-        if (this.y < 0 || this.y > window.innerHeight) {
+        if (this.y < -20 || this.y > 1100) {
             this.dy = -this.dy;
         }
 
@@ -58,11 +58,11 @@ function LilyPad(I) {
 
     I.update = function () {
 
-        if (this.x < 0 || this.x > window.innerWidth) {
+        if (this.x < -20 || this.x > 1940) {
             this.dx = -this.dx
         }
 
-        if (this.y < 0 || this.y > window.innerHeight) {
+        if (this.y < -20 || this.y > 1100) {
             this.dy = -this.dy;
         }
 
@@ -103,11 +103,11 @@ function Flower(I) {
 
     I.update = function () {
 
-        if (this.x < 0 || this.x > window.innerWidth) {
+        if (this.x < -20 || this.x > 1940) {
             this.dx = -this.dx
         }
 
-        if (this.y < 0 || this.y > window.innerHeight) {
+        if (this.y < -20 || this.y > 1100) {
             this.dy = -this.dy;
         }
 

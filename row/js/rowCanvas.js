@@ -2,7 +2,7 @@
     "use strict";
 
     var constants = {
-        maxSpeed: 5
+        maxSpeed: 3
     };
 
     var rowCanvas = WinJS.Class.define(
@@ -49,20 +49,30 @@
           },
           update: function () {
               var i;
-              for (i = 0; i < this._pennies.length; ++i) {
-                  if (this._pennies[i].isActive) {
-                      this._pennies.splice(i--, 1);
-                  } else { 
-                      this._pennies[i].update();
+              var pennyCount = 0;
+
+              this._lilypads.forEach(function (lilypad) {
+                  if (lilypad.dx > constants.maxSpeed) {
+                      lilypad.dx = constants.maxSpeed;
                   }
-              }
-              this._lilypads.forEach(function(lilypad) {
+                  if (lilypad.dy > constants.maxSpeed) {
+                      lilypad.dy = constants.maxSpeed;
+                  }
                   lilypad.update();
               });
 
-              if(this._pennies.length < 4) {
+              this._pennies.forEach(function (penny) {
+                  if (!penny.hasBeenHit) {
+                      pennyCount++;
+                  }
+              });
+              if (pennyCount < 4) {
                   this._pennies.push(new Penny());
               }
+              if (pennyCount > 25) {
+                  this._pennies.splice(0, 1);
+              }
+
               this.collidingCircles();
           },
           createBoat: function (p, playerData) {
@@ -71,8 +81,12 @@
           moveBoat: function (p, playerData) {
               var that = this;
               var multiplier = 0.001;
-              var xDistance = (playerData['right']['pos']['x'] - 30) - (this._boats[p].x - (that._boats[p].width / 2));
-              var yDistance = (playerData['right']['pos']['y'] - 38) - (this._boats[p].y - (that._boats[p].height / 2));
+
+              // Controls based on you and the boat, not you and your COM
+              // var xDistance = (playerData['right']['pos']['x'] - 30) - (this._boats[p].x - (that._boats[p].width / 2));
+              // var yDistance = (playerData['right']['pos']['y'] - 38) - (this._boats[p].y - (that._boats[p].height / 2));
+              var xDistance = (playerData['right']['pos']['x'] - 30) - (playerData['spine']['pos']['x']);
+              var yDistance = (playerData['right']['pos']['y'] - 38) - (playerData['spine']['pos']['y']);
               var angleDistance = this.calculateAngleDistance(xDistance, yDistance);
 
               var boatX = that._boats[p].x - that._boats[p].width / 2;
@@ -88,6 +102,7 @@
 
                           if (that.isPixelCollision(boatData, boatX, boatY, pennyData, penny.x, penny.y, false)) {
                               penny.hasBeenHit = true;
+                              penny.paused = false;
                           }
                       }
                   }

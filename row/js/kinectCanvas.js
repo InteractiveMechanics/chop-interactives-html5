@@ -161,6 +161,7 @@
               }
               context.restore();
 
+              /*
               context.save();
               //context.shadowColor = '#444444';
               //context.shadowBlur = 5;
@@ -187,6 +188,7 @@
                   context.drawImage(leftHand, Math.round(this._lastConfidentPlayers[p]['left']['pos']['x']), Math.round(this._lastConfidentPlayers[p]['left']['pos']['y']), 60, 76);
               }
               context.restore();
+              */
           },
           showInstructions: function (p) {
               var context = this._instructionsContext;

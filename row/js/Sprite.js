@@ -62,15 +62,19 @@ ImagePainter.prototype = {
     }
 };
 
-SpriteSheetPainter = function (cells) {
+var SpriteSheetPainter = function (imageUrl, cells) {
+    this.image = new Image;
+    this.image.src = imageUrl;
     this.cells = cells;
 };
 
 SpriteSheetPainter.prototype = {
     cells: [],
     cellIndex: 0,
+    image: undefined,
 
     advance: function () {
+        console.log('run advance ' + this.cellIndex);
         if (this.cellIndex == this.cells.length - 1) {
             this.cellIndex = 0;
         }
@@ -81,10 +85,10 @@ SpriteSheetPainter.prototype = {
 
     paint: function (sprite, context) {
         var cell = this.cells[this.cellIndex];
-        context.drawImage(spritesheet, cell.left, cell.top,
-                                       cell.width, cell.height,
-                                       sprite.left, sprite.top,
-                                       cell.width, cell.height);
+        context.drawImage(this.image, cell.left * 2, cell.top * 2,
+                                      cell.width * 2, cell.height * 2,
+                                      sprite.left, sprite.top,
+                                      cell.width, cell.height);
     }
 };
 
