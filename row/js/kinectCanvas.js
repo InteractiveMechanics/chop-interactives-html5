@@ -29,6 +29,7 @@
               this._pendingPlayers = [];
               this._lastPlayers = {};
               this._lastConfidentPlayers = {};
+
               console.log('Kinect canvases initialized.');
           },
           clearScreen: function (context) {
@@ -66,12 +67,22 @@
 
                           this._newPlayerTimeout = setTimeout(function () {
                               pendingPlayers.splice(pending, 1);
-                              if (players[p] && index === -1) {
+                              if (players[p] && index === -1 && activePlayers.length <= constants.maxPlayers) {
                                   activePlayers.push(p);
                                   lastConfidentPlayers[p] = players[p];
                                   lastPlayers[p] = players[p];
 
-                                  that.showInstructions(p);
+                                  that._activeAlert = true;
+                                  that._instructions.paused = false;
+                                  console.log('Show instructions for Player ' + p);
+
+                                  setTimeout(function () {
+                                      that._activeAlert = false;
+                                      that._instructions.paused = true;
+                                      that.clearScreen(that._instructionsContext);
+                                      console.log('Clear instructions for Player ' + p);
+                                  }, 6000);
+
                                   that._rowCanvas.createBoat(p);
                               }
                           }, 5000);
@@ -116,11 +127,32 @@
                       console.log("No players present, reseting the game.");
                   }, constants.resetTimeoutDuration);
               }
+              this.showInstructions();
               this._rowCanvas.draw();
 
-              // Run this method often, checks to see if we have too many people
+              // Run this function often, checks to see if we have too many people
               this._totalBodies = count;
-              this.showTooManyPlayers(this._totalBodies);
+              if (count > constants.maxPlayers && this._activeTooManyPlayers == false) {
+                  var image = new Image();
+                  image.src = 'images/too-many-alert@2x.png';
+                  that.clearScreen(that._instructionsContext);
+                  that._instructionsContext.drawImage(image, 691, 920, 539, 80);
+                  
+                  this._activeTooManyPlayers = true;
+                  console.log('Show "too many players" alert.');
+
+                  this.tooManyTimeout = setTimeout(function () {
+                      that.clearScreen(that._instructionsContext);
+                      this._activeTooManyPlayers = false;
+                      console.log('Remove "too many players" alert.');
+                  }, constants.tooManyTimeoutDuration);
+              }
+              if (count <= constants.maxPlayers && this._activeTooManyPlayers == true) {
+                  that.clearScreen(that._instructionsContext);
+                  this._activeTooManyPlayers = false;
+                  window.clearTimeout(this.tooManyTimeout);
+                  console.log('Remove "too many players" alert.');
+              }
 
               this._lastPlayers = players;
           },
@@ -157,47 +189,14 @@
               }
               context.restore();
           },
-          showInstructions: function (p) {
+          showInstructions: function () {
               var context = this._instructionsContext;
-              var image = new Image();
               var that = this;
 
-              if (this._activeAlert == false) {
-                  this.clearScreen(context);
-                  this._activeAlert = true;
-
-                  console.log('Show instructions for Player ' + p);
-                  image.src = 'images/instructions/P' + p + '_instruction_01.png';
-                  context.save();
-                  context.shadowColor = '#999';
-                  context.shadowBlur = 8;
-                  context.shadowOffsetX = 0;
-                  context.shadowOffsetY = 0;
-                  context.drawImage(image, 832, 912, 128, 128);
-                  context.restore();
-
-                  setTimeout(function () {
-                      that._activeAlert = false;
-                      that.clearScreen(context);
-                      console.log('Clear instructions for Player ' + p);
-                  }, 5000);
-              }
-          },
-          showTooManyPlayers: function (count) {
-              // if our alert active variable is false, then show the message, fade it out after five seconds, and don't show it again for thirty seconds
-              // if the alert active variable is true, then do nothing
-              if (count > constants.maxPlayers && this._activeTooManyPlayers == false) {
-                  console.log('Show "too many players" alert.');
-                  this._activeTooManyPlayers = true;
-
-                  this.tooManyTimeout = setTimeout(function () {
-                      console.log('Remove "too many players" alert.');
-                      this._activeTooManyPlayers = false;
-                  }, constants.tooManyTimeoutDuration);
-              }
-              if (count <= constants.maxPlayers && this._activeTooManyPlayers == true) {
-                  window.clearTimeout(this.tooManyTimeout);
-                  this._activeTooManyPlayers = false;
+              if (this._activeAlert) {
+                  this._instructions.x = 860;
+                  this._instructions.y = 800;
+                  this._instructions.draw(context);                  
               }
           },
           _canvas: null,
@@ -223,7 +222,9 @@
 
           _newPlayerTimeout: null,
           _resetAllTimeout: null,
-          _tooManyTimeout: null
+          _tooManyTimeout: null,
+
+          _instructions: new Instructions()
       }
     );
 
