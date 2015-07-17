@@ -85,9 +85,6 @@
                   var that = this;
                   var multiplier = 0.001;
 
-                  // Controls based on you and the boat, not you and your COM
-                  // var xDistance = (playerData['right']['pos']['x'] - 30) - (this._boats[p].x - (that._boats[p].width / 2));
-                  // var yDistance = (playerData['right']['pos']['y'] - 38) - (this._boats[p].y - (that._boats[p].height / 2));
                   var xDistance = (playerData['right']['pos']['x'] - 30) - (playerData['spine']['pos']['x']);
                   var yDistance = (playerData['right']['pos']['y'] - 38) - (playerData['spine']['pos']['y']);
                   var angleDistance = this.calculateAngleDistance(xDistance, yDistance);

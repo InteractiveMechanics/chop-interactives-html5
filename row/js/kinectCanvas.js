@@ -3,8 +3,8 @@
 
     var constants = {
         maxPlayers: 4,
-        handHeight: 76,
-        handWidth: 60,
+        handHeight: 154,
+        handWidth: 154,
         instructionsDuration: 5000,
         tooManyTimeoutDuration: 30000,
         resetTimeoutDuration: 30000
@@ -127,68 +127,34 @@
               var context = this._context;
               var rightHand = new Image();
               var leftHand = new Image();
+              var deltaX = player['right']['pos']['x'] - player['spine']['pos']['x'];
+              var deltaY = player['right']['pos']['y'] - player['spine']['pos']['y'];
+              var angle = this._rowCanvas.calculateAngleDistance(deltaX, deltaY);
               
               // If the kinect is confident and is able to accurately track the hand, then use that date and store it for the future
               // if the kinect is not confident and is not able to accurately track the hand, then use the last set of confident data that was stored
-
               context.save();
               //context.shadowColor = '#444444';
               //context.shadowBlur = 5;
               //context.shadowOffsetX = 0;
               //context.shadowOffsetY = 5;
               if (player['right']['confidence'] === 1) {
-                  if (player['right']['status'] === 'closed') {
-                      rightHand.src = 'images/shared/P' + p + '_closed.png';
-                  } else {
-                      rightHand.src = 'images/shared/P' + p + '_open.png';
-                  }
+                  rightHand.src = 'images/arrows/P' + p + '_arrow.png';
                   this._lastConfidentPlayers[p]['right'] = player['right'];
               } else {
-                  if (this._lastConfidentPlayers[p]['right']['status'] === 'closed') {
-                      rightHand.src = 'images/shared/P' + p + '_closed.png';
-                  } else {
-                      rightHand.src = 'images/shared/P' + p + '_open.png';
-                  }
+                  rightHand.src = 'images/arrows/P' + p + '_arrow.png';
               }
-              context.scale(-1, 1);
               if (player['right']['trackingState'] === 2) {
-                  context.translate(-(Math.round(player['right']['pos']['x'] - constants.handWidth / 2)), Math.round(player['right']['pos']['y'] - constants.handHeight / 2));
-                  context.drawImage(rightHand, -60, 0, 60, 76);
+                  context.translate(Math.round(player['right']['pos']['x'] - constants.handWidth / 2), Math.round(player['right']['pos']['y'] - constants.handHeight / 2));
+                  context.rotate(angle[0] / Math.PI);
+                  context.drawImage(rightHand, -constants.handWidth / 2, -constants.handHeight / 2, constants.handWidth, constants.handHeight);
               } else if (player['right']['trackingState'] === 1 || 0) {
-                  context.translate(-(Math.round(this._lastConfidentPlayers[p]['right']['pos']['x'] - constants.handWidth / 2)), Math.round(this._lastConfidentPlayers[p]['right']['pos']['y'] - constants.handHeight / 2));
+                  context.translate(Math.round(this._lastConfidentPlayers[p]['right']['pos']['x'] - constants.handWidth / 2), Math.round(this._lastConfidentPlayers[p]['right']['pos']['y'] - constants.handHeight / 2));
+                  context.rotate(angle[0] / Math.PI);
                   context.globalAlpha = 0.5;
-                  context.drawImage(rightHand, -60, 0, 60, 76);
+                  context.drawImage(rightHand, -constants.handWidth / 2, -constants.handHeight / 2, constants.handWidth, constants.handHeight);
               }
               context.restore();
-
-              /*
-              context.save();
-              //context.shadowColor = '#444444';
-              //context.shadowBlur = 5;
-              //context.shadowOffsetX = 0;
-              //context.shadowOffsetY = 5;
-              if (player['left']['confidence'] === 1) {
-                  if (player['left']['status'] === 'closed') {
-                      leftHand.src = 'images/shared/P' + p + '_closed.png';
-                  } else {
-                      leftHand.src = 'images/shared/P' + p + '_open.png';
-                  }
-                  this._lastConfidentPlayers[p]['left'] = player['left'];
-              } else {
-                  if (this._lastConfidentPlayers[p]['left']['status'] === 'closed') {
-                      leftHand.src = 'images/shared/P' + p + '_closed.png';
-                  } else {
-                      leftHand.src = 'images/shared/P' + p + '_open.png';
-                  }
-              }
-              if (player['left']['trackingState'] === 2) {
-                  context.drawImage(leftHand, Math.round(player['left']['pos']['x']), Math.round(player['left']['pos']['y']), 60, 76);
-              } else if (player['left']['trackingState'] === 1 || 0) {
-                  context.globalAlpha = 0.5;
-                  context.drawImage(leftHand, Math.round(this._lastConfidentPlayers[p]['left']['pos']['x']), Math.round(this._lastConfidentPlayers[p]['left']['pos']['y']), 60, 76);
-              }
-              context.restore();
-              */
           },
           showInstructions: function (p) {
               var context = this._instructionsContext;
