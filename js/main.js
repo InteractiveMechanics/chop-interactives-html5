@@ -4,11 +4,14 @@ var canvas_center;
 
 var overlay_left;
 var overlay_center;
+var timer = 0;
 var overlay_right;
 
 var left_pegs = [];
 var right_pegs = [];
 var center_pegs = [];
+
+var paint_splatters = [];
 
 
 var img;
@@ -29,27 +32,10 @@ function getMousePos(_canvas, evt) {
 
 function init() {
 	
-	canvas_left = document.createElement('canvas');
-	canvas_left.id     = "canvas_left";
-	canvas_left.width  = width;
-	canvas_left.height = window.innerHeight;
-	canvas_left.style.zIndex   = 8;
-	canvas_left.style.borderLeft  = "5px solid #806f50";
-	canvas_left.style.borderRight   = "5px solid #806f50";
-
-	canvas_center = document.createElement('canvas');
-	canvas_center.id     = "canvas_center";
-	canvas_center.width  = width;
-	canvas_center.height = window.innerHeight;
-	canvas_center.style.zIndex   = 8;
-	canvas_center.style.borderRight   = "5px solid #806f50";
-
-	canvas_right = document.createElement('canvas');
-	canvas_right.id     = "canvas_right";
-	canvas_right.width  = width;
-	canvas_right.height = window.innerHeight;
-	canvas_right.style.zIndex   = 8;
-	canvas_right.style.borderRight   = "5px solid #806f50";
+	createLeftCanvas();
+	createCenterCanvas();
+	createRightCanvas();
+	
 
 	document.body.appendChild(canvas_left);
 	document.body.appendChild(canvas_right);
@@ -58,13 +44,69 @@ function init() {
 	createCanvasOverlays();
 	setupPegs();
 
+	loadSplatterImages();
+
 	img = new Image();
 	img.onload = imageLoaded;
 	img.src = 'background_slice@2x.jpg';
+
+	
 };
+
+function loadSplatterImages() {
+	for(var i = 0; i < 40; i++) {
+		var filename = "paint-splatters/splatter_" +  i;
+		paint_splatters.push( Sprite(filename) );
+	}
+}
+
+function randomSplat() {
+	return paint_splatters[Math.floor(Math.random()*paint_splatters.length)];
+}
 
 function createCanvasOverlays() {
 	
+	
+	createLeftOverlayPanel();
+	createCenterOverlayPanel();
+	createRightOverlayPanel();
+	
+
+	document.body.appendChild(overlay_left);
+	document.body.appendChild(overlay_center);
+	document.body.appendChild(overlay_right);
+
+};
+
+function createLeftCanvas() {
+	canvas_left = document.createElement('canvas');
+	canvas_left.id     = "canvas_left";
+	canvas_left.width  = width;
+	canvas_left.height = window.innerHeight;
+	canvas_left.style.zIndex   = 8;
+	canvas_left.style.borderLeft  = "5px solid #806f50";
+	canvas_left.style.borderRight   = "5px solid #806f50";
+}
+
+function createCenterCanvas() {
+	canvas_center = document.createElement('canvas');
+	canvas_center.id     = "canvas_center";
+	canvas_center.width  = width;
+	canvas_center.height = window.innerHeight;
+	canvas_center.style.zIndex   = 8;
+	canvas_center.style.borderRight   = "5px solid #806f50";
+}
+
+function createRightCanvas() {
+	canvas_right = document.createElement('canvas');
+	canvas_right.id     = "canvas_right";
+	canvas_right.width  = width;
+	canvas_right.height = window.innerHeight;
+	canvas_right.style.zIndex   = 8;
+	canvas_right.style.borderRight   = "5px solid #806f50";
+}
+
+function createLeftOverlayPanel() {
 	overlay_left = document.createElement('canvas');
 	overlay_left.id     = "overlay_left";
 	overlay_left.width  = width + 10;
@@ -73,7 +115,9 @@ function createCanvasOverlays() {
 	overlay_left.style.position   = 'absolute';
 	overlay_left.style.top   = 0;
 	overlay_left.style.left   = 0;
+}
 
+function createCenterOverlayPanel() {
 	overlay_center = document.createElement('canvas');
 	overlay_center.id     = "overlay_left";
 	overlay_center.width  = width + 5;
@@ -82,7 +126,9 @@ function createCanvasOverlays() {
 	overlay_center.style.position   = 'absolute';
 	overlay_center.style.top   = 0;
 	overlay_center.style.left   = width+10;
+}
 
+function createRightOverlayPanel() {
 	overlay_right = document.createElement('canvas');
 	overlay_right.id     = "overlay_right";
 	overlay_right.width  = width + 5;
@@ -91,54 +137,42 @@ function createCanvasOverlays() {
 	overlay_right.style.position   = 'absolute';
 	overlay_right.style.top   = 0;
 	overlay_right.style.left   = (2*width)+15;
-
-	document.body.appendChild(overlay_left);
-	document.body.appendChild(overlay_center);
-	document.body.appendChild(overlay_right);
-
-};
+}
 
 function setupPegs() {
 
 	for(var i = 0; i < window.innerHeight; i += (window.innerHeight / 8)) {
 		var x = randomValue(90, width-100);
 		var y = randomValue(i, i += (window.innerHeight / 15));
-		//createPeg(overlay_left, x, y, '#003300');
-
-		var pegfile = "pegs/p0/P0_" + parseInt(randomValue(0, 8));
-		left_pegs.push(new Peg(x, y, overlay_left, pegfile));
+		
+		var peg = getPeg(overlay_left, x, y);
+		left_pegs.push(peg);
 	}
 
 	for(var j = 0; j < window.innerHeight; j += (window.innerHeight / 8)) {
 		var x = randomValue(90, width-100);
 		var y = randomValue(j, j += (window.innerHeight / 15));
-		//createPeg(overlay_center, x, y, '#FF0000');
-		var pegfile = "pegs/p1/P1_" + parseInt(randomValue(0, 8));
-		center_pegs.push(new Peg(x, y, overlay_center, pegfile));
+		
+		var peg = getPeg(overlay_center, x, y);
+		center_pegs.push(peg);
 	}
 
 	for(var k = 0; k < window.innerHeight; k += (window.innerHeight / 8)) {
 		var x = randomValue(90, width-100);
 		var y = randomValue(k, k += (window.innerHeight / 15));
-		//createPeg(overlay_right, x, y, '#0000FF');
-		var pegfile = "pegs/p2/P2_" + parseInt(randomValue(0, 8));
-		right_pegs.push(new Peg(x, y, overlay_right, pegfile));
+		
+		var peg = getPeg(overlay_right, x, y);
+		right_pegs.push(peg);
 	}
 }
 
-function createPeg(canvas, x, y, color) {
-	var context = canvas.getContext('2d');
-    var centerX = x;
-    var centerY = y;
-    var radius = 40;
+function getPeg(c, x , y) {
+	var pegndex = parseInt(randomValue(0, 8));
+	var filepath = "pegs/pX/PX_" + pegndex;
+	var specialfile = "pegs/pS/PS_" + pegndex;
+	var peg = new Peg(x, y, c, filepath, pegndex, specialfile);
 
-    context.beginPath();
-    context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
-    context.fillStyle = color;
-    context.fill();
-    context.lineWidth = 5;
-    context.strokeStyle = color;
-    context.stroke();
+	return peg;
 }
 
 function randomValue(min, max) {
@@ -170,6 +204,8 @@ window.requestAnimationFrame = window.requestAnimationFrame
 
 
 function draw(delta) {
+	if(timer < 1700) {timer += 1;}
+
     totalSeconds += delta;
 
     var vx = 15; // the background scrolls with a speed of 100 pixels/sec
@@ -180,8 +216,7 @@ function draw(delta) {
     canvas_left.getContext('2d').translate(0, xpos);
     
     for (var i = 0; i < numImages; i++) {
-    	console.log(numImages);
-        canvas_left.getContext('2d').drawImage(img, 0, -7500);
+        canvas_left.getContext('2d').drawImage(img, 0, -6500);
     }
     
     canvas_left.getContext('2d').restore();
@@ -190,7 +225,7 @@ function draw(delta) {
     canvas_center.getContext('2d').translate(0, xpos);
     
     for (var i = 0; i < numImages; i++) {
-        canvas_center.getContext('2d').drawImage(img, 0,  -7700);
+        canvas_center.getContext('2d').drawImage(img, 0,  -6700);
     }
     
     canvas_center.getContext('2d').restore();
@@ -199,7 +234,7 @@ function draw(delta) {
     canvas_right.getContext('2d').translate(0, xpos);
     
     for (var i = 0; i < numImages; i++) {
-        canvas_right.getContext('2d').drawImage(img, 0,  -7300);
+        canvas_right.getContext('2d').drawImage(img, 0,  -6300);
     }
     
     canvas_right.getContext('2d').restore();
@@ -212,14 +247,18 @@ function draw(delta) {
 
     	var mX = mousePos.x;
 	    var mY = mousePos.y;
-	    if(mX >= peg.x && mX < peg.x+peg.width && mY >= peg.y && mY < peg.y+peg.height) {
+	    if(mX >= peg.x && mX < peg.x+peg.width && mY >= peg.y && mY < peg.y+peg.height && peg.player_assigned) {
 	    	peg.activated = true;
+	    	if(!peg.splatter_sprite) {
+	    		peg.splatter_sprite = randomSplat();
+	    	}
 	    }
 
     	if (peg.y > window.innerHeight) {  //Repeat the raindrop when it falls out of view
 	        peg.y = -100 //Account for the image size
 	        peg.x = randomValue(90, width-110);
 	        peg.activated = false;   
+	        peg.splatter_sprite = null;
 	    }
   	});
 
@@ -230,14 +269,18 @@ function draw(delta) {
 
     	var mX = mousePos.x;
 	    var mY = mousePos.y;
-	    if(mX >= peg.x && mX < peg.x+peg.width && mY >= peg.y && mY < peg.y+peg.height) {
+	    if(mX >= peg.x && mX < peg.x+peg.width && mY >= peg.y && mY < peg.y+peg.height && peg.player_assigned) {
 	    	peg.activated = true;
+	    	if(!peg.splatter_sprite) {
+	    		peg.splatter_sprite = randomSplat();
+	    	}
 	    }
 
     	if (peg.y > window.innerHeight) {  //Repeat the raindrop when it falls out of view
 	        peg.y = -100 //Account for the image size
 	        peg.x = randomValue(90, width-110);
 	        peg.activated = false;   
+	        peg.splatter_sprite = null;
 	    }
   	});
 
@@ -249,17 +292,61 @@ function draw(delta) {
 
     	var mX = mousePos.x;
 	    var mY = mousePos.y;
-	    if(mX >= peg.x && mX < peg.x+peg.width && mY >= peg.y && mY < peg.y+peg.height) {
+	    if(mX >= peg.x && mX < peg.x+peg.width && mY >= peg.y && mY < peg.y+peg.height && peg.player_assigned) {
 	    	peg.activated = true;
+
+	    	if(!peg.splatter_sprite) {
+	    		peg.splatter_sprite = randomSplat();
+	    	}
 	    }
 
     	if (peg.y > window.innerHeight) {  //Repeat the raindrop when it falls out of view
 	        peg.y = -100 //Account for the image size
 	        peg.x = randomValue(90, width-110);
 	        peg.activated = false;   
+	        peg.splatter_sprite = null;
 	    }
 
   	});
+
+  	if(timer == 350) {
+  		left_pegs.forEach(function(peg) {
+  			peg.playerHasEntered(2);
+  			peg.player_assigned = true;
+  		});
+  	}
+
+  	if(timer == 700) {
+  		center_pegs.forEach(function(peg) {
+  			peg.playerHasEntered(4);
+  			peg.player_assigned = true;
+  		});
+  	}
+
+  	if(timer == 1050) {
+  		right_pegs.forEach(function(peg) {
+  			peg.playerHasEntered(3);
+  			peg.player_assigned = true;
+  		});
+  	}
+
+  	if(timer == 1400) {
+  		center_pegs.forEach(function(peg) {
+  			peg.player_assigned = false;
+  		});
+  	}
+
+  	if(timer == 1600) {
+  		right_pegs.forEach(function(peg) {
+  			peg.player_assigned = false;
+  		});
+  	}
+
+  	if(timer == 1100) {
+  		left_pegs.forEach(function(peg) {
+  			peg.player_assigned = false;
+  		});
+  	}
 }
 
 
