@@ -9,7 +9,7 @@ function HeavyLilyPad(I) {
 
     I.width = 200;
     I.height = 200;
-    I.weight = 10;
+    I.weight = 0.5;
 
     I.update = function () {
         if (this.x < -20 || this.x > 1940) {
@@ -22,7 +22,6 @@ function HeavyLilyPad(I) {
 
         this.x += this.dx;
         this.y += this.dy;
-        this.angle += this.dr;
     };
 
     I.sprite = new Sprite('lilypad2', new ImagePainter('images/lilypad_2@2x.png'));
@@ -54,7 +53,7 @@ function LilyPad(I) {
 
     I.width = 200;
     I.height = 200;
-    I.weight = 6;
+    I.weight = 1;
 
     I.update = function () {
 
@@ -99,7 +98,7 @@ function Flower(I) {
 
     I.width = 200;
     I.height = 200;
-    I.weight = 3;
+    I.weight = 2;
 
     I.update = function () {
 

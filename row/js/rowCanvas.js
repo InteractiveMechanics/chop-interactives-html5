@@ -52,11 +52,11 @@
               var pennyCount = 0;
 
               this._lilypads.forEach(function (lilypad) {
-                  if (lilypad.dx > constants.maxSpeed) {
-                      lilypad.dx = constants.maxSpeed;
+                  if (lilypad.dx > lilypad.weight) {
+                      lilypad.dx = lilypad.weight;
                   }
-                  if (lilypad.dy > constants.maxSpeed) {
-                      lilypad.dy = constants.maxSpeed;
+                  if (lilypad.dy > lilypad.weight) {
+                      lilypad.dy = lilypad.weight;
                   }
                   lilypad.update();
               });
