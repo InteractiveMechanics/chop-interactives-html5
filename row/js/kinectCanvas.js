@@ -59,14 +59,14 @@
                   // fire the instructions for the new user
                   var index = activePlayers.indexOf(p);
                   var pending = pendingPlayers.indexOf(p);
-                  if (index === -1) {
-                      if (pending === -1) {
+                  if (index === -1 && !lastPlayers[p]) {
+                      if (pending === -1 && !lastPlayers[p]) {
                           pendingPlayers.push(p);
                           console.log("Player " + p + " joined the game.")
 
                           this._newPlayerTimeout = setTimeout(function () {
                               pendingPlayers.splice(pending, 1);
-                              if (players[p]) {
+                              if (players[p] && index === -1) {
                                   activePlayers.push(p);
                                   lastConfidentPlayers[p] = players[p];
                                   lastPlayers[p] = players[p];
@@ -77,6 +77,7 @@
                           }, 5000);
                       }
                   }
+                  //console.log(pendingPlayers, activePlayers);
 
                   // if there are less players than the max
                   // draw their hands and do everything we need to do on-screen
@@ -134,10 +135,10 @@
               // If the kinect is confident and is able to accurately track the hand, then use that date and store it for the future
               // if the kinect is not confident and is not able to accurately track the hand, then use the last set of confident data that was stored
               context.save();
-              //context.shadowColor = '#444444';
-              //context.shadowBlur = 5;
-              //context.shadowOffsetX = 0;
-              //context.shadowOffsetY = 5;
+              context.shadowColor = '#679FAC';
+              context.shadowBlur = 8;
+              context.shadowOffsetX = 0;
+              context.shadowOffsetY = 0;
               if (player['right']['confidence'] === 1) {
                   rightHand.src = 'images/arrows/P' + p + '_arrow.png';
                   this._lastConfidentPlayers[p]['right'] = player['right'];
@@ -168,10 +169,10 @@
                   console.log('Show instructions for Player ' + p);
                   image.src = 'images/instructions/P' + p + '_instruction_01.png';
                   context.save();
-                  context.shadowColor = '#444444';
-                  context.shadowBlur = 5;
+                  context.shadowColor = '#999';
+                  context.shadowBlur = 8;
                   context.shadowOffsetX = 0;
-                  context.shadowOffsetY = 5;
+                  context.shadowOffsetY = 0;
                   context.drawImage(image, 832, 912, 128, 128);
                   context.restore();
 

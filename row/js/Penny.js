@@ -15,6 +15,7 @@ function Penny(I) {
 
     I.lastAdvance = 0;
     I.frames = 0;
+    I.totalFrames = 12;
 
     I.cells = [
       { left: 0,   top: 0, width: 80, height: 80 },
@@ -52,7 +53,7 @@ function Penny(I) {
                     that.lastAdvance = milli;
                     that.frames++;
                 }
-                if (that.frames == 11) {
+                if (that.frames == that.totalFrames - 1) {
                     that.paused = true;
                 }
             }

@@ -2,7 +2,7 @@
     "use strict";
 
     var constants = {
-        maxSpeed: 1.5
+        maxSpeed: 2
     };
 
     var rowCanvas = WinJS.Class.define(
@@ -52,11 +52,19 @@
               var pennyCount = 0;
 
               this._lilypads.forEach(function (lilypad) {
-                  if (lilypad.dx > lilypad.weight) {
-                      lilypad.dx = lilypad.weight;
+                  if (Math.abs(lilypad.dx) > lilypad.weight) {
+                      if (lilypad.dx > 0) {
+                          lilypad.dx = lilypad.weight;
+                      } else {
+                          lilypad.dx = -lilypad.weight;
+                      }
                   }
-                  if (lilypad.dy > lilypad.weight) {
-                      lilypad.dy = lilypad.weight;
+                  if (Math.abs(lilypad.dy) > lilypad.weight) {
+                      if (lilypad.dy > 0) {
+                          lilypad.dy = lilypad.weight;
+                      } else {
+                          lilypad.dy = -lilypad.weight;
+                      }
                   }
                   lilypad.update();
               });
@@ -92,7 +100,10 @@
                   var boatX = that._boats[p].x - that._boats[p].width / 2;
                   var boatY = that._boats[p].y - that._boats[p].width / 2;
 
-                  var isColliding = false;
+                  if (angleDistance[1] > 1) {
+                      this._boats[p].dx += xDistance * multiplier;
+                      this._boats[p].dy += yDistance * multiplier;
+                  }
 
                   this._pennies.forEach(function (penny) {
                       if (!penny.hasBeenHit) {
@@ -114,19 +125,28 @@
                           var lilypadData = that._canvas2Context.getImageData(lilypad.x, lilypad.y, lilypad.width, lilypad.height);
 
                           if (that.isPixelCollision(boatData, boatX, boatY, lilypadData, lilypad.x, lilypad.y, false)) {
-                              isColliding = true;
                               multiplier = 0.003;
 
-                              if (that._boats[p].dx > 0 && lilypad.dx > 0) {
+                              if ((that._boats[p].dx > 0 && lilypad.dx > 0) || (that._boats[p].dx < 0 && lilypad.dx < 0)) {
                                   lilypad.dx += lilypad.dx;
+                                  that._boats[p].dx = that._boats[p].dx - lilypad.dx / 2;
+                              } else if ((that._boats[p].dx > 0 && lilypad.dx < 0) || (that._boats[p].dx < 0 && lilypad.dx > 0)) {
+                                  lilypad.dx = lilypad.dx + that._boats[p].dx;
+                                  that._boats[p].dx = -that._boats[p].dx;
                               } else {
-                                  lilypad.dx = -lilypad.dx;
+                                  lilypad.dx = 0;
+                                  that._boats[p].dx = 0;
                               }
 
-                              if (that._boats[p].dy > 0 && lilypad.dy > 0) {
+                              if ((that._boats[p].dy > 0 && lilypad.dy > 0) || (that._boats[p].dy < 0 && lilypad.dy < 0)) {
                                   lilypad.dy += lilypad.dy;
+                                  that._boats[p].dy = that._boats[p].dy - lilypad.dy / 2;
+                              } else if ((that._boats[p].dy > 0 && lilypad.dy < 0) || (that._boats[p].dy < 0 && lilypad.dy > 0)) {
+                                  lilypad.dy = lilypad.dy + that._boats[p].dy;
+                                  that._boats[p].dy = -that._boats[p].dy;
                               } else {
-                                  lilypad.dy = -lilypad.dy;
+                                  lilypad.dy = 0;
+                                  that._boats[p].dy = 0;
                               }
                           }
                       }
@@ -139,38 +159,39 @@
                               var otherBoatData = that._canvasContext.getImageData(otherBoat.x, otherBoat.y, otherBoat.width, otherBoat.width);
 
                               if (that.isPixelCollision(boatData, boatX, boatY, otherBoatData, otherBoat.x, otherBoat.y, false)) {
-                                  isColliding = true;
                                   multiplier = 0.003;
 
-                                  if (that._boats[p].dx > 0 && otherBoat.dx > 0) {
+                                  if ((that._boats[p].dx > 0 && otherBoat.dx > 0) || (that._boats[p].dx < 0 && otherBoat.dx < 0)) {
                                       otherBoat.dx += otherBoat.dx;
+                                      that._boats[p].dx = that._boats[p].dx - otherBoat.dx / 2;
+                                  } else if ((that._boats[p].dx > 0 && otherBoat.dx < 0) || (that._boats[p].dx < 0 && otherBoat.dx > 0)) {
+                                      otherBoat.dx = otherBoat.dx + that._boats[p].dx;
+                                      that._boats[p].dx = -that._boats[p].dx;
                                   } else {
-                                      otherBoat.dx = -otherBoat.dx;
+                                      otherBoat.dx = 0;
+                                      that._boats[p].dx = 0;
                                   }
 
-                                  if (that._boats[p].dy > 0 && otherBoat.dy > 0) {
+                                  if ((that._boats[p].dy > 0 && otherBoat.dy > 0) || (that._boats[p].dy < 0 && otherBoat.dy < 0)) {
                                       otherBoat.dy += otherBoat.dy;
+                                      that._boats[p].dy = that._boats[p].dy - otherBoat.dy / 2;
+                                  } else if ((that._boats[p].dy > 0 && otherBoat.dy < 0) || (that._boats[p].dy < 0 && otherBoat.dy > 0)) {
+                                      otherBoat.dy = otherBoat.dy + that._boats[p].dy;
+                                      that._boats[p].dy = -that._boats[p].dy;
                                   } else {
-                                      otherBoat.dy = -otherBoat.dy;
+                                      otherBoat.dy = 0;
+                                      that._boats[p].dy = 0;
                                   }
                               }
                           }
                       }
                   });
 
-                  if (angleDistance[1] > 1) {
-                      this._boats[p].dx += xDistance * multiplier;
-                      this._boats[p].dy += yDistance * multiplier;
-                  }
                   if (this._boats[p].dx > constants.maxSpeed) {
                       this._boats[p].dx = constants.maxSpeed;
                   }
                   if (this._boats[p].dy > constants.maxSpeed) {
                       this._boats[p].dy = constants.maxSpeed;
-                  }
-                  if (isColliding) {
-                      this._boats[p].dx = -this._boats[p].dx;
-                      this._boats[p].dy = -this._boats[p].dy;
                   }
                   this._boats[p].angle = angleDistance[0];
                   this._boats[p].update();
@@ -234,9 +255,9 @@
                 y2 = Math.round( y2 );
 
                 var w  = first.width,
-                    h  = first.width,
+                    h  = first.height,
                     w2 = other.width,
-                    h2 = other.height ;
+                    h2 = other.height;
 
                 // deal with the image being centred
                 if ( isCentred ) {
@@ -253,7 +274,7 @@
                     xMax = Math.min( x+w, x2+w2 ),
                     yMax = Math.min( y+h, y2+h2 );
 
-                 // Sanity collision check, we ensure that the top-left corner is both
+                // Sanity collision check, we ensure that the top-left corner is both
                 // above and to the left of the bottom-right corner.
                 if ( xMin >= xMax || yMin >= yMax ) {
                     return false;
@@ -265,10 +286,10 @@
                 // get the pixels out from the images
                 var pixels  = first.data,
                     pixels2 = other.data;
-
+                
                 // if the area is really small,
                 // then just perform a normal image collision check
-                if ( xDiff < 10 && yDiff < 10 ) {
+                if ( xDiff < 4 && yDiff < 4 ) {
                     for ( var pixelX = xMin; pixelX < xMax; pixelX++ ) {
                         for ( var pixelY = yMin; pixelY < yMax; pixelY++ ) {
                             if (
@@ -295,8 +316,8 @@
                     // Work out the increments,
                     // it's a third, but ensure we don't get a tiny
                     // slither of an area for the last iteration (using fast ceil).
-                    var incX = xDiff / 4,
-                        incY = yDiff / 2;
+                    var incX = xDiff / 3.0,
+                        incY = yDiff / 3.0;
                     incX = (~~incX === incX) ? incX : (incX+1 | 0);
                     incY = (~~incY === incY) ? incY : (incY+1 | 0);
 
