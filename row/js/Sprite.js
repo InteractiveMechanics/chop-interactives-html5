@@ -74,7 +74,6 @@ SpriteSheetPainter.prototype = {
     image: undefined,
 
     advance: function () {
-        console.log('run advance ' + this.cellIndex);
         if (this.cellIndex == this.cells.length - 1) {
             this.cellIndex = 0;
         }

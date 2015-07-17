@@ -72,7 +72,7 @@
                                   lastPlayers[p] = players[p];
 
                                   that.showInstructions(p);
-                                  that._rowCanvas.createBoat(p, players[p]);
+                                  that._rowCanvas.createBoat(p);
                               }
                           }, 5000);
                       }

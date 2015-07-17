@@ -75,79 +75,109 @@
 
               this.collidingCircles();
           },
-          createBoat: function (p, playerData) {
-              this._boats[p] = new Boat();
+          createBoat: function (p) {
+              if (!this._boats[p]) {
+                  this._boats[p] = new Boat();
+              }
           },
           moveBoat: function (p, playerData) {
-              var that = this;
-              var multiplier = 0.001;
+              if (playerData && this._boats[p]) {
+                  var that = this;
+                  var multiplier = 0.001;
 
-              // Controls based on you and the boat, not you and your COM
-              // var xDistance = (playerData['right']['pos']['x'] - 30) - (this._boats[p].x - (that._boats[p].width / 2));
-              // var yDistance = (playerData['right']['pos']['y'] - 38) - (this._boats[p].y - (that._boats[p].height / 2));
-              var xDistance = (playerData['right']['pos']['x'] - 30) - (playerData['spine']['pos']['x']);
-              var yDistance = (playerData['right']['pos']['y'] - 38) - (playerData['spine']['pos']['y']);
-              var angleDistance = this.calculateAngleDistance(xDistance, yDistance);
+                  // Controls based on you and the boat, not you and your COM
+                  // var xDistance = (playerData['right']['pos']['x'] - 30) - (this._boats[p].x - (that._boats[p].width / 2));
+                  // var yDistance = (playerData['right']['pos']['y'] - 38) - (this._boats[p].y - (that._boats[p].height / 2));
+                  var xDistance = (playerData['right']['pos']['x'] - 30) - (playerData['spine']['pos']['x']);
+                  var yDistance = (playerData['right']['pos']['y'] - 38) - (playerData['spine']['pos']['y']);
+                  var angleDistance = this.calculateAngleDistance(xDistance, yDistance);
 
-              var boatX = that._boats[p].x - that._boats[p].width / 2;
-              var boatY = that._boats[p].y - that._boats[p].width / 2;
+                  var boatX = that._boats[p].x - that._boats[p].width / 2;
+                  var boatY = that._boats[p].y - that._boats[p].width / 2;
 
-              var isColliding = false;
+                  var isColliding = false;
 
-              this._pennies.forEach(function (penny) {
-                  if (!penny.hasBeenHit) {
-                      if (that.collides(penny, that._boats[p])) {
+                  this._pennies.forEach(function (penny) {
+                      if (!penny.hasBeenHit) {
+                          if (that.collides(penny, that._boats[p])) {
+                              var boatData = that._canvasContext.getImageData(boatX, boatY, that._boats[p].width, that._boats[p].width);
+                              var pennyData = that._pennyContext.getImageData(penny.x, penny.y, penny.width, penny.height);
+
+                              if (that.isPixelCollision(boatData, boatX, boatY, pennyData, penny.x, penny.y, false)) {
+                                  penny.hasBeenHit = true;
+                                  penny.paused = false;
+                              }
+                          }
+                      }
+                  });
+
+                  this._lilypads.forEach(function (lilypad) {
+                      if (that.collides(lilypad, that._boats[p])) {
                           var boatData = that._canvasContext.getImageData(boatX, boatY, that._boats[p].width, that._boats[p].width);
-                          var pennyData = that._pennyContext.getImageData(penny.x, penny.y, penny.width, penny.height);
+                          var lilypadData = that._canvas2Context.getImageData(lilypad.x, lilypad.y, lilypad.width, lilypad.height);
 
-                          if (that.isPixelCollision(boatData, boatX, boatY, pennyData, penny.x, penny.y, false)) {
-                              penny.hasBeenHit = true;
-                              penny.paused = false;
+                          if (that.isPixelCollision(boatData, boatX, boatY, lilypadData, lilypad.x, lilypad.y, false)) {
+                              isColliding = true;
+                              multiplier = 0.003;
+
+                              if (that._boats[p].dx > 0 && lilypad.dx > 0) {
+                                  lilypad.dx += lilypad.dx;
+                              } else {
+                                  lilypad.dx = -lilypad.dx;
+                              }
+
+                              if (that._boats[p].dy > 0 && lilypad.dy > 0) {
+                                  lilypad.dy += lilypad.dy;
+                              } else {
+                                  lilypad.dy = -lilypad.dy;
+                              }
                           }
                       }
-                  }
-              });
-              
-              this._lilypads.forEach(function (lilypad) {
-                  if (that.collides(lilypad, that._boats[p])) {
-                      var boatData = that._canvasContext.getImageData(boatX, boatY, that._boats[p].width, that._boats[p].width);
-                      var lilypadData = that._canvas2Context.getImageData(lilypad.x, lilypad.y, lilypad.width, lilypad.height);
+                  });
 
-                      if (that.isPixelCollision(boatData, boatX, boatY, lilypadData, lilypad.x, lilypad.y, false)) {
-                          isColliding = true;
-                          multiplier = 0.003;
+                  this._boats.forEach(function (otherBoat) {
+                      if (otherBoat.x != that._boats[p].x && otherBoat.y != that._boats[p].y) {
+                          if (that.collides(otherBoat, that._boats[p])) {
+                              var boatData = that._canvasContext.getImageData(boatX, boatY, that._boats[p].width, that._boats[p].width);
+                              var otherBoatData = that._canvasContext.getImageData(otherBoat.x, otherBoat.y, otherBoat.width, otherBoat.width);
 
-                          if (that._boats[p].dx > 0 && lilypad.dx > 0) {
-                              lilypad.dx += lilypad.dx;
-                          } else {
-                              lilypad.dx = -lilypad.dx;
-                          }
+                              if (that.isPixelCollision(boatData, boatX, boatY, otherBoatData, otherBoat.x, otherBoat.y, false)) {
+                                  isColliding = true;
+                                  multiplier = 0.003;
 
-                          if (that._boats[p].dy > 0 && lilypad.dy > 0) {
-                              lilypad.dy += lilypad.dy;
-                          } else {
-                              lilypad.dy = -lilypad.dy;
+                                  if (that._boats[p].dx > 0 && otherBoat.dx > 0) {
+                                      otherBoat.dx += otherBoat.dx;
+                                  } else {
+                                      otherBoat.dx = -otherBoat.dx;
+                                  }
+
+                                  if (that._boats[p].dy > 0 && otherBoat.dy > 0) {
+                                      otherBoat.dy += otherBoat.dy;
+                                  } else {
+                                      otherBoat.dy = -otherBoat.dy;
+                                  }
+                              }
                           }
                       }
+                  });
+
+                  if (angleDistance[1] > 1) {
+                      this._boats[p].dx += xDistance * multiplier;
+                      this._boats[p].dy += yDistance * multiplier;
                   }
-              });
-              
-              if (angleDistance[1] > 1) {
-                  this._boats[p].dx += xDistance * multiplier;
-                  this._boats[p].dy += yDistance * multiplier;
+                  if (this._boats[p].dx > constants.maxSpeed) {
+                      this._boats[p].dx = constants.maxSpeed;
+                  }
+                  if (this._boats[p].dy > constants.maxSpeed) {
+                      this._boats[p].dy = constants.maxSpeed;
+                  }
+                  if (isColliding) {
+                      this._boats[p].dx = -this._boats[p].dx;
+                      this._boats[p].dy = -this._boats[p].dy;
+                  }
+                  this._boats[p].angle = angleDistance[0];
+                  this._boats[p].update();
               }
-              if (this._boats[p].dx > constants.maxSpeed) {
-                  this._boats[p].dx = constants.maxSpeed;
-              }
-              if (this._boats[p].dy > constants.maxSpeed) {
-                  this._boats[p].dy = constants.maxSpeed;
-              }
-              if (isColliding) {
-                  this._boats[p].dx = -this._boats[p].dx;
-                  this._boats[p].dy = -this._boats[p].dy;
-              }
-              this._boats[p].angle = angleDistance[0];
-              this._boats[p].update();
           },
           removeBoat: function (p) {
               this._boats.splice(p, 1);
