@@ -2,7 +2,7 @@
     "use strict";
 
     var constants = {
-        maxSpeed: 3
+        maxSpeed: 1.5
     };
 
     var rowCanvas = WinJS.Class.define(
@@ -99,7 +99,7 @@
 
                   this._pennies.forEach(function (penny) {
                       if (!penny.hasBeenHit) {
-                          if (that.collides(penny, that._boats[p])) {
+                          if (that.collides(penny, that._boats[p])) { 
                               var boatData = that._canvasContext.getImageData(boatX, boatY, that._boats[p].width, that._boats[p].width);
                               var pennyData = that._pennyContext.getImageData(penny.x, penny.y, penny.width, penny.height);
 
