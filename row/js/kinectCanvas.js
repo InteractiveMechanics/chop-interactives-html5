@@ -88,8 +88,6 @@
                           }, 5000);
                       }
                   }
-                  //console.log(pendingPlayers, activePlayers);
-
                   // if there are less players than the max
                   // draw their hands and do everything we need to do on-screen
                   if (activePlayers.length <= constants.maxPlayers && index > -1) {

@@ -104,10 +104,11 @@
                       this._boats[p].dx += xDistance * multiplier;
                       this._boats[p].dy += yDistance * multiplier;
                   }
+                  this._boats[p].angle = angleDistance[0];
 
                   this._pennies.forEach(function (penny) {
                       if (!penny.hasBeenHit) {
-                          if (that.collides(penny, that._boats[p])) { 
+                          if (that.collides(penny.x, penny.y, penny.width, that._boats[p].x - that._boats[p].width/2, that._boats[p].y - that._boats[p].height/2, that._boats[p].width)) { 
                               var boatData = that._canvasContext.getImageData(boatX, boatY, that._boats[p].width, that._boats[p].width);
                               var pennyData = that._pennyContext.getImageData(penny.x, penny.y, penny.width, penny.height);
 
@@ -120,7 +121,7 @@
                   });
 
                   this._lilypads.forEach(function (lilypad) {
-                      if (that.collides(lilypad, that._boats[p])) {
+                      if (that.collides(lilypad.x, lilypad.y, lilypad.width, that._boats[p].x - that._boats[p].width/2, that._boats[p].y - that._boats[p].height/2, that._boats[p].width)) {
                           var boatData = that._canvasContext.getImageData(boatX, boatY, that._boats[p].width, that._boats[p].width);
                           var lilypadData = that._canvas2Context.getImageData(lilypad.x, lilypad.y, lilypad.width, lilypad.height);
 
@@ -128,25 +129,19 @@
                               multiplier = 0.003;
 
                               if ((that._boats[p].dx > 0 && lilypad.dx > 0) || (that._boats[p].dx < 0 && lilypad.dx < 0)) {
-                                  lilypad.dx += lilypad.dx;
-                                  that._boats[p].dx = that._boats[p].dx - lilypad.dx / 2;
-                              } else if ((that._boats[p].dx > 0 && lilypad.dx < 0) || (that._boats[p].dx < 0 && lilypad.dx > 0)) {
-                                  lilypad.dx = lilypad.dx + that._boats[p].dx;
+                                  lilypad.dx = lilypad.dx * 2;
                                   that._boats[p].dx = -that._boats[p].dx;
                               } else {
-                                  lilypad.dx = 0;
-                                  that._boats[p].dx = 0;
+                                  lilypad.dx = -lilypad.dx * 2;
+                                  that._boats[p].dx = -that._boats[p].dx * 2;
                               }
 
                               if ((that._boats[p].dy > 0 && lilypad.dy > 0) || (that._boats[p].dy < 0 && lilypad.dy < 0)) {
-                                  lilypad.dy += lilypad.dy;
-                                  that._boats[p].dy = that._boats[p].dy - lilypad.dy / 2;
-                              } else if ((that._boats[p].dy > 0 && lilypad.dy < 0) || (that._boats[p].dy < 0 && lilypad.dy > 0)) {
-                                  lilypad.dy = lilypad.dy + that._boats[p].dy;
+                                  lilypad.dy = lilypad.dy * 2;
                                   that._boats[p].dy = -that._boats[p].dy;
                               } else {
-                                  lilypad.dy = 0;
-                                  that._boats[p].dy = 0;
+                                  lilypad.dy = -lilypad.dy * 2;
+                                  that._boats[p].dy = -that._boats[p].dy * 2;
                               }
                           }
                       }
@@ -154,7 +149,7 @@
 
                   this._boats.forEach(function (otherBoat) {
                       if (otherBoat.x != that._boats[p].x && otherBoat.y != that._boats[p].y) {
-                          if (that.collides(otherBoat, that._boats[p])) {
+                          if (that.collides(otherBoat.x - that._boats[p].width/2, otherBoat.y - that._boats[p].height/2, otherBoat.width, that._boats[p].x - that._boats[p].width/2, that._boats[p].y - that._boats[p].height/2, that._boats[p].width)) {
                               var boatData = that._canvasContext.getImageData(boatX, boatY, that._boats[p].width, that._boats[p].width);
                               var otherBoatData = that._canvasContext.getImageData(otherBoat.x, otherBoat.y, otherBoat.width, otherBoat.width);
 
@@ -162,25 +157,19 @@
                                   multiplier = 0.003;
 
                                   if ((that._boats[p].dx > 0 && otherBoat.dx > 0) || (that._boats[p].dx < 0 && otherBoat.dx < 0)) {
-                                      otherBoat.dx += otherBoat.dx;
-                                      that._boats[p].dx = that._boats[p].dx - otherBoat.dx / 2;
-                                  } else if ((that._boats[p].dx > 0 && otherBoat.dx < 0) || (that._boats[p].dx < 0 && otherBoat.dx > 0)) {
                                       otherBoat.dx = otherBoat.dx + that._boats[p].dx;
-                                      that._boats[p].dx = -that._boats[p].dx;
+                                      that._boats[p].dx = that._boats[p].dx / 2;
                                   } else {
-                                      otherBoat.dx = 0;
-                                      that._boats[p].dx = 0;
+                                      otherBoat.dx = -otherBoat.dx;
+                                      that._boats[p].dx = -that._boats[p].dx;
                                   }
 
                                   if ((that._boats[p].dy > 0 && otherBoat.dy > 0) || (that._boats[p].dy < 0 && otherBoat.dy < 0)) {
-                                      otherBoat.dy += otherBoat.dy;
-                                      that._boats[p].dy = that._boats[p].dy - otherBoat.dy / 2;
-                                  } else if ((that._boats[p].dy > 0 && otherBoat.dy < 0) || (that._boats[p].dy < 0 && otherBoat.dy > 0)) {
-                                      otherBoat.dy = otherBoat.dy + that._boats[p].dy;
-                                      that._boats[p].dy = -that._boats[p].dy;
+                                      otherBoat.dy = otherBoat.dy + that._boats[p].dy / 2;
+                                      that._boats[p].dy = that._boats[p].dy / 2;
                                   } else {
-                                      otherBoat.dy = 0;
-                                      that._boats[p].dy = 0;
+                                      otherBoat.dy = -otherBoat.dy;
+                                      that._boats[p].dy = -that._boats[p].dy;
                                   }
                               }
                           }
@@ -193,7 +182,6 @@
                   if (this._boats[p].dy > constants.maxSpeed) {
                       this._boats[p].dy = constants.maxSpeed;
                   }
-                  this._boats[p].angle = angleDistance[0];
                   this._boats[p].update();
               }
           },
@@ -241,11 +229,11 @@
                     this._pennies.push(new Penny());
                 }
           },
-          collides: function (a, b) {
-              if (a.x < b.x + b.width &&
-                  a.x + a.width > b.x &&
-                  a.y < b.y + b.height &&
-                  a.y + a.height > b.y) return true;
+          collides: function (ax, ay, awidth, bx, by, bwidth) {
+              if (ax < bx + bwidth &&
+                  ax + awidth > bx &&
+                  ay < by + bwidth &&
+                  ay + awidth > by) return true;
           },
           isPixelCollision: function ( first, x, y, other, x2, y2, isCentred ) {
                 // we need to avoid using floats, as were doing array lookups
