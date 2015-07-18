@@ -1,15 +1,12 @@
-var canvas_left;
-var canvas_right;
-var canvas_center;
-
-var overlay_left;
-var overlay_center;
 var timer = 0;
-var overlay_right;
 
 var left_pegs = [];
 var right_pegs = [];
 var center_pegs = [];
+
+var LeftPanel;
+var CenterPanel;
+var RightPanel;
 
 var paint_splatters = [];
 
@@ -32,25 +29,33 @@ function getMousePos(_canvas, evt) {
 
 function init() {
 	
-	createLeftCanvas();
-	createCenterCanvas();
-	createRightCanvas();
+	var canvas_left = createLeftCanvas();
+	var canvas_center = createCenterCanvas();
+	var canvas_right = createRightCanvas();
 	
-
 	document.body.appendChild(canvas_left);
 	document.body.appendChild(canvas_right);
 	document.body.appendChild(canvas_center);
 
-	createCanvasOverlays();
-	setupPegs();
+	var overlay_left = createLeftOverlayPanel();
+	var overlay_center = createCenterOverlayPanel();
+	var overlay_right = createRightOverlayPanel();
+	
+	document.body.appendChild(overlay_left);
+	document.body.appendChild(overlay_center);
+	document.body.appendChild(overlay_right);
+
+	setupPegs(overlay_left, overlay_center, overlay_right);
 
 	loadSplatterImages();
+
+	LeftPanel = new Panel(canvas_left, overlay_left, left_pegs);
+	CenterPanel = new Panel(canvas_center, overlay_center, center_pegs);
+	RightPanel = new Panel(canvas_right, overlay_right, right_pegs);
 
 	img = new Image();
 	img.onload = imageLoaded;
 	img.src = 'background_slice@2x.jpg';
-
-	
 };
 
 function loadSplatterImages() {
@@ -66,48 +71,44 @@ function randomSplat() {
 
 function createCanvasOverlays() {
 	
-	
-	createLeftOverlayPanel();
-	createCenterOverlayPanel();
-	createRightOverlayPanel();
-	
-
-	document.body.appendChild(overlay_left);
-	document.body.appendChild(overlay_center);
-	document.body.appendChild(overlay_right);
-
 };
 
 function createLeftCanvas() {
-	canvas_left = document.createElement('canvas');
+	var canvas_left = document.createElement('canvas');
 	canvas_left.id     = "canvas_left";
 	canvas_left.width  = width;
 	canvas_left.height = window.innerHeight;
 	canvas_left.style.zIndex   = 8;
 	canvas_left.style.borderLeft  = "5px solid #806f50";
 	canvas_left.style.borderRight   = "5px solid #806f50";
+
+	return canvas_left;
 }
 
 function createCenterCanvas() {
-	canvas_center = document.createElement('canvas');
+	var canvas_center = document.createElement('canvas');
 	canvas_center.id     = "canvas_center";
 	canvas_center.width  = width;
 	canvas_center.height = window.innerHeight;
 	canvas_center.style.zIndex   = 8;
 	canvas_center.style.borderRight   = "5px solid #806f50";
+
+	return canvas_center;
 }
 
 function createRightCanvas() {
-	canvas_right = document.createElement('canvas');
+	var canvas_right = document.createElement('canvas');
 	canvas_right.id     = "canvas_right";
 	canvas_right.width  = width;
 	canvas_right.height = window.innerHeight;
 	canvas_right.style.zIndex   = 8;
 	canvas_right.style.borderRight   = "5px solid #806f50";
+
+	return canvas_right;
 }
 
 function createLeftOverlayPanel() {
-	overlay_left = document.createElement('canvas');
+	var overlay_left = document.createElement('canvas');
 	overlay_left.id     = "overlay_left";
 	overlay_left.width  = width + 10;
 	overlay_left.height = window.innerHeight;
@@ -115,10 +116,12 @@ function createLeftOverlayPanel() {
 	overlay_left.style.position   = 'absolute';
 	overlay_left.style.top   = 0;
 	overlay_left.style.left   = 0;
+
+	return overlay_left;
 }
 
 function createCenterOverlayPanel() {
-	overlay_center = document.createElement('canvas');
+	var overlay_center = document.createElement('canvas');
 	overlay_center.id     = "overlay_left";
 	overlay_center.width  = width + 5;
 	overlay_center.height = window.innerHeight;
@@ -126,10 +129,12 @@ function createCenterOverlayPanel() {
 	overlay_center.style.position   = 'absolute';
 	overlay_center.style.top   = 0;
 	overlay_center.style.left   = width+10;
+
+	return overlay_center;
 }
 
 function createRightOverlayPanel() {
-	overlay_right = document.createElement('canvas');
+	var overlay_right = document.createElement('canvas');
 	overlay_right.id     = "overlay_right";
 	overlay_right.width  = width + 5;
 	overlay_right.height = window.innerHeight;
@@ -137,9 +142,11 @@ function createRightOverlayPanel() {
 	overlay_right.style.position   = 'absolute';
 	overlay_right.style.top   = 0;
 	overlay_right.style.left   = (2*width)+15;
+
+	return overlay_right;
 }
 
-function setupPegs() {
+function setupPegs(overlay_left, overlay_center, overlay_right) {
 
 	for(var i = 0; i < window.innerHeight; i += (window.innerHeight / 8)) {
 		var x = randomValue(90, width-100);
@@ -202,156 +209,65 @@ window.requestAnimationFrame = window.requestAnimationFrame
                 || window.mozRequestAnimationFrame
                 || function(callback) { window.setTimeout(callback, 1000 / 60); };
 
-
 function draw(delta) {
 	if(timer < 1700) {timer += 1;}
-
     totalSeconds += delta;
 
-    var vx = 15; // the background scrolls with a speed of 100 pixels/sec
-    var numImages = Math.ceil(canvas_left.height / img.height) + 1;
-    var xpos = totalSeconds * vx % img.height;
-    
-    canvas_left.getContext('2d').save();
-    canvas_left.getContext('2d').translate(0, xpos);
-    
-    for (var i = 0; i < numImages; i++) {
-        canvas_left.getContext('2d').drawImage(img, 0, -6500);
-    }
-    
-    canvas_left.getContext('2d').restore();
+    LeftPanel.moveBG(totalSeconds, img, -5500);
+    CenterPanel.moveBG(totalSeconds, img, -5700);
+    RightPanel.moveBG(totalSeconds, img, -5200);
 
-    canvas_center.getContext('2d').save();
-    canvas_center.getContext('2d').translate(0, xpos);
-    
-    for (var i = 0; i < numImages; i++) {
-        canvas_center.getContext('2d').drawImage(img, 0,  -6700);
-    }
-    
-    canvas_center.getContext('2d').restore();
+    LeftPanel.drawPegs(mousePos);
+    CenterPanel.drawPegs(mousePos);
+    RightPanel.drawPegs(mousePos);
 
-    canvas_right.getContext('2d').save();
-    canvas_right.getContext('2d').translate(0, xpos);
-    
-    for (var i = 0; i < numImages; i++) {
-        canvas_right.getContext('2d').drawImage(img, 0,  -6300);
-    }
-    
-    canvas_right.getContext('2d').restore();
+    fakeGamePlay();
+}
 
 
-    overlay_left.getContext("2d").clearRect(0, 0, overlay_left.width, overlay_left.height);
-    left_pegs.forEach(function(peg) {
-    	peg.draw();
-    	peg.y += .25;
-
-    	var mX = mousePos.x;
-	    var mY = mousePos.y;
-	    if(mX >= peg.x && mX < peg.x+peg.width && mY >= peg.y && mY < peg.y+peg.height && peg.player_assigned) {
-	    	peg.activated = true;
-	    	if(!peg.splatter_sprite) {
-	    		peg.splatter_sprite = randomSplat();
-	    	}
-	    }
-
-    	if (peg.y > window.innerHeight) {  //Repeat the raindrop when it falls out of view
-	        peg.y = -100 //Account for the image size
-	        peg.x = randomValue(90, width-110);
-	        peg.activated = false;   
-	        peg.splatter_sprite = null;
-	    }
-  	});
-
-    overlay_center.getContext("2d").clearRect(0, 0, overlay_left.width, overlay_left.height);
-    center_pegs.forEach(function(peg) {
-    	peg.draw();
-    	peg.y += .25;
-
-    	var mX = mousePos.x;
-	    var mY = mousePos.y;
-	    if(mX >= peg.x && mX < peg.x+peg.width && mY >= peg.y && mY < peg.y+peg.height && peg.player_assigned) {
-	    	peg.activated = true;
-	    	if(!peg.splatter_sprite) {
-	    		peg.splatter_sprite = randomSplat();
-	    	}
-	    }
-
-    	if (peg.y > window.innerHeight) {  //Repeat the raindrop when it falls out of view
-	        peg.y = -100 //Account for the image size
-	        peg.x = randomValue(90, width-110);
-	        peg.activated = false;   
-	        peg.splatter_sprite = null;
-	    }
-  	});
-
-  	overlay_right.getContext("2d").clearRect(0, 0, overlay_left.width, overlay_left.height);
-    
-    right_pegs.forEach(function(peg) {
-    	peg.draw();
-    	peg.y += .25;
-
-    	var mX = mousePos.x;
-	    var mY = mousePos.y;
-	    if(mX >= peg.x && mX < peg.x+peg.width && mY >= peg.y && mY < peg.y+peg.height && peg.player_assigned) {
-	    	peg.activated = true;
-
-	    	if(!peg.splatter_sprite) {
-	    		peg.splatter_sprite = randomSplat();
-	    	}
-	    }
-
-    	if (peg.y > window.innerHeight) {  //Repeat the raindrop when it falls out of view
-	        peg.y = -100 //Account for the image size
-	        peg.x = randomValue(90, width-110);
-	        peg.activated = false;   
-	        peg.splatter_sprite = null;
-	    }
-
-  	});
-
-  	if(timer == 350) {
-  		left_pegs.forEach(function(peg) {
+function fakeGamePlay(){
+	if(timer == 350) {
+  		LeftPanel.pegs.forEach(function(peg) {
   			peg.playerHasEntered(2);
   			peg.player_assigned = true;
   		});
   	}
 
   	if(timer == 700) {
-  		center_pegs.forEach(function(peg) {
+  		CenterPanel.pegs.forEach(function(peg) {
   			peg.playerHasEntered(4);
   			peg.player_assigned = true;
   		});
   	}
 
   	if(timer == 1050) {
-  		right_pegs.forEach(function(peg) {
+  		RightPanel.pegs.forEach(function(peg) {
   			peg.playerHasEntered(3);
   			peg.player_assigned = true;
   		});
   	}
 
   	if(timer == 1400) {
-  		center_pegs.forEach(function(peg) {
+  		CenterPanel.pegs.forEach(function(peg) {
   			peg.player_assigned = false;
   		});
   	}
 
   	if(timer == 1600) {
-  		right_pegs.forEach(function(peg) {
+  		RightPanel.pegs.forEach(function(peg) {
   			peg.player_assigned = false;
   		});
   	}
 
   	if(timer == 1100) {
-  		left_pegs.forEach(function(peg) {
+  		LeftPanel.pegs.forEach(function(peg) {
   			peg.player_assigned = false;
   		});
   	}
 }
 
-
 init();
 
-overlay_center.addEventListener('mousemove', function(evt) {
-	mousePos = getMousePos(overlay_center, evt);
+CenterPanel.overlay_canvas.addEventListener('mousemove', function(evt) {
+	mousePos = getMousePos(CenterPanel.overlay_canvas, evt);
 }, false);

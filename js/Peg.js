@@ -4,12 +4,13 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 	I.x = x;
 	I.y = y;
 	I.pegIndex = index;
-	I.activated = false;
-	I.currentlyActive = false;
 	I.width = 120;
 	I.height = 120;
 
 	I.player_assigned = false;
+	I.activated = false;
+	I.currentlyActive = false;
+	I.showSpecialPeg = false;
 
 	I.canvas = canvas;
 	I.context = canvas.getContext('2d');
@@ -32,7 +33,11 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 
 		if(this.player_assigned) {
 			if(!this.activated) {
-				this.sprite.draw(this.context, this.x, this.y, null, null, this.width, this.height);
+				if(!this.showSpecialPeg) {
+					this.sprite.draw(this.context, this.x, this.y, null, null, this.width, this.height);
+				} else {
+					this.special_sprite.draw(this.context, this.x, this.y, null, null, this.width, this.height);
+				}
 			} else {
 				if(this.splatter_sprite) {
 					this.splatter_sprite.draw(this.context, this.x, this.y, null, null, this.width, this.height);
