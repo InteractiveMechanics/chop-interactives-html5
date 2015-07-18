@@ -75,28 +75,29 @@
                                   that._instructions.paused = false;
                                   console.log('Show instructions for Player ' + p);
 
-                                  if (!that._climbCanvas._center_pegs_player) {
+                                  // If our player is in the center, and it isn't taken yet, start there
+                                  if (players[p]['spine']['pos']['x'] > 640 && players[p]['spine']['pos']['x'] < 1280 && !that._centerPanelPlayer) {
+                                      that._centerPanelPlayer = p;
                                       that._climbCanvas._center_pegs.forEach(function (peg) {
-                                          that._climbCanvas._center_pegs_player = p;
                                           peg.playerHasEntered(p);
                                           peg.player_assigned = true;
                                       });
-                                  } else {
-                                      if (!that._climbCanvas._left_pegs_player) {
-                                          that._climbCanvas._left_pegs.forEach(function (peg) {
-                                              that._climbCanvas._left_pegs_player = p;
-                                              peg.playerHasEntered(p);
-                                              peg.player_assigned = true;
-                                          });
-                                      } else {
-                                          if (!that._climbCanvas._right_pegs_player) {
-                                              that._climbCanvas._right_pegs.forEach(function (peg) {
-                                                  that._climbCanvas._right_pegs_player = p;
-                                                  peg.playerHasEntered(p);
-                                                  peg.player_assigned = true;
-                                              });
-                                          }
-                                      }
+                                  }
+                                  // If our player is on the left, and it isn't taken yet, start there
+                                  if (players[p]['spine']['pos']['x'] > 0 && players[p]['spine']['pos']['x'] < 640 && !that._leftPanelPlayer) {
+                                        that._leftPanelPlayer = p;
+                                        that._climbCanvas._left_pegs.forEach(function (peg) {
+                                            peg.playerHasEntered(p);
+                                            peg.player_assigned = true;
+                                        });
+                                  }
+                                  // If our player is on the right, and it isn't taken yet, start there
+                                  if (players[p]['spine']['pos']['x'] > 1280 && players[p]['spine']['pos']['x'] < 1920 && !that._rightPanelPlayer) {
+                                        that._rightPanelPlayer = p;
+                                        that._climbCanvas._right_pegs.forEach(function (peg) {
+                                            peg.playerHasEntered(p);
+                                            peg.player_assigned = true;
+                                        });
                                   }
 
                                   setTimeout(function () {
@@ -112,7 +113,22 @@
                   // if there are less players than the max
                   // draw their hands and do everything we need to do on-screen
                   if (activePlayers.length <= constants.maxPlayers && index > -1) {
-                      this.drawHands(p, players[p], this._lastPlayers[p]);
+                      if (this._leftPanelPlayer === p) {
+                          var panel = 0;
+                          var pegs = that._climbCanvas._left_pegs;
+                      }
+                      if (this._centerPanelPlayer === p) {
+                          var panel = 1;
+                          var pegs = that._climbCanvas._center_pegs;
+                      }
+                      if (this._rightPanelPlayer === p) {
+                          var panel = 2;
+                          var pegs = that._climbCanvas._right_pegs;
+                      }
+
+                      this.drawHands(p, players[p], this._lastPlayers[p], panel);
+                      this._climbCanvas.detectActivated(players[p]['right'], pegs, panel);
+                      this._climbCanvas.detectActivated(players[p]['left'], pegs, panel);
                   }
               }
               for (var l in lastPlayers) {
@@ -122,22 +138,28 @@
 
                       if (index > -1) {
                           activePlayers.splice(index, 1);
-                          if (that._climbCanvas._center_pegs_player == l) {
-                              that._climbCanvas._center_pegs_player = null;
+                          if (that._centerPanelPlayer == l) {
+                              that._centerPanelPlayer = null;
                               that._climbCanvas._center_pegs.forEach(function (peg) {
-                                  peg.player_assigned = false;
+                                  if (!peg.splatter_sprite) {
+                                      peg.player_assigned = false;
+                                  }
                               });
                           }
-                          if (that._climbCanvas._left_pegs_player == l) {
-                              that._climbCanvas._left_pegs_player = null;
+                          if (that._leftPanelPlayer == l) {
+                              that._leftPanelPlayer = null;
                               that._climbCanvas._left_pegs.forEach(function (peg) {
-                                  peg.player_assigned = false;
+                                  if (!peg.splatter_sprite) {
+                                      peg.player_assigned = false;
+                                  }
                               });
                           }
-                          if (that._climbCanvas._right_pegs_player == l) {
-                              that._climbCanvas._right_pegs_player = null;
+                          if (that._rightPanelPlayer == l) {
+                              that._rightPanelPlayer = null;
                               that._climbCanvas._right_pegs.forEach(function (peg) {
-                                  peg.player_assigned = false;
+                                  if (!peg.splatter_sprite) {
+                                      peg.player_assigned = false;
+                                  }
                               });
                           }
                           console.log("Player " + l + " left the game.");
@@ -157,6 +179,9 @@
                       pendingPlayers = [];
                       lastPlayers = {};
                       lastConfidentPlayers = {};
+                      that._rightPanelPlayer = null;
+                      that._leftPanelPlayer = null;
+                      that._centerPanelPlayer = null;
                       that._activeReset = false;
                       console.log("No players present, reseting the game.");
                   }, constants.resetTimeoutDuration);
@@ -190,10 +215,19 @@
               this._climbCanvas.draw();
               this._lastPlayers = players;
           },
-          drawHands: function (p, player, lastPlayer) {
+          drawHands: function (p, player, lastPlayer, panel) {
               var context = this._context;
               var rightHand = new Image();
               var leftHand = new Image();
+
+              var spineX = player['spine']['pos']['x'];
+              var minX = spineX - 320;
+              var maxX = spineX + 320;
+              var panelMinX = 640 * panel - 30;
+              var panelMaxX = 640 * (panel + 1) + 30;
+
+              player['right']['pos']['x'] = this.map_range(player['right']['pos']['x'], minX, maxX, panelMinX, panelMaxX);
+              player['left']['pos']['x'] = this.map_range(player['left']['pos']['x'], minX, maxX, panelMinX, panelMaxX);
 
               // If the kinect is confident and is able to accurately track the hand, then use that date and store it for the future
               // if the kinect is not confident and is not able to accurately track the hand, then use the last set of confident data that was stored
@@ -246,6 +280,9 @@
               }
               context.restore();
           },
+          map_range: function (value, low1, high1, low2, high2) {
+              return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
+          },
           showInstructions: function () {
               var context = this._instructionsContext;
               var that = this;
@@ -271,6 +308,11 @@
           _activePlayers: null,
           _pendingPlayers: null,
           _totalBodies: 0,
+
+          // Keep track of who is which quadrant
+          _leftPanelPlayer: null,
+          _centerPanelPlayer: null,
+          _rightPanelPlayer: null,
 
           // For alerts and messages
           _activeAlert: false,

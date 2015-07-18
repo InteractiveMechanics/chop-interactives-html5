@@ -43,29 +43,23 @@
     
                 this._canvas_left.getContext('2d').save();
                 this._canvas_left.getContext('2d').translate(0, xpos);
-    
                 for (var i = 0; i < numImages; i++) {
                     this._canvas_left.getContext('2d').drawImage(this._img, 0, -6500);
                 }
-    
                 this._canvas_left.getContext('2d').restore();
 
                 this._canvas_center.getContext('2d').save();
                 this._canvas_center.getContext('2d').translate(0, xpos);
-    
                 for (var i = 0; i < numImages; i++) {
                     this._canvas_center.getContext('2d').drawImage(this._img, 0, -6700);
                 }
-    
                 this._canvas_center.getContext('2d').restore();
 
                 this._canvas_right.getContext('2d').save();
                 this._canvas_right.getContext('2d').translate(0, xpos);
-    
                 for (var i = 0; i < numImages; i++) {
                     this._canvas_right.getContext('2d').drawImage(this._img, 0, -6300);
                 }
-    
                 this._canvas_right.getContext('2d').restore();
 
 
@@ -73,15 +67,6 @@
                 this._left_pegs.forEach(function (peg) {
                     peg.draw();
                     peg.y += .25;
-
-                    var mX = 0;
-                    var mY = 0;
-                    if(mX >= peg.x && mX < peg.x+peg.width && mY >= peg.y && mY < peg.y+peg.height && peg.player_assigned) {
-                        peg.activated = true;
-                        if(!peg.splatter_sprite) {
-                            peg.splatter_sprite = that.randomSplat();
-                        }
-                    }
 
                     if (peg.y > window.innerHeight) {  //Repeat the raindrop when it falls out of view
                         peg.y = -100 //Account for the image size
@@ -96,15 +81,6 @@
                     peg.draw();
                     peg.y += .25;
 
-                    var mX = 0;
-                    var mY = 0;
-                    if(mX >= peg.x && mX < peg.x+peg.width && mY >= peg.y && mY < peg.y+peg.height && peg.player_assigned) {
-                        peg.activated = true;
-                        if(!peg.splatter_sprite) {
-                            peg.splatter_sprite = that.randomSplat();
-                        }
-                    }
-
                     if (peg.y > window.innerHeight) {  //Repeat the raindrop when it falls out of view
                         peg.y = -100 //Account for the image size
                         peg.x = that.randomValue(90, that._width - 110);
@@ -114,20 +90,9 @@
                 });
 
                 this._overlay_right.getContext("2d").clearRect(0, 0, this._overlay_left.width, this._overlay_left.height);
-    
                 this._right_pegs.forEach(function (peg) {
                     peg.draw();
                     peg.y += .25;
-
-                    var mX = 0;
-                    var mY = 0;
-                    if (mX >= peg.x && mX < peg.x + peg.width && mY >= peg.y && mY < peg.y + peg.height && peg.player_assigned) {
-                        peg.activated = true;
-
-                        if (!peg.splatter_sprite) {
-                            peg.splatter_sprite = that.randomSplat();
-                        }
-                    }
 
                     if (peg.y > window.innerHeight) {  //Repeat the raindrop when it falls out of view
                         peg.y = -100 //Account for the image size
@@ -137,11 +102,26 @@
                     }
                 });
           },
+          detectActivated: function (player, pegs, panel) {
+              var that = this;
+              var mX = player['pos']['x'] - (640 * panel);
+              var mY = player['pos']['y'];
+
+              pegs.forEach(function (peg) {
+                  if (mX >= peg.x && mX < peg.x + peg.width && mY >= peg.y && mY < peg.y + peg.height && player['status'] === 'closed') {
+                      peg.activated = true;
+
+                      if (!peg.splatter_sprite) {
+                          peg.splatter_sprite = that.randomSplat();
+                      }
+                  }
+              });
+          },
 
           loadSplatterImages: function () {
-	        for(var i = 0; i < 40; i++) {
+	        for(var i = 0; i < 60; i++) {
 	            var filename = "images/paint-splatters/splatter_" + i + '.png';
-	            this._paint_splatters.push(Sprite(filename));
+	            this._paint_splatters.push(new Sprite('splatter', new ImagePainter(filename)));
 	        }
           },
           randomSplat: function () {
@@ -160,63 +140,39 @@
           createLeftCanvas: function () {
               this._canvas_left = document.createElement('canvas');
               this._canvas_left.id = "canvas_left";
-              this._canvas_left.width = this._width;
+              this._canvas_left.width = 635;
               this._canvas_left.height = window.innerHeight;
-              this._canvas_left.style.zIndex = 8;
-              this._canvas_left.style.borderLeft = "5px solid #806f50";
-              this._canvas_left.style.borderRight = "5px solid #806f50";
-              this._canvas_left.style.top = 0;
           },
           createCenterCanvas: function () {
               this._canvas_center = document.createElement('canvas');
               this._canvas_center.id = "canvas_center";
-              this._canvas_center.width = this._width;
+              this._canvas_center.width = 635;
               this._canvas_center.height = window.innerHeight;
-              this._canvas_center.style.zIndex = 8;
-              this._canvas_center.style.borderRight = "5px solid #806f50";
-              this._canvas_center.style.top = 0;
           },
           createRightCanvas: function () {
               this._canvas_right = document.createElement('canvas');
               this._canvas_right.id = "canvas_right";
-              this._canvas_right.width = this._width;
+              this._canvas_right.width = 635;
               this._canvas_right.height = window.innerHeight;
-              this._canvas_right.style.zIndex = 8;
-              this._canvas_right.style.borderRight = "5px solid #806f50";
-              this._canvas_right.style.top = 0;
           },
 
           createLeftOverlayPanel: function () {
               this._overlay_left = document.createElement('canvas');
               this._overlay_left.id = "overlay_left";
-              this._overlay_left.width = this._width + 10;
+              this._overlay_left.width = 635;
               this._overlay_left.height = window.innerHeight;
-              this._overlay_left.style.zIndex = 15;
-              this._overlay_left.style.position = 'absolute';
-              this._overlay_left.style.top = 0;
-              this._overlay_left.style.left = 0;
           },
           createCenterOverlayPanel: function () {
-              var left = this._width + 10;
               this._overlay_center = document.createElement('canvas');
-              this._overlay_center.id = "overlay_left";
-              this._overlay_center.width = this._width + 5;
+              this._overlay_center.id = "overlay_center";
+              this._overlay_center.width = 635;
               this._overlay_center.height = window.innerHeight;
-              this._overlay_center.style.zIndex = 15;
-              this._overlay_center.style.position = 'absolute';
-              this._overlay_center.style.top = 0;
-              this._overlay_center.style.left = left + 'px';
           },
           createRightOverlayPanel: function () {
-              var left = (2 * this._width) + 15;
               this._overlay_right = document.createElement('canvas');
               this._overlay_right.id = "overlay_right";
-              this._overlay_right.width = this._width + 5;
+              this._overlay_right.width = 635;
               this._overlay_right.height = window.innerHeight;
-              this._overlay_right.style.zIndex = 15;
-              this._overlay_right.style.position = 'absolute';
-              this._overlay_right.style.top = 0;
-              this._overlay_right.style.left = left + 'px';
           },
 
           setupPegs: function () {
@@ -272,14 +228,10 @@
           _right_pegs: [],
           _center_pegs: [],
 
-          _left_pegs_player: null,
-          _right_pegs_player: null,
-          _center_pegs_player: null,
-
           _paint_splatters: [],
 
           _img: null,
-          _width: (window.innerWidth / 3) - 7
+          _width: 635
       }
     );
 

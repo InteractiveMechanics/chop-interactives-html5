@@ -38,10 +38,10 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 				this.sprite.paint(this.context);
 			} else {
 		        if (this.splatter_sprite) {
-		            this.splatter_sprite.width = this.width;
-		            this.splatter_sprite.height = this.height;
-		            this.splatter_sprite.left = this.x;
-		            this.splatter_sprite.top = this.y;
+		            this.splatter_sprite.width = 200;
+		            this.splatter_sprite.height = 200;
+		            this.splatter_sprite.left = this.x - 40;
+		            this.splatter_sprite.top = this.y - 40;
 					this.splatter_sprite.paint(this.context);
 				}
 			}

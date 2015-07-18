@@ -1,13 +1,44 @@
-﻿#instructionsCanvas {
+﻿canvas {
+    position: absolute;
+    top: 0;
+}
+
+#instructionsCanvas {
     z-index: 50;
 }
 #kinectCanvas {
     z-index: 40;
 }
+#canvas_left,
+#canvas_center,
+#canvas_right {
+    border-left: 5px solid #806f50;
+    z-index: 8;
+}
 
-#instructionsCanvas,
-#kinectCanvas {
-    position: absolute;
-    top: 0;
+#overlay_left,
+#overlay_center,
+#overlay_right {
+    z-index: 10;
+}
+
+#canvas_left {
     left: 0;
+}
+#overlay_left {
+    left: 5px;
+}
+
+#canvas_center {
+    left: 640px;
+}
+#overlay_center {
+    left: 645px;
+}
+
+#canvas_right {
+    left: 1280px;
+}
+#overlay_right {
+    left: 1285px;
 }
