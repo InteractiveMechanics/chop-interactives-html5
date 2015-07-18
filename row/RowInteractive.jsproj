@@ -121,10 +121,8 @@
     <Content Include="images\water@2x.png" />
     <Content Include="js\default.js" />
     <Content Include="js\kinectCanvas.js" />
-    <Content Include="js\iterable.js" />
+    <Content Include="js\Iterable.js" />
     <Content Include="js\kinectController.js" />
-    <Content Include="js\lib\jquery-1.11.2.min.js" />
-    <Content Include="js\lib\jquery-1.11.3.js" />
     <Content Include="js\Lilypad.js" />
     <Content Include="js\Boat.js" />
     <Content Include="js\Instructions.js" />

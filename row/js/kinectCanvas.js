@@ -67,7 +67,7 @@
 
                           this._newPlayerTimeout = setTimeout(function () {
                               pendingPlayers.splice(pending, 1);
-                              if (players[p] && index === -1 && activePlayers.length <= constants.maxPlayers) {
+                              if (players[p] && index === -1 && activePlayers.length < constants.maxPlayers) {
                                   activePlayers.push(p);
                                   lastConfidentPlayers[p] = players[p];
                                   lastPlayers[p] = players[p];
