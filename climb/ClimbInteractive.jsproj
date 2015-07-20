@@ -261,6 +261,7 @@
     <Content Include="js\kinectCanvas.js" />
     <Content Include="js\Iterable.js" />
     <Content Include="js\kinectController.js" />
+    <Content Include="js\Panel.js" />
     <Content Include="js\Peg.js" />
     <Content Include="js\Sprite.js" />
     <None Include="KinectMotionDemo_TemporaryKey.pfx" />

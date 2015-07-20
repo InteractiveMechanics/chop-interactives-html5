@@ -24,7 +24,7 @@
               document.body.appendChild(overlay_center);
               document.body.appendChild(overlay_right);
               
-              setupPegs(overlay_left, overlay_center, overlay_right);
+              this.setupPegs(overlay_left, overlay_center, overlay_right);
 
               this.loadSplatterImages();
 
@@ -52,9 +52,9 @@
                 this._CenterPanel.moveBG(this._totalSeconds, this._img, -5700);
                 this._RightPanel.moveBG(this._totalSeconds, this._img, -5200);
                 
-                this._LeftPanel.drawPegs(mousePos);
-                this._CenterPanel.drawPegs(mousePos);
-                this._RightPanel.drawPegs(mousePos);
+                this._LeftPanel.drawPegs();
+                this._CenterPanel.drawPegs();
+                this._RightPanel.drawPegs();
           },
           detectActivated: function (player, pegs, panel) {
               var that = this;
@@ -63,7 +63,7 @@
 
               pegs.forEach(function (peg) {
                   if (mX >= peg.x && mX < peg.x + peg.width && mY >= peg.y && mY < peg.y + peg.height && player['status'] === 'closed') {
-                      peg.counter++;
+                      peg.counter = peg.counter + 3;
 
                       if (!peg.splatter_sprite && peg.counter > 30) {
                           peg.activated = true;

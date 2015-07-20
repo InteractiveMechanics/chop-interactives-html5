@@ -24,25 +24,17 @@ function Panel(bg_canvas, overlay_canvas, pegs) {
     	this.bg_canvas.getContext('2d').restore();
 	}
 
-	I.drawPegs = function(mousePos) {
+	I.drawPegs = function () {
+	    var that = this;
 		this.overlay_canvas.getContext("2d").clearRect(0, 0, this.overlay_canvas.width, this.overlay_canvas.height);
 	    
 	    this.pegs.forEach(function(peg) {
 	    	peg.draw();
 	    	peg.y += .25;
 
-	    	var mX = mousePos.x;
-		    var mY = mousePos.y;
-		    if(mX >= peg.x && mX < peg.x+peg.width && mY >= peg.y && mY < peg.y+peg.height && peg.player_assigned) {
-		    	peg.activated = true;
-		    	if(!peg.splatter_sprite) {
-		    		peg.splatter_sprite = randomSplat();
-		    	}
-		    }
-
 	    	if (peg.y > window.innerHeight) {  //Repeat the raindrop when it falls out of view
 		        peg.y = -100 //Account for the image size
-		        peg.x = randomValue(90, width-110);
+		        peg.x = randomValue(90, that.overlay_canvas.width - 110);
 		        peg.activated = false;   
 		        peg.splatter_sprite = null;
 		    }
@@ -50,4 +42,8 @@ function Panel(bg_canvas, overlay_canvas, pegs) {
 	}
 
 	return I;
+}
+
+function randomValue (min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }

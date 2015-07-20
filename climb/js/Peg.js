@@ -60,24 +60,32 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 	I.draw = function() {
 		if(this.player_assigned) {
 		    if (!this.activated) {
-		        context.shadowBlur = this.counter * 3;
-		        context.shadowOffsetX = 0;
-		        context.shadowOffsetY = 0;
-
 		        if (!this.showSpecialPeg) {
-		            context.shadowColor = this.color;
+		            this.context.save();
+		            this.context.shadowColor = this.color;
+		            this.context.shadowBlur = this.counter * 3;
+		            this.context.shadowOffsetX = 0;
+		            this.context.shadowOffsetY = 0;
+
 		            this.sprite.width = this.width;
 		            this.sprite.height = this.height;
 		            this.sprite.left = this.x;
 		            this.sprite.top = this.y;
 		            this.sprite.paint(this.context);
+		            this.context.restore();
 		        } else {
-		            context.shadowColor = '#FFF033';
+		            this.context.save();
+		            this.context.shadowColor = '#FFF033';
+		            this.context.shadowBlur = this.counter * 3;
+		            this.context.shadowOffsetX = 0;
+		            this.context.shadowOffsetY = 0;
+
 		            this.special_sprite.width = this.width;
 		            this.special_sprite.height = this.height;
 		            this.special_sprite.left = this.x;
 		            this.special_sprite.top = this.y;
 		            this.special_sprite.paint(this.context);
+		            this.context.restore();
 		        }
 			} else {
 		        if (this.splatter_sprite) {
