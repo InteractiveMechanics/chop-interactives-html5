@@ -19,6 +19,10 @@ var mousePos = {
 	y: 5
 };
 
+var image1;
+var image2;
+var image3;
+
 function getMousePos(_canvas, evt) {
     var rect = _canvas.getBoundingClientRect();
     return {
@@ -53,9 +57,32 @@ function init() {
 	CenterPanel = new Panel(canvas_center, overlay_center, center_pegs);
 	RightPanel = new Panel(canvas_right, overlay_right, right_pegs);
 
-	img = new Image();
-	img.onload = imageLoaded;
-	img.src = 'background_slice@2x.jpg';
+	image1 = new Image();
+	image1.onload = loadImageOne;
+	image1.src = 'background_slice@2x.jpg';
+};
+
+
+function loadImageOne() {
+	image2 = new Image();
+	image2.onload = loadImageTwo;
+	image2.src = 'background_slice@2x.jpg';
+};
+
+function loadImageTwo() {
+	image3 = new Image();
+	image3.onload = loadImageThree;
+	image3.src = 'background_slice@2x.jpg';
+};
+
+function loadImageThree() {
+
+	LeftPanel.bg_image = image1;
+	CenterPanel.bg_image = image2;
+	RightPanel.bg_image = image3;
+
+	draw(0);
+    loop();
 };
 
 function loadSplatterImages() {
@@ -191,8 +218,7 @@ var totalSeconds = 0;
 
 
 function imageLoaded() {
-    draw(0);
-    loop();
+    
 }
 
 function loop() {
@@ -213,9 +239,9 @@ function draw(delta) {
 	if(timer < 1700) {timer += 1;}
     totalSeconds += delta;
 
-    LeftPanel.moveBG(totalSeconds, img, -5500);
-    CenterPanel.moveBG(totalSeconds, img, -5700);
-    RightPanel.moveBG(totalSeconds, img, -5200);
+    LeftPanel.moveBG();
+    CenterPanel.moveBG();
+    RightPanel.moveBG();
 
     LeftPanel.drawPegs(mousePos);
     CenterPanel.drawPegs(mousePos);
