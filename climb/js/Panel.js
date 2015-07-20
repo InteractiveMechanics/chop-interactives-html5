@@ -22,20 +22,23 @@ function Panel(bg_canvas, overlay_canvas, pegs) {
 		return totalSeconds * this.speed % height;
 	}
 
-	I.moveBG = function(totalSeconds, img, val) {
-	    this.bg_canvas.getContext('2d').drawImage(img,0,this.startY);
-	    this.bg_canvas.getContext('2d').drawImage(img,0,this.startY2);
-	    
-        if (this.startY > img.height) {
-            this.startY = -(img.height-1);
-        }
-	   
-        if (this.startY2 > img.height) {
-            this.startY2 = -(img.height-1);
-        }
-	    
-        this.startY += this.speed;
-	    this.startY2 += this.speed;
+	I.moveBG = function () {
+	    if (this.bg_image) {
+
+	        this.bg_canvas.getContext('2d').drawImage(this.bg_image, 0, this.startY);
+	        this.bg_canvas.getContext('2d').drawImage(this.bg_image, 0, this.startY2);
+
+	        if (this.startY > this.bg_image.height) {
+	            this.startY = -(this.bg_image.height - 1);
+	        }
+
+	        if (this.startY2 > this.bg_image.height) {
+	            this.startY2 = -(this.bg_image.height - 1);
+	        }
+
+	        this.startY += this.speed;
+	        this.startY2 += this.speed;
+	    }
 	}
 
 	I.drawPegs = function () {

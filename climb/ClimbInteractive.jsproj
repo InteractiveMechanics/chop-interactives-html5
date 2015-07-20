@@ -57,7 +57,9 @@
     </AppxManifest>
     <Content Include="default.html" />
     <Content Include="images\background@2x.png" />
-    <Content Include="images\background_slice@2x.jpg" />
+    <Content Include="images\background_slice01@2x.jpg" />
+    <Content Include="images\background_slice02@2x.jpg" />
+    <Content Include="images\background_slice03@2x.jpg" />
     <Content Include="images\instructions@2x.png" />
     <Content Include="images\logo.scale-100.png" />
     <Content Include="images\logo.scale-140.png" />

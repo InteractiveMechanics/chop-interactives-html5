@@ -32,12 +32,25 @@
               this._CenterPanel = new Panel(canvas_center, overlay_center, this._center_pegs);
               this._RightPanel = new Panel(canvas_right, overlay_right, this._right_pegs);
 
-              this._img = new Image();
-              this._img.src = 'images/background_slice@2x.jpg';
+              this._image1 = new Image();
+              this._image2 = new Image();
+              this._image3 = new Image();
+
+              this._image1.src = 'images/background_slice01@2x.jpg';
+              this._image2.src = 'images/background_slice02@2x.jpg';
+              this._image3.src = 'images/background_slice03@2x.jpg';
+
+              this._image3.onload = this.loadImageThree();
           },
           clearScreen: function (context) {
               var context = context;
               context.clearRect(0, 0, 1920, 1080);
+          },
+
+          loadImageThree: function () {
+              this._LeftPanel.bg_image = this._image1;
+              this._CenterPanel.bg_image = this._image2;
+              this._RightPanel.bg_image = this._image3;
           },
 
           draw: function () {
@@ -48,9 +61,9 @@
                 this._lastFrameTime = now;
                 this._totalSeconds += delta;
 
-                this._LeftPanel.moveBG(this._totalSeconds, this._img, -5500);
-                this._CenterPanel.moveBG(this._totalSeconds, this._img, -5700);
-                this._RightPanel.moveBG(this._totalSeconds, this._img, -5200);
+                this._LeftPanel.moveBG();
+                this._CenterPanel.moveBG();
+                this._RightPanel.moveBG();
                 
                 this._LeftPanel.drawPegs();
                 this._CenterPanel.drawPegs();
@@ -188,7 +201,9 @@
 
           _paint_splatters: [],
 
-          _img: null,
+          _image1: null,
+          _image2: null,
+          _image3: null,
           _width: 635
       }
     );
