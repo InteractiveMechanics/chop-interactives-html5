@@ -56,23 +56,27 @@
                 this._CenterPanel.drawPegs();
                 this._RightPanel.drawPegs();
           },
-          detectActivated: function (player, pegs, panel) {
+          detectActivated: function (player, Panel, index) {
               var that = this;
-              var mX = player['pos']['x'] - (640 * panel);
+              var mX = player['pos']['x'] - (640 * index);
               var mY = player['pos']['y'];
 
-              pegs.forEach(function (peg) {
-                  if (mX >= peg.x && mX < peg.x + peg.width && mY >= peg.y && mY < peg.y + peg.height && player['status'] === 'closed') {
-                      peg.counter = peg.counter + 3;
+              if (Panel) {
+                  Panel.pegs.forEach(function (peg) {
+                      if (mX >= peg.x && mX < peg.x + peg.width && mY >= peg.y && mY < peg.y + peg.height && player['status'] === 'closed') {
+                          peg.counter = peg.counter + 2;
 
-                      if (!peg.splatter_sprite && peg.counter > 30) {
-                          peg.activated = true;
-                          peg.splatter_sprite = that.randomSplat();
+                          if (!peg.splatter_sprite && peg.counter > 60) {
+                              peg.activated = true;
+                              peg.splatter_sprite = that.randomSplat();
+
+                              if (Panel.speed < 5) {
+                                  Panel.speed += 0.25;
+                              }
+                          }
                       }
-                  } else {
-                      peg.counter = 0;
-                  }
-              });
+                  });
+              }
           },
 
           loadSplatterImages: function () {

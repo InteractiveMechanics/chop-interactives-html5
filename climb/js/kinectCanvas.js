@@ -86,22 +86,24 @@
                                           peg.playerHasEntered(p);
                                           peg.player_assigned = true;
                                       });
-                                  }
-                                  // If our player is on the left, and it isn't taken yet, start there
-                                  if (players[p]['spine']['pos']['x'] > 0 && players[p]['spine']['pos']['x'] < 640 && !that._leftPanelPlayer) {
-                                        that._leftPanelPlayer = p;
-                                        LeftPanel.pegs.forEach(function (peg) {
-                                            peg.playerHasEntered(p);
-                                            peg.player_assigned = true;
-                                        });
-                                  }
-                                  // If our player is on the right, and it isn't taken yet, start there
-                                  if (players[p]['spine']['pos']['x'] > 1280 && players[p]['spine']['pos']['x'] < 1920 && !that._rightPanelPlayer) {
-                                        that._rightPanelPlayer = p;
-                                        RightPanel.pegs.forEach(function (peg) {
-                                            peg.playerHasEntered(p);
-                                            peg.player_assigned = true;
-                                        });
+                                  } else {
+                                      // If our player is on the left, and it isn't taken yet, start there
+                                      if (players[p]['spine']['pos']['x'] > 0 && players[p]['spine']['pos']['x'] < 640 && !that._leftPanelPlayer) {
+                                          that._leftPanelPlayer = p;
+                                          LeftPanel.pegs.forEach(function (peg) {
+                                              peg.playerHasEntered(p);
+                                              peg.player_assigned = true;
+                                          });
+                                      } else {
+                                          // If our player is on the right, and it isn't taken yet, start there
+                                          if (players[p]['spine']['pos']['x'] > 1280 && players[p]['spine']['pos']['x'] < 1920 && !that._rightPanelPlayer) {
+                                              that._rightPanelPlayer = p;
+                                              RightPanel.pegs.forEach(function (peg) {
+                                                  peg.playerHasEntered(p);
+                                                  peg.player_assigned = true;
+                                              });
+                                          }
+                                      }
                                   }
 
                                   setTimeout(function () {
@@ -119,15 +121,15 @@
                   if (activePlayers.length <= constants.maxPlayers && index > -1) {
                       if (this._leftPanelPlayer === p) {
                           var panel = 0;
-                          var pegs = LeftPanel.pegs;
+                          var pegs = LeftPanel;
                       }
                       if (this._centerPanelPlayer === p) {
                           var panel = 1;
-                          var pegs = CenterPanel.pegs;
+                          var pegs = CenterPanel;
                       }
                       if (this._rightPanelPlayer === p) {
                           var panel = 2;
-                          var pegs = RightPanel.pegs;
+                          var pegs = RightPanel;
                       }
 
                       this.drawHands(p, players[p], this._lastPlayers[p], panel);
@@ -145,25 +147,19 @@
                           if (that._centerPanelPlayer == l) {
                               that._centerPanelPlayer = null;
                               CenterPanel.pegs.forEach(function (peg) {
-                                  if (!peg.splatter_sprite) {
-                                      peg.player_assigned = false;
-                                  }
+                                  peg.player_assigned = false;
                               });
                           }
                           if (that._leftPanelPlayer == l) {
                               that._leftPanelPlayer = null;
                               LeftPanel.pegs.forEach(function (peg) {
-                                  if (!peg.splatter_sprite) {
-                                      peg.player_assigned = false;
-                                  }
+                                  peg.player_assigned = false;
                               });
                           }
                           if (that._rightPanelPlayer == l) {
                               that._rightPanelPlayer = null;
                               RightPanel.pegs.forEach(function (peg) {
-                                  if (!peg.splatter_sprite) {
-                                      peg.player_assigned = false;
-                                  }
+                                  peg.player_assigned = false;
                               });
                           }
                           console.log("Player " + l + " left the game.");

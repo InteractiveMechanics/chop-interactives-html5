@@ -5,7 +5,12 @@ function Panel(bg_canvas, overlay_canvas, pegs) {
 	I.overlay_canvas = overlay_canvas;
 	I.showSpecialPeg = false;
 	I.pegs = pegs;
-	I.speed = 15;
+	I.speed = .25;
+	I.scrollVal = 0;
+	I.bg_image = null;
+	
+    I.startY = 0;
+	I.startY2 = -8100
 
 	I.splatAll = function() {
 		this.pegs.forEach(function(peg) {
@@ -18,10 +23,19 @@ function Panel(bg_canvas, overlay_canvas, pegs) {
 	}
 
 	I.moveBG = function(totalSeconds, img, val) {
-		this.bg_canvas.getContext('2d').save();
-    	this.bg_canvas.getContext('2d').translate(0, this.xPosition(totalSeconds, img.height));
-    	this.bg_canvas.getContext('2d').drawImage(img, 0, val);
-    	this.bg_canvas.getContext('2d').restore();
+	    this.bg_canvas.getContext('2d').drawImage(img,0,this.startY);
+	    this.bg_canvas.getContext('2d').drawImage(img,0,this.startY2);
+	    
+        if (this.startY > img.height) {
+            this.startY = -(img.height-1);
+        }
+	   
+        if (this.startY2 > img.height) {
+            this.startY2 = -(img.height-1);
+        }
+	    
+        this.startY += this.speed;
+	    this.startY2 += this.speed;
 	}
 
 	I.drawPegs = function () {
@@ -30,13 +44,18 @@ function Panel(bg_canvas, overlay_canvas, pegs) {
 	    
 	    this.pegs.forEach(function(peg) {
 	    	peg.draw();
-	    	peg.y += .25;
+	    	peg.y += that.speed;
 
-	    	if (peg.y > window.innerHeight) {  //Repeat the raindrop when it falls out of view
+	    	if (peg.y > window.innerHeight + 100) {  //Repeat the raindrop when it falls out of view
+	    	    if (!peg.activated && that.speed > 0.25) {
+	    	        that.speed -= 0.25;
+	    	    }
+
 		        peg.y = -100 //Account for the image size
 		        peg.x = randomValue(90, that.overlay_canvas.width - 110);
 		        peg.activated = false;   
 		        peg.splatter_sprite = null;
+		        peg.counter = 0;
 		    }
 	  	});
 	}

@@ -32,7 +32,7 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 		var filename = "images/pegs/P" + playerNumber + "/P" + playerNumber + "_" + this.pegIndex + '.png';
 		this.sprite = new Sprite('peg', new ImagePainter(filename));
 
-		switch (playerNumber) {
+		switch (parseInt(playerNumber)) {
 		    case 0:
 		        this.color = '#FF0000';
 		        break;
@@ -63,7 +63,7 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 		        if (!this.showSpecialPeg) {
 		            this.context.save();
 		            this.context.shadowColor = this.color;
-		            this.context.shadowBlur = this.counter * 3;
+		            this.context.shadowBlur = this.counter;
 		            this.context.shadowOffsetX = 0;
 		            this.context.shadowOffsetY = 0;
 
@@ -76,7 +76,7 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 		        } else {
 		            this.context.save();
 		            this.context.shadowColor = '#FFF033';
-		            this.context.shadowBlur = this.counter * 3;
+		            this.context.shadowBlur = this.counter;
 		            this.context.shadowOffsetX = 0;
 		            this.context.shadowOffsetY = 0;
 
@@ -87,21 +87,35 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 		            this.special_sprite.paint(this.context);
 		            this.context.restore();
 		        }
-			} else {
+		    } else {
 		        if (this.splatter_sprite) {
-		            this.splatter_sprite.width = 200;
-		            this.splatter_sprite.height = 200;
-		            this.splatter_sprite.left = this.x - 40;
-		            this.splatter_sprite.top = this.y - 40;
-					this.splatter_sprite.paint(this.context);
-				}
-			}
+		            this.context.save();
+		            this.context.globalAlpha = 0.9;
+		            this.splatter_sprite.width = 400;
+		            this.splatter_sprite.height = 400;
+		            this.splatter_sprite.left = this.x - 140;
+		            this.splatter_sprite.top = this.y - 140;
+		            this.splatter_sprite.paint(this.context);
+		            this.context.restore();
+		        }
+		    }
 		} else {
-		    this.gray_sprite.width = this.width;
-		    this.gray_sprite.height = this.height;
-		    this.gray_sprite.left = this.x;
-		    this.gray_sprite.top = this.y;
-			this.gray_sprite.paint(this.context);
+		    if (this.splatter_sprite) {
+		        this.context.save();
+		        this.context.globalAlpha = 0.9;
+		        this.splatter_sprite.width = 400;
+		        this.splatter_sprite.height = 400;
+		        this.splatter_sprite.left = this.x - 140;
+		        this.splatter_sprite.top = this.y - 140;
+		        this.splatter_sprite.paint(this.context);
+		        this.context.restore();
+		    } else {
+		        this.gray_sprite.width = this.width;
+		        this.gray_sprite.height = this.height;
+		        this.gray_sprite.left = this.x;
+		        this.gray_sprite.top = this.y;
+		        this.gray_sprite.paint(this.context);
+		    }
 		}
 	}
 
