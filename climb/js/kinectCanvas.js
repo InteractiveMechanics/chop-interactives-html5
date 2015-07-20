@@ -44,6 +44,10 @@
               var lastPlayers = this._lastPlayers;
               var lastConfidentPlayers = this._lastConfidentPlayers;
 
+              var LeftPanel = this._climbCanvas._LeftPanel;
+              var CenterPanel = this._climbCanvas._CenterPanel;
+              var RightPanel = this._climbCanvas._RightPanel;
+
               this.clearScreen(this._context);
 
               for (var p in players) {
@@ -78,7 +82,7 @@
                                   // If our player is in the center, and it isn't taken yet, start there
                                   if (players[p]['spine']['pos']['x'] > 640 && players[p]['spine']['pos']['x'] < 1280 && !that._centerPanelPlayer) {
                                       that._centerPanelPlayer = p;
-                                      that._climbCanvas._center_pegs.forEach(function (peg) {
+                                      CenterPanel.pegs.forEach(function (peg) {
                                           peg.playerHasEntered(p);
                                           peg.player_assigned = true;
                                       });
@@ -86,7 +90,7 @@
                                   // If our player is on the left, and it isn't taken yet, start there
                                   if (players[p]['spine']['pos']['x'] > 0 && players[p]['spine']['pos']['x'] < 640 && !that._leftPanelPlayer) {
                                         that._leftPanelPlayer = p;
-                                        that._climbCanvas._left_pegs.forEach(function (peg) {
+                                        LeftPanel.pegs.forEach(function (peg) {
                                             peg.playerHasEntered(p);
                                             peg.player_assigned = true;
                                         });
@@ -94,7 +98,7 @@
                                   // If our player is on the right, and it isn't taken yet, start there
                                   if (players[p]['spine']['pos']['x'] > 1280 && players[p]['spine']['pos']['x'] < 1920 && !that._rightPanelPlayer) {
                                         that._rightPanelPlayer = p;
-                                        that._climbCanvas._right_pegs.forEach(function (peg) {
+                                        RightPanel.pegs.forEach(function (peg) {
                                             peg.playerHasEntered(p);
                                             peg.player_assigned = true;
                                         });
@@ -115,15 +119,15 @@
                   if (activePlayers.length <= constants.maxPlayers && index > -1) {
                       if (this._leftPanelPlayer === p) {
                           var panel = 0;
-                          var pegs = that._climbCanvas._left_pegs;
+                          var pegs = LeftPanel.pegs;
                       }
                       if (this._centerPanelPlayer === p) {
                           var panel = 1;
-                          var pegs = that._climbCanvas._center_pegs;
+                          var pegs = CenterPanel.pegs;
                       }
                       if (this._rightPanelPlayer === p) {
                           var panel = 2;
-                          var pegs = that._climbCanvas._right_pegs;
+                          var pegs = RightPanel.pegs;
                       }
 
                       this.drawHands(p, players[p], this._lastPlayers[p], panel);
@@ -140,7 +144,7 @@
                           activePlayers.splice(index, 1);
                           if (that._centerPanelPlayer == l) {
                               that._centerPanelPlayer = null;
-                              that._climbCanvas._center_pegs.forEach(function (peg) {
+                              CenterPanel.pegs.forEach(function (peg) {
                                   if (!peg.splatter_sprite) {
                                       peg.player_assigned = false;
                                   }
@@ -148,7 +152,7 @@
                           }
                           if (that._leftPanelPlayer == l) {
                               that._leftPanelPlayer = null;
-                              that._climbCanvas._left_pegs.forEach(function (peg) {
+                              LeftPanel.pegs.forEach(function (peg) {
                                   if (!peg.splatter_sprite) {
                                       peg.player_assigned = false;
                                   }
@@ -156,7 +160,7 @@
                           }
                           if (that._rightPanelPlayer == l) {
                               that._rightPanelPlayer = null;
-                              that._climbCanvas._right_pegs.forEach(function (peg) {
+                              RightPanel.pegs.forEach(function (peg) {
                                   if (!peg.splatter_sprite) {
                                       peg.player_assigned = false;
                                   }

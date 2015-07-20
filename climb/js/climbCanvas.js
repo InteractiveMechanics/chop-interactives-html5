@@ -8,18 +8,29 @@
       },
       {
           init: function () {
-              this.createLeftCanvas();
-              this.createCenterCanvas();
-              this.createRightCanvas();
+              var canvas_left = this.createLeftCanvas();
+              var canvas_center = this.createCenterCanvas();
+              var canvas_right = this.createRightCanvas();
 
-              document.body.appendChild(this._canvas_left);
-              document.body.appendChild(this._canvas_right);
-              document.body.appendChild(this._canvas_center);
+              document.body.appendChild(canvas_left);
+              document.body.appendChild(canvas_right);
+              document.body.appendChild(canvas_center);
 
-              this.createCanvasOverlays();
-              this.setupPegs();
+              var overlay_left = this.createLeftOverlayPanel();
+              var overlay_center = this.createCenterOverlayPanel();
+              var overlay_right = this.createRightOverlayPanel();
+              	
+              document.body.appendChild(overlay_left);
+              document.body.appendChild(overlay_center);
+              document.body.appendChild(overlay_right);
+              
+              setupPegs(overlay_left, overlay_center, overlay_right);
 
               this.loadSplatterImages();
+
+              this._LeftPanel = new Panel(canvas_left, overlay_left, this._left_pegs);
+              this._CenterPanel = new Panel(canvas_center, overlay_center, this._center_pegs);
+              this._RightPanel = new Panel(canvas_right, overlay_right, this._right_pegs);
 
               this._img = new Image();
               this._img.src = 'images/background_slice@2x.jpg';
@@ -37,70 +48,13 @@
                 this._lastFrameTime = now;
                 this._totalSeconds += delta;
 
-                var vx = 15; // the background scrolls with a speed of 100 pixels/sec
-                var numImages = Math.ceil(this._canvas_left.height / this._img.height) + 1;
-                var xpos = this._totalSeconds * vx % this._img.height;
-    
-                this._canvas_left.getContext('2d').save();
-                this._canvas_left.getContext('2d').translate(0, xpos);
-                for (var i = 0; i < numImages; i++) {
-                    this._canvas_left.getContext('2d').drawImage(this._img, 0, -6500);
-                }
-                this._canvas_left.getContext('2d').restore();
-
-                this._canvas_center.getContext('2d').save();
-                this._canvas_center.getContext('2d').translate(0, xpos);
-                for (var i = 0; i < numImages; i++) {
-                    this._canvas_center.getContext('2d').drawImage(this._img, 0, -6700);
-                }
-                this._canvas_center.getContext('2d').restore();
-
-                this._canvas_right.getContext('2d').save();
-                this._canvas_right.getContext('2d').translate(0, xpos);
-                for (var i = 0; i < numImages; i++) {
-                    this._canvas_right.getContext('2d').drawImage(this._img, 0, -6300);
-                }
-                this._canvas_right.getContext('2d').restore();
-
-
-                this._overlay_left.getContext("2d").clearRect(0, 0, this._overlay_left.width, this._overlay_left.height);
-                this._left_pegs.forEach(function (peg) {
-                    peg.draw();
-                    peg.y += .25;
-
-                    if (peg.y > window.innerHeight) {  //Repeat the raindrop when it falls out of view
-                        peg.y = -100 //Account for the image size
-                        peg.x = that.randomValue(90, that._width - 110);
-                        peg.activated = false;   
-                        peg.splatter_sprite = null;
-                    }
-                });
-
-                this._overlay_center.getContext("2d").clearRect(0, 0, this._overlay_left.width, this._overlay_left.height);
-                this._center_pegs.forEach(function (peg) {
-                    peg.draw();
-                    peg.y += .25;
-
-                    if (peg.y > window.innerHeight) {  //Repeat the raindrop when it falls out of view
-                        peg.y = -100 //Account for the image size
-                        peg.x = that.randomValue(90, that._width - 110);
-                        peg.activated = false;   
-                        peg.splatter_sprite = null;
-                    }
-                });
-
-                this._overlay_right.getContext("2d").clearRect(0, 0, this._overlay_left.width, this._overlay_left.height);
-                this._right_pegs.forEach(function (peg) {
-                    peg.draw();
-                    peg.y += .25;
-
-                    if (peg.y > window.innerHeight) {  //Repeat the raindrop when it falls out of view
-                        peg.y = -100 //Account for the image size
-                        peg.x = that.randomValue(90, that._width - 110);
-                        peg.activated = false;
-                        peg.splatter_sprite = null;
-                    }
-                });
+                this._LeftPanel.moveBG(this._totalSeconds, this._img, -5500);
+                this._CenterPanel.moveBG(this._totalSeconds, this._img, -5700);
+                this._RightPanel.moveBG(this._totalSeconds, this._img, -5200);
+                
+                this._LeftPanel.drawPegs(mousePos);
+                this._CenterPanel.drawPegs(mousePos);
+                this._RightPanel.drawPegs(mousePos);
           },
           detectActivated: function (player, pegs, panel) {
               var that = this;
@@ -129,58 +83,58 @@
           },
 
           createCanvasOverlays: function () {	
-              this.createLeftOverlayPanel();
-              this.createCenterOverlayPanel();
-              this.createRightOverlayPanel();
 
-              document.body.appendChild(this._overlay_left);
-              document.body.appendChild(this._overlay_center);
-              document.body.appendChild(this._overlay_right);
           },
           createLeftCanvas: function () {
-              this._canvas_left = document.createElement('canvas');
-              this._canvas_left.id = "canvas_left";
-              this._canvas_left.width = 635;
-              this._canvas_left.height = window.innerHeight;
+              var canvas_left = document.createElement('canvas');
+              canvas_left.id = "canvas_left";
+              canvas_left.width = 635;
+              canvas_left.height = window.innerHeight;
+              return canvas_left;
           },
           createCenterCanvas: function () {
-              this._canvas_center = document.createElement('canvas');
-              this._canvas_center.id = "canvas_center";
-              this._canvas_center.width = 635;
-              this._canvas_center.height = window.innerHeight;
+              var canvas_center = document.createElement('canvas');
+              canvas_center.id = "canvas_center";
+              canvas_center.width = 635;
+              canvas_center.height = window.innerHeight;
+              return canvas_center;
           },
           createRightCanvas: function () {
-              this._canvas_right = document.createElement('canvas');
-              this._canvas_right.id = "canvas_right";
-              this._canvas_right.width = 635;
-              this._canvas_right.height = window.innerHeight;
+              var canvas_right = document.createElement('canvas');
+              canvas_right.id = "canvas_right";
+              canvas_right.width = 635;
+              canvas_right.height = window.innerHeight;
+              return canvas_right;
           },
 
           createLeftOverlayPanel: function () {
-              this._overlay_left = document.createElement('canvas');
-              this._overlay_left.id = "overlay_left";
-              this._overlay_left.width = 635;
-              this._overlay_left.height = window.innerHeight;
+              var overlay_left = document.createElement('canvas');
+              overlay_left.id = "overlay_left";
+              overlay_left.width = 635;
+              overlay_left.height = window.innerHeight;
+              return overlay_left;
           },
           createCenterOverlayPanel: function () {
-              this._overlay_center = document.createElement('canvas');
-              this._overlay_center.id = "overlay_center";
-              this._overlay_center.width = 635;
-              this._overlay_center.height = window.innerHeight;
+              var overlay_center = document.createElement('canvas');
+              overlay_center.id = "overlay_center";
+              overlay_center.width = 635;
+              overlay_center.height = window.innerHeight;
+              return overlay_center;
           },
           createRightOverlayPanel: function () {
-              this._overlay_right = document.createElement('canvas');
-              this._overlay_right.id = "overlay_right";
-              this._overlay_right.width = 635;
-              this._overlay_right.height = window.innerHeight;
+              var overlay_right = document.createElement('canvas');
+              overlay_right.id = "overlay_right";
+              overlay_right.width = 635;
+              overlay_right.height = window.innerHeight;
+              return overlay_right;
           },
 
-          setupPegs: function () {
+          setupPegs: function (overlay_left, overlay_center, overlay_right) {
               for(var i = 0; i < window.innerHeight; i += (window.innerHeight / 8)) {
                   var x = this.randomValue(90, this._width - 100);
                   var y = this.randomValue(i, i += (window.innerHeight / 15));
 		
-                  var peg = this.getPeg(this._overlay_left, x, y);
+                  var peg = this.getPeg(overlay_left, x, y);
                   this._left_pegs.push(peg);
               }
 
@@ -188,7 +142,7 @@
                   var x = this.randomValue(90, this._width - 100);
                   var y = this.randomValue(j, j += (window.innerHeight / 15));
 		
-                  var peg = this.getPeg(this._overlay_center, x, y);
+                  var peg = this.getPeg(overlay_center, x, y);
                   this._center_pegs.push(peg);
               }
 
@@ -196,7 +150,7 @@
                   var x = this.randomValue(90, this._width - 100);
                   var y = this.randomValue(k, k += (window.innerHeight / 15));
 		
-                  var peg = this.getPeg(this._overlay_right, x, y);
+                  var peg = this.getPeg(overlay_right, x, y);
                   this._right_pegs.push(peg);
               }
           },
@@ -213,12 +167,9 @@
               return Math.floor(Math.random() * (max - min + 1)) + min;
           },
 
-          _canvas_left: null,
-          _canvas_right: null,
-          _canvas_center: null,
-          _overlay_left: null,
-          _overlay_center: null,
-          _overlay_right: null,
+          _LeftPanel: null,
+          _CenterPanel: null,
+          _RightPanel: null,
 
           _timer: 0,
           _lastFrameTime: 0,
