@@ -13,6 +13,9 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 	I.currentlyActive = false;
 	I.showSpecialPeg = false;
 
+	I.counter = 0;
+	I.color = null;
+
 	I.canvas = canvas;
 	I.context = canvas.getContext('2d');
 
@@ -28,18 +31,48 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 	I.playerHasEntered = function(playerNumber) {
 		var filename = "images/pegs/P" + playerNumber + "/P" + playerNumber + "_" + this.pegIndex + '.png';
 		this.sprite = new Sprite('peg', new ImagePainter(filename));
+
+		switch (playerNumber) {
+		    case 0:
+		        this.color = '#FF0000';
+		        break;
+		    case 1:
+		        this.color = '#29ABE2';
+		        break;
+		    case 2:
+		        this.color = '#FCEE21';
+		        break;
+		    case 3:
+		        this.color = '#00FF00';
+		        break;
+		    case 4:
+		        this.color = '#7D32AC';
+		        break;
+		    case 5:
+		        this.color = '#FFA200';
+		        break;
+		    default:
+		        this.color = null;
+		        break;
+		}
 	}
 
 	I.draw = function() {
 		if(this.player_assigned) {
 		    if (!this.activated) {
+		        context.shadowBlur = this.counter * 3;
+		        context.shadowOffsetX = 0;
+		        context.shadowOffsetY = 0;
+
 		        if (!this.showSpecialPeg) {
+		            context.shadowColor = this.color;
 		            this.sprite.width = this.width;
 		            this.sprite.height = this.height;
 		            this.sprite.left = this.x;
 		            this.sprite.top = this.y;
 		            this.sprite.paint(this.context);
 		        } else {
+		            context.shadowColor = '#FFF033';
 		            this.special_sprite.width = this.width;
 		            this.special_sprite.height = this.height;
 		            this.special_sprite.left = this.x;

@@ -63,11 +63,14 @@
 
               pegs.forEach(function (peg) {
                   if (mX >= peg.x && mX < peg.x + peg.width && mY >= peg.y && mY < peg.y + peg.height && player['status'] === 'closed') {
-                      peg.activated = true;
+                      peg.counter++;
 
-                      if (!peg.splatter_sprite) {
+                      if (!peg.splatter_sprite && peg.counter > 30) {
+                          peg.activated = true;
                           peg.splatter_sprite = that.randomSplat();
                       }
+                  } else {
+                      peg.counter = 0;
                   }
               });
           },
@@ -155,7 +158,7 @@
               }
           },
           getPeg: function (c, x , y) {
-              var pegndex = parseInt(this.randomValue(0, 8));
+              var pegndex = parseInt(this.randomValue(0, 9));
               var filepath = "images/pegs/PX/PX_" + pegndex + '.png';
               var specialfile = "images/pegs/PS/PS_" + pegndex + '.png';
               var peg = new Peg(x, y, c, filepath, pegndex, specialfile);
