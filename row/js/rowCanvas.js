@@ -186,7 +186,10 @@
               }
           },
           removeBoat: function (p) {
-              this._boats.splice(p, 1);
+              console.log('Boat to be removed: ', p, this._boats);
+              var index = this._boats.indexOf(p);
+              this._boats.splice(index, 1);
+              console.log('Boats left: ', this._boats);
           },
           collidingCircles: function () {
               var length = this._lilypads.length;

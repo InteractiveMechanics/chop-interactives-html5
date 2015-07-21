@@ -85,7 +85,7 @@
 
                       if (index > -1) {
                           activePlayers.splice(index, 1);
-                          this._rowCanvas.removeBoat(l);
+                          that._rowCanvas.removeBoat(l);
                           console.log("Player " + l + " left the game.");
                       }
                   }
@@ -117,6 +117,7 @@
                   }, constants.resetTimeoutDuration);
               }
 
+              // Count total players
               for (var p in players) {
                   that._totalBodies++;
               }
@@ -144,6 +145,7 @@
                   console.log('Remove "too many players" alert.');
               }
 
+              this.showInstructions();
               this._rowCanvas.draw();
               this._lastPlayers = players;
           },

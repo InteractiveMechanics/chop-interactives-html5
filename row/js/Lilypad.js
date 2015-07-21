@@ -16,7 +16,7 @@ function HeavyLilyPad(I) {
             this.dx = -this.dx
         }
 
-        if (this.y < -20 || this.y > 1100) {
+        if (this.y < -20 || this.y > 1060) {
             this.dy = -this.dy;
         }
 
@@ -61,7 +61,7 @@ function LilyPad(I) {
             this.dx = -this.dx
         }
 
-        if (this.y < -20 || this.y > 1100) {
+        if (this.y < -20 || this.y > 1060) {
             this.dy = -this.dy;
         }
 
@@ -106,7 +106,7 @@ function Flower(I) {
             this.dx = -this.dx
         }
 
-        if (this.y < -20 || this.y > 1100) {
+        if (this.y < -20 || this.y > 1060) {
             this.dy = -this.dy;
         }
 

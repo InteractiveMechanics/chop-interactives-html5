@@ -90,7 +90,7 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 		    } else {
 		        if (this.splatter_sprite) {
 		            this.context.save();
-		            this.context.globalAlpha = 0.9;
+		            this.context.globalAlpha = 0.85;
 		            this.splatter_sprite.width = 400;
 		            this.splatter_sprite.height = 400;
 		            this.splatter_sprite.left = this.x - 140;

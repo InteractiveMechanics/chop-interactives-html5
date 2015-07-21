@@ -64,13 +64,19 @@
 
                               console.log('Player ' + p + ' assigned to Center Panel.');
                               activePlayers.push(p);
-                              console.log('Active Players after push: ', activePlayers);
                               lastConfidentPlayers[p] = players[p];
                               lastPlayers[p] = players[p];
 
                               that._activeAlert = true;
                               that._instructions.paused = false;
                               console.log('Show instructions for Player ' + p);
+
+                              setTimeout(function () {
+                                  that._activeAlert = false;
+                                  that._instructions.paused = true;
+                                  that.clearScreen(that._instructionsContext);
+                                  console.log('Clear instructions for Player ' + p);
+                              }, 6000);
                           } else if (players[p]['spine']['pos']['x'] < 960 && !that._leftPanelPlayer) {
                               that._leftPanelPlayer = p;
                               LeftPanel.pegs.forEach(function (peg) {
@@ -80,13 +86,19 @@
 
                               console.log('Player ' + p + ' assigned to Left Panel.');
                               activePlayers.push(p);
-                              console.log('Active Players after push: ', activePlayers);
                               lastConfidentPlayers[p] = players[p];
                               lastPlayers[p] = players[p];
 
                               that._activeAlert = true;
                               that._instructions.paused = false;
                               console.log('Show instructions for Player ' + p);
+
+                              setTimeout(function () {
+                                  that._activeAlert = false;
+                                  that._instructions.paused = true;
+                                  that.clearScreen(that._instructionsContext);
+                                  console.log('Clear instructions for Player ' + p);
+                              }, 6000);
                           } else if (players[p]['spine']['pos']['x'] > 960 && !that._rightPanelPlayer) {
                               that._rightPanelPlayer = p;
                               RightPanel.pegs.forEach(function (peg) {
@@ -96,13 +108,19 @@
 
                               console.log('Player ' + p + ' assigned to Right Panel.');
                               activePlayers.push(p);
-                              console.log('Active Players after push: ', activePlayers);
                               lastConfidentPlayers[p] = players[p];
                               lastPlayers[p] = players[p];
 
                               that._activeAlert = true;
                               that._instructions.paused = false;
                               console.log('Show instructions for Player ' + p);
+
+                              setTimeout(function () {
+                                  that._activeAlert = false;
+                                  that._instructions.paused = true;
+                                  that.clearScreen(that._instructionsContext);
+                                  console.log('Clear instructions for Player ' + p);
+                              }, 6000);
                           }
                       }
                   }
@@ -212,6 +230,7 @@
                   console.log('Remove "too many players" alert.');
               }
 
+              this.showInstructions();
               this._climbCanvas.draw();
               this._lastPlayers = players;
           },

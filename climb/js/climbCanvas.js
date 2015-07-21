@@ -78,12 +78,16 @@
                   Panel.pegs.forEach(function (peg) {
                       if (mX >= peg.x && mX < peg.x + peg.width && mY >= peg.y && mY < peg.y + peg.height) {
                           if (player['status'] === 'closed') {
-                              peg.counter = peg.counter + 2;
+                              peg.counter = peg.counter + 1.5;
                           } else {
-                              peg.counter = peg.counter + 1;
+                              if (Panel.speed > 3) {
+                                  peg.counter = peg.counter + 0.75;
+                              } else {
+                                  peg.counter = peg.counter + 0.5;
+                              }
                           }
                           
-                          if (!peg.splatter_sprite && peg.counter > 60) {
+                          if (!peg.splatter_sprite && peg.counter > 50) {
                               peg.activated = true;
                               peg.splatter_sprite = that.randomSplat();
 
@@ -106,9 +110,6 @@
               return this._paint_splatters[Math.floor(Math.random() * this._paint_splatters.length)];
           },
 
-          createCanvasOverlays: function () {
-
-          },
           createLeftCanvas: function () {
               var canvas_left = document.createElement('canvas');
               canvas_left.id = "canvas_left";
