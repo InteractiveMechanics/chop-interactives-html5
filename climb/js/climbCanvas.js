@@ -19,11 +19,11 @@
               var overlay_left = this.createLeftOverlayPanel();
               var overlay_center = this.createCenterOverlayPanel();
               var overlay_right = this.createRightOverlayPanel();
-              	
+
               document.body.appendChild(overlay_left);
               document.body.appendChild(overlay_center);
               document.body.appendChild(overlay_right);
-              
+
               this.setupPegs(overlay_left, overlay_center, overlay_right);
 
               this.loadSplatterImages();
@@ -54,20 +54,20 @@
           },
 
           draw: function () {
-                var that = this;
+              var that = this;
 
-                var now = Date.now();
-                var delta = (now - this._lastFrameTime) / 1000;
-                this._lastFrameTime = now;
-                this._totalSeconds += delta;
+              var now = Date.now();
+              var delta = (now - this._lastFrameTime) / 1000;
+              this._lastFrameTime = now;
+              this._totalSeconds += delta;
 
-                this._LeftPanel.moveBG();
-                this._CenterPanel.moveBG();
-                this._RightPanel.moveBG();
-                
-                this._LeftPanel.drawPegs();
-                this._CenterPanel.drawPegs();
-                this._RightPanel.drawPegs();
+              this._LeftPanel.moveBG();
+              this._CenterPanel.moveBG();
+              this._RightPanel.moveBG();
+
+              this._LeftPanel.drawPegs();
+              this._CenterPanel.drawPegs();
+              this._RightPanel.drawPegs();
           },
           detectActivated: function (player, Panel, index) {
               var that = this;
@@ -76,9 +76,13 @@
 
               if (Panel) {
                   Panel.pegs.forEach(function (peg) {
-                      if (mX >= peg.x && mX < peg.x + peg.width && mY >= peg.y && mY < peg.y + peg.height && player['status'] === 'closed') {
-                          peg.counter = peg.counter + 2;
-
+                      if (mX >= peg.x && mX < peg.x + peg.width && mY >= peg.y && mY < peg.y + peg.height) {
+                          if (player['status'] === 'closed') {
+                              peg.counter = peg.counter + 2;
+                          } else {
+                              peg.counter = peg.counter + 1;
+                          }
+                          
                           if (!peg.splatter_sprite && peg.counter > 60) {
                               peg.activated = true;
                               peg.splatter_sprite = that.randomSplat();
@@ -93,16 +97,16 @@
           },
 
           loadSplatterImages: function () {
-	        for(var i = 0; i < 60; i++) {
-	            var filename = "images/paint-splatters/splatter_" + i + '.png';
-	            this._paint_splatters.push(new Sprite('splatter', new ImagePainter(filename)));
-	        }
+              for (var i = 0; i < 60; i++) {
+                  var filename = "images/paint-splatters/splatter_" + i + '.png';
+                  this._paint_splatters.push(new Sprite('splatter', new ImagePainter(filename)));
+              }
           },
           randomSplat: function () {
               return this._paint_splatters[Math.floor(Math.random() * this._paint_splatters.length)];
           },
 
-          createCanvasOverlays: function () {	
+          createCanvasOverlays: function () {
 
           },
           createLeftCanvas: function () {
@@ -150,31 +154,31 @@
           },
 
           setupPegs: function (overlay_left, overlay_center, overlay_right) {
-              for(var i = 0; i < window.innerHeight; i += (window.innerHeight / 8)) {
+              for (var i = 0; i < window.innerHeight; i += (window.innerHeight / 8)) {
                   var x = this.randomValue(90, this._width - 100);
                   var y = this.randomValue(i, i += (window.innerHeight / 15));
-		
+
                   var peg = this.getPeg(overlay_left, x, y);
                   this._left_pegs.push(peg);
               }
 
-              for(var j = 0; j < window.innerHeight; j += (window.innerHeight / 8)) {
+              for (var j = 0; j < window.innerHeight; j += (window.innerHeight / 8)) {
                   var x = this.randomValue(90, this._width - 100);
                   var y = this.randomValue(j, j += (window.innerHeight / 15));
-		
+
                   var peg = this.getPeg(overlay_center, x, y);
                   this._center_pegs.push(peg);
               }
 
-              for(var k = 0; k < window.innerHeight; k += (window.innerHeight / 8)) {
+              for (var k = 0; k < window.innerHeight; k += (window.innerHeight / 8)) {
                   var x = this.randomValue(90, this._width - 100);
                   var y = this.randomValue(k, k += (window.innerHeight / 15));
-		
+
                   var peg = this.getPeg(overlay_right, x, y);
                   this._right_pegs.push(peg);
               }
           },
-          getPeg: function (c, x , y) {
+          getPeg: function (c, x, y) {
               var pegndex = parseInt(this.randomValue(0, 9));
               var filepath = "images/pegs/PX/PX_" + pegndex + '.png';
               var specialfile = "images/pegs/PS/PS_" + pegndex + '.png';
@@ -194,7 +198,7 @@
           _timer: 0,
           _lastFrameTime: 0,
           _totalSeconds: 0,
-      
+
           _left_pegs: [],
           _right_pegs: [],
           _center_pegs: [],

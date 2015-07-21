@@ -2,7 +2,7 @@
     "use strict";
 
     var constants = {
-        maxPlayers: 4,
+        maxPlayers: 3,
         handHeight: 154,
         handWidth: 154,
         instructionsDuration: 5000,
@@ -38,80 +38,71 @@
           },
           draw: function (players) {
               var that = this;
-              var count = 0;
               var activePlayers = this._activePlayers;
               var pendingPlayers = this._pendingPlayers;
               var lastPlayers = this._lastPlayers;
               var lastConfidentPlayers = this._lastConfidentPlayers;
 
               this.clearScreen(this._context);
+              this._totalBodies = 0;
+
               this._rowCanvas.update();
 
-              for (var p in players) {
-                  // I think we're going to need a check here where we add p to the pending players array first, then
-                  // use that information to decide if we have too many players 
-                  window.clearTimeout(this._resetAllTimeout);
-                  this._activeReset = false;
-                  count++;
+              // New loop for adding a player
+              if (activePlayers.length < constants.maxPlayers) {
+                  for (var p in players) {
+                      var index = activePlayers.indexOf(p);
+                      if (index === -1) {
+                          activePlayers.push(p);
+                          lastConfidentPlayers[p] = players[p];
+                          lastPlayers[p] = players[p];
 
-                  // when a new player enters the area, start a timer for 5 seconds before creating them on screen
-                  // set the active players array for their number to true
-                  // make sure to set their last position so it doesn't break the code
-                  // fire the instructions for the new user
-                  var index = activePlayers.indexOf(p);
-                  var pending = pendingPlayers.indexOf(p);
-                  if (index === -1 && !lastPlayers[p]) {
-                      if (pending === -1 && !lastPlayers[p]) {
-                          pendingPlayers.push(p);
-                          console.log("Player " + p + " joined the game.")
+                          that._activeAlert = true;
+                          that._instructions.paused = false;
+                          console.log('Show instructions for Player ' + p);
 
-                          this._newPlayerTimeout = setTimeout(function () {
-                              pendingPlayers.splice(pending, 1);
-                              if (players[p] && index === -1 && activePlayers.length < constants.maxPlayers) {
-                                  activePlayers.push(p);
-                                  lastConfidentPlayers[p] = players[p];
-                                  lastPlayers[p] = players[p];
+                          setTimeout(function () {
+                              that._activeAlert = false;
+                              that._instructions.paused = true;
+                              that.clearScreen(that._instructionsContext);
+                              console.log('Clear instructions for Player ' + p);
+                          }, 6000);
 
-                                  that._activeAlert = true;
-                                  that._instructions.paused = false;
-                                  console.log('Show instructions for Player ' + p);
-
-                                  setTimeout(function () {
-                                      that._activeAlert = false;
-                                      that._instructions.paused = true;
-                                      that.clearScreen(that._instructionsContext);
-                                      console.log('Clear instructions for Player ' + p);
-                                  }, 6000);
-
-                                  that._rowCanvas.createBoat(p);
-                              }
-                          }, 5000);
+                          that._rowCanvas.createBoat(p);
                       }
                   }
-                  // if there are less players than the max
-                  // draw their hands and do everything we need to do on-screen
-                  if (activePlayers.length <= constants.maxPlayers && index > -1) {
-                      this.drawHands(p, players[p], this._lastPlayers[p]);
-                      this._rowCanvas.moveBoat(p, players[p]);
-                  }
               }
+
+              // Compares lastPlayers to currentPlayers to see if someone leaves
               for (var l in lastPlayers) {
                   if (!players[l]) {
                       var index = activePlayers.indexOf(l);
                       var pending = pendingPlayers.indexOf(l);
+
+                      if (pending > -1) {
+                          pendingPlayers.splice(pending, 1);
+                      }
 
                       if (index > -1) {
                           activePlayers.splice(index, 1);
                           this._rowCanvas.removeBoat(l);
                           console.log("Player " + l + " left the game.");
                       }
-                      if (pending > -1) {
-                          pendingPlayers.splice(pending, 1);
-                          window.clearTimeout(this._newPlayerTimeout);
-                          console.log("Canceled player " + l + " instructions.")
-                      }
                   }
               }
+
+              // Drawing
+              activePlayers.forEach(function (aP) {
+                  window.clearTimeout(that._resetAllTimeout);
+                  that._activeReset = false;
+
+                  if (players[aP]) {
+                      that.drawHands(aP, players[aP], that._lastPlayers[aP]);
+                      that._rowCanvas.moveBoat(aP, players[aP]);
+                  }
+              });
+
+              // Hard Reset
               if (!players[0] && !players[1] && !players[2] && !players[3] && !players[4] && !players[5] && this._activeReset == false) {
                   this._activeReset = true;
 
@@ -125,17 +116,18 @@
                       console.log("No players present, reseting the game.");
                   }, constants.resetTimeoutDuration);
               }
-              this.showInstructions();
-              this._rowCanvas.draw();
+
+              for (var p in players) {
+                  that._totalBodies++;
+              }
 
               // Run this function often, checks to see if we have too many people
-              this._totalBodies = count;
-              if (count > constants.maxPlayers && this._activeTooManyPlayers == false) {
+              if (this._totalBodies > constants.maxPlayers && this._activeTooManyPlayers == false) {
                   var image = new Image();
                   image.src = 'images/too-many-alert@2x.png';
                   that.clearScreen(that._instructionsContext);
                   that._instructionsContext.drawImage(image, 691, 920, 539, 80);
-                  
+
                   this._activeTooManyPlayers = true;
                   console.log('Show "too many players" alert.');
 
@@ -145,13 +137,14 @@
                       console.log('Remove "too many players" alert.');
                   }, constants.tooManyTimeoutDuration);
               }
-              if (count <= constants.maxPlayers && this._activeTooManyPlayers == true) {
+              if (this._totalBodies <= constants.maxPlayers && this._activeTooManyPlayers == true) {
                   that.clearScreen(that._instructionsContext);
                   this._activeTooManyPlayers = false;
                   window.clearTimeout(this.tooManyTimeout);
                   console.log('Remove "too many players" alert.');
               }
 
+              this._rowCanvas.draw();
               this._lastPlayers = players;
           },
           drawHands: function (p, player, lastPlayer) {

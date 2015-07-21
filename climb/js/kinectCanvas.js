@@ -38,7 +38,6 @@
           },
           draw: function (players) {
               var that = this;
-              var count = 0;
               var activePlayers = this._activePlayers;
               var pendingPlayers = this._pendingPlayers;
               var lastPlayers = this._lastPlayers;
@@ -49,98 +48,75 @@
               var RightPanel = this._climbCanvas._RightPanel;
 
               this.clearScreen(this._context);
+              this._totalBodies = 0;
 
-              for (var p in players) {
-                  // I think we're going to need a check here where we add p to the pending players array first, then
-                  // use that information to decide if we have too many players 
-                  window.clearTimeout(this._resetAllTimeout);
-                  this._activeReset = false;
-                  count++;
+              // New loop for adding a player
+              if (activePlayers.length < constants.maxPlayers) {
+                  for (var p in players) {
+                      var index = activePlayers.indexOf(p);
+                      if (index === -1) {
+                          if (!that._centerPanelPlayer) {
+                              that._centerPanelPlayer = p;
+                              CenterPanel.pegs.forEach(function (peg) {
+                                  peg.playerHasEntered(p);
+                                  peg.player_assigned = true;
+                              });
 
-                  // when a new player enters the area, start a timer for 5 seconds before creating them on screen
-                  // set the active players array for their number to true
-                  // make sure to set their last position so it doesn't break the code
-                  // fire the instructions for the new user
-                  var index = activePlayers.indexOf(p);
-                  var pending = pendingPlayers.indexOf(p);
-                  if (index === -1 && !lastPlayers[p]) {
-                      if (pending === -1 && !lastPlayers[p]) {
-                          pendingPlayers.push(p);
-                          console.log("Player " + p + " joined the game.")
+                              console.log('Player ' + p + ' assigned to Center Panel.');
+                              activePlayers.push(p);
+                              console.log('Active Players after push: ', activePlayers);
+                              lastConfidentPlayers[p] = players[p];
+                              lastPlayers[p] = players[p];
 
-                          this._newPlayerTimeout = setTimeout(function () {
-                              pendingPlayers.splice(pending, 1);
-                              if (players[p] && index === -1 && activePlayers.length < constants.maxPlayers) {
-                                  activePlayers.push(p);
-                                  lastConfidentPlayers[p] = players[p];
-                                  lastPlayers[p] = players[p];
+                              that._activeAlert = true;
+                              that._instructions.paused = false;
+                              console.log('Show instructions for Player ' + p);
+                          } else if (players[p]['spine']['pos']['x'] < 960 && !that._leftPanelPlayer) {
+                              that._leftPanelPlayer = p;
+                              LeftPanel.pegs.forEach(function (peg) {
+                                  peg.playerHasEntered(p);
+                                  peg.player_assigned = true;
+                              });
 
-                                  that._activeAlert = true;
-                                  that._instructions.paused = false;
-                                  console.log('Show instructions for Player ' + p);
+                              console.log('Player ' + p + ' assigned to Left Panel.');
+                              activePlayers.push(p);
+                              console.log('Active Players after push: ', activePlayers);
+                              lastConfidentPlayers[p] = players[p];
+                              lastPlayers[p] = players[p];
 
-                                  // If our player is in the center, and it isn't taken yet, start there
-                                  if (players[p]['spine']['pos']['x'] > 640 && players[p]['spine']['pos']['x'] < 1280 && !that._centerPanelPlayer) {
-                                      that._centerPanelPlayer = p;
-                                      CenterPanel.pegs.forEach(function (peg) {
-                                          peg.playerHasEntered(p);
-                                          peg.player_assigned = true;
-                                      });
-                                  } else {
-                                      // If our player is on the left, and it isn't taken yet, start there
-                                      if (players[p]['spine']['pos']['x'] > 0 && players[p]['spine']['pos']['x'] < 640 && !that._leftPanelPlayer) {
-                                          that._leftPanelPlayer = p;
-                                          LeftPanel.pegs.forEach(function (peg) {
-                                              peg.playerHasEntered(p);
-                                              peg.player_assigned = true;
-                                          });
-                                      } else {
-                                          // If our player is on the right, and it isn't taken yet, start there
-                                          if (players[p]['spine']['pos']['x'] > 1280 && players[p]['spine']['pos']['x'] < 1920 && !that._rightPanelPlayer) {
-                                              that._rightPanelPlayer = p;
-                                              RightPanel.pegs.forEach(function (peg) {
-                                                  peg.playerHasEntered(p);
-                                                  peg.player_assigned = true;
-                                              });
-                                          }
-                                      }
-                                  }
+                              that._activeAlert = true;
+                              that._instructions.paused = false;
+                              console.log('Show instructions for Player ' + p);
+                          } else if (players[p]['spine']['pos']['x'] > 960 && !that._rightPanelPlayer) {
+                              that._rightPanelPlayer = p;
+                              RightPanel.pegs.forEach(function (peg) {
+                                  peg.playerHasEntered(p);
+                                  peg.player_assigned = true;
+                              });
 
-                                  setTimeout(function () {
-                                      that._activeAlert = false;
-                                      that._instructions.paused = true;
-                                      that.clearScreen(that._instructionsContext);
-                                      console.log('Clear instructions for Player ' + p);
-                                  }, 6000);
-                              }
-                          }, 5000);
+                              console.log('Player ' + p + ' assigned to Right Panel.');
+                              activePlayers.push(p);
+                              console.log('Active Players after push: ', activePlayers);
+                              lastConfidentPlayers[p] = players[p];
+                              lastPlayers[p] = players[p];
+
+                              that._activeAlert = true;
+                              that._instructions.paused = false;
+                              console.log('Show instructions for Player ' + p);
+                          }
                       }
-                  }
-                  // if there are less players than the max
-                  // draw their hands and do everything we need to do on-screen
-                  if (activePlayers.length <= constants.maxPlayers && index > -1) {
-                      if (this._leftPanelPlayer === p) {
-                          var panel = 0;
-                          var pegs = LeftPanel;
-                      }
-                      if (this._centerPanelPlayer === p) {
-                          var panel = 1;
-                          var pegs = CenterPanel;
-                      }
-                      if (this._rightPanelPlayer === p) {
-                          var panel = 2;
-                          var pegs = RightPanel;
-                      }
-
-                      this.drawHands(p, players[p], this._lastPlayers[p], panel);
-                      this._climbCanvas.detectActivated(players[p]['right'], pegs, panel);
-                      this._climbCanvas.detectActivated(players[p]['left'], pegs, panel);
                   }
               }
+
+              // Compares lastPlayers to currentPlayers to see if someone leaves
               for (var l in lastPlayers) {
                   if (!players[l]) {
                       var index = activePlayers.indexOf(l);
                       var pending = pendingPlayers.indexOf(l);
+
+                      if (pending > -1) {
+                          pendingPlayers.splice(pending, 1);
+                      }
 
                       if (index > -1) {
                           activePlayers.splice(index, 1);
@@ -164,13 +140,35 @@
                           }
                           console.log("Player " + l + " left the game.");
                       }
-                      if (pending > -1) {
-                          pendingPlayers.splice(pending, 1);
-                          window.clearTimeout(this._newPlayerTimeout);
-                          console.log("Canceled player " + l + " instructions.")
-                      }
                   }
               }
+
+              // Drawing
+              activePlayers.forEach(function (aP) {
+                  window.clearTimeout(that._resetAllTimeout);
+                  that._activeReset = false;
+
+                  if (players[aP]) {
+                      if (that._leftPanelPlayer === aP) {
+                          var offset = 0;
+                          var panel = LeftPanel;
+                      }
+                      if (that._centerPanelPlayer === aP) {
+                          var offset = 1;
+                          var panel = CenterPanel;
+                      }
+                      if (that._rightPanelPlayer === aP) {
+                          var offset = 2;
+                          var panel = RightPanel;
+                      }
+
+                      that.drawHands(aP, players[aP], that._lastPlayers[aP], offset);
+                      that._climbCanvas.detectActivated(players[aP]['right'], panel, offset);
+                      that._climbCanvas.detectActivated(players[aP]['left'], panel, offset);
+                  }
+              });
+
+              // Hard Reset
               if (!players[0] && !players[1] && !players[2] && !players[3] && !players[4] && !players[5] && this._activeReset == false) {
                   this._activeReset = true;
 
@@ -186,11 +184,13 @@
                       console.log("No players present, reseting the game.");
                   }, constants.resetTimeoutDuration);
               }
-              this.showInstructions();
+
+              for (var p in players) {
+                  that._totalBodies++;
+              }
 
               // Run this function often, checks to see if we have too many people
-              this._totalBodies = count;
-              if (count > constants.maxPlayers && this._activeTooManyPlayers == false) {
+              if (this._totalBodies > constants.maxPlayers && this._activeTooManyPlayers == false) {
                   var image = new Image();
                   image.src = 'images/too-many-alert@2x.png';
                   that.clearScreen(that._instructionsContext);
@@ -205,7 +205,7 @@
                       console.log('Remove "too many players" alert.');
                   }, constants.tooManyTimeoutDuration);
               }
-              if (count <= constants.maxPlayers && this._activeTooManyPlayers == true) {
+              if (this._totalBodies <= constants.maxPlayers && this._activeTooManyPlayers == true) {
                   that.clearScreen(that._instructionsContext);
                   this._activeTooManyPlayers = false;
                   window.clearTimeout(this.tooManyTimeout);
