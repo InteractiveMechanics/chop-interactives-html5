@@ -38,7 +38,9 @@
               this.clearScreen(this._pennyContext);
 
               this._boats.forEach(function (boat, index) {
-                  boat.draw(that._canvasContext, index);
+                  if (boat != undefined) {
+                      boat.draw(that._canvasContext, index);
+                  }
               });
               this._lilypads.forEach(function (lilypad) {
                   lilypad.draw(that._canvas2Context);
@@ -87,6 +89,23 @@
               if (!this._boats[p]) {
                   this._boats[p] = new Boat();
               }
+              while(!this.validBoatXAndY(p)) {
+                  this._boats[p].x = randomInRange(1900, 20);
+                  this._boats[p].y = randomInRange(1060, 20);
+              }
+          },
+          validBoatXAndY: function (p) {
+              var that = this;
+              this._lilypads.forEach(function (lilypad) {
+                  var boatRect = new Rectangle(that._boats[p].x, that._boats[p].y, that._boats[p].width, that._boats[p].width);
+                  var lilypadRect = new Rectangle(lilypad.x, lilypad.y, lilypad.width, lilypad.width);
+
+                  if (boatRect.intersectsWith(lilypadRect)) {
+                      return false;
+                  }
+              });
+
+              return true;
           },
           moveBoat: function (p, playerData) {
               if (playerData && this._boats[p]) {
@@ -148,28 +167,30 @@
                   });
 
                   this._boats.forEach(function (otherBoat) {
-                      if (otherBoat.x != that._boats[p].x && otherBoat.y != that._boats[p].y) {
-                          if (that.collides(otherBoat.x - that._boats[p].width/2, otherBoat.y - that._boats[p].height/2, otherBoat.width, that._boats[p].x - that._boats[p].width/2, that._boats[p].y - that._boats[p].height/2, that._boats[p].width)) {
-                              var boatData = that._canvasContext.getImageData(boatX, boatY, that._boats[p].width, that._boats[p].width);
-                              var otherBoatData = that._canvasContext.getImageData(otherBoat.x, otherBoat.y, otherBoat.width, otherBoat.width);
+                      if (otherBoat != undefined) {
+                          if (otherBoat.x != that._boats[p].x && otherBoat.y != that._boats[p].y) {
+                              if (that.collides(otherBoat.x - that._boats[p].width / 2, otherBoat.y - that._boats[p].height / 2, otherBoat.width, that._boats[p].x - that._boats[p].width / 2, that._boats[p].y - that._boats[p].height / 2, that._boats[p].width)) {
+                                  var boatData = that._canvasContext.getImageData(boatX, boatY, that._boats[p].width, that._boats[p].width);
+                                  var otherBoatData = that._canvasContext.getImageData(otherBoat.x - otherBoat.width / 2, otherBoat.y - otherBoat.width / 2, otherBoat.width, otherBoat.width);
 
-                              if (that.isPixelCollision(boatData, boatX, boatY, otherBoatData, otherBoat.x, otherBoat.y, false)) {
-                                  multiplier = 0.003;
+                                  if (that.isPixelCollision(boatData, boatX, boatY, otherBoatData, otherBoat.x, otherBoat.y, false)) {
+                                      multiplier = 0.003;
 
-                                  if ((that._boats[p].dx > 0 && otherBoat.dx > 0) || (that._boats[p].dx < 0 && otherBoat.dx < 0)) {
-                                      otherBoat.dx = otherBoat.dx + that._boats[p].dx;
-                                      that._boats[p].dx = that._boats[p].dx / 2;
-                                  } else {
-                                      otherBoat.dx = -otherBoat.dx;
-                                      that._boats[p].dx = -that._boats[p].dx;
-                                  }
+                                      if ((that._boats[p].dx > 0 && otherBoat.dx > 0) || (that._boats[p].dx < 0 && otherBoat.dx < 0)) {
+                                          otherBoat.dx = otherBoat.dx + that._boats[p].dx;
+                                          that._boats[p].dx = that._boats[p].dx / 2;
+                                      } else {
+                                          otherBoat.dx = -otherBoat.dx;
+                                          that._boats[p].dx = -that._boats[p].dx;
+                                      }
 
-                                  if ((that._boats[p].dy > 0 && otherBoat.dy > 0) || (that._boats[p].dy < 0 && otherBoat.dy < 0)) {
-                                      otherBoat.dy = otherBoat.dy + that._boats[p].dy / 2;
-                                      that._boats[p].dy = that._boats[p].dy / 2;
-                                  } else {
-                                      otherBoat.dy = -otherBoat.dy;
-                                      that._boats[p].dy = -that._boats[p].dy;
+                                      if ((that._boats[p].dy > 0 && otherBoat.dy > 0) || (that._boats[p].dy < 0 && otherBoat.dy < 0)) {
+                                          otherBoat.dy = otherBoat.dy + that._boats[p].dy / 2;
+                                          that._boats[p].dy = that._boats[p].dy / 2;
+                                      } else {
+                                          otherBoat.dy = -otherBoat.dy;
+                                          that._boats[p].dy = -that._boats[p].dy;
+                                      }
                                   }
                               }
                           }
@@ -187,8 +208,8 @@
           },
           removeBoat: function (p) {
               console.log('Boat to be removed: ', p, this._boats);
-              var index = this._boats.indexOf(p);
-              this._boats.splice(index, 1);
+              this._boats.splice(p, 1);
+              this._boats.splice(p, 0, undefined);
               console.log('Boats left: ', this._boats);
           },
           collidingCircles: function () {

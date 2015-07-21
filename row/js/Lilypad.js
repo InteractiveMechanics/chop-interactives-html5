@@ -148,3 +148,18 @@ function random_dx_dy() {
 
     return highlightedNumber;
 }
+
+function Rectangle(x, y, width, height) {
+    var I = I || {};
+
+    I.x = x;
+    I.y = y;
+    I.width = width;
+    I.height = height;
+
+    I.intersectsWith = function (rect) {
+        return (rect.x < this.x + this.width && this.x < rect.x + rect.width && rect.y < this.y + this.height)
+    }
+
+    return I;
+}

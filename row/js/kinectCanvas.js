@@ -117,7 +117,6 @@
                   }, constants.resetTimeoutDuration);
               }
 
-              // Count total players
               for (var p in players) {
                   that._totalBodies++;
               }
@@ -145,7 +144,7 @@
                   console.log('Remove "too many players" alert.');
               }
 
-              this.showInstructions();
+              this.showInstructions()
               this._rowCanvas.draw();
               this._lastPlayers = players;
           },
