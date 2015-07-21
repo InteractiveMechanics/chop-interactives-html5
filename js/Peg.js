@@ -1,4 +1,4 @@
-function Peg(x, y, canvas, pegfile, index, specialfile) {
+function Peg(x, y, canvas, pegfile, index, specialfile, specialsplatter) {
 	var I = I || {};
 
 	I.x = x;
@@ -10,12 +10,13 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 	I.player_assigned = false;
 	I.activated = false;
 	I.currentlyActive = false;
-	I.showSpecialPeg = false;
+	I.isSpecialPeg = false;
 
 	I.canvas = canvas;
 	I.context = canvas.getContext('2d');
 
 	I.sprite = Sprite(pegfile);
+	I.special_splatter_sprite = Sprite(specialsplatter);
 	I.splatter_sprite = null;
 	I.gray_sprite = Sprite(pegfile);
 	I.special_sprite = Sprite(specialfile);
@@ -32,17 +33,23 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 	I.draw = function() {
 
 		if(this.player_assigned) {
+			
 			if(!this.activated) {
-				if(!this.showSpecialPeg) {
+				if(!this.isSpecialPeg) {
 					this.sprite.draw(this.context, this.x, this.y, null, null, this.width, this.height);
 				} else {
 					this.special_sprite.draw(this.context, this.x, this.y, null, null, this.width, this.height);
 				}
 			} else {
-				if(this.splatter_sprite) {
-					this.splatter_sprite.draw(this.context, this.x, this.y, null, null, this.width, this.height);
+				if(!this.isSpecialPeg) {
+					if(this.splatter_sprite) {
+						this.splatter_sprite.draw(this.context, this.x, this.y, null, null, this.width, this.height);
+					}
+				} else {
+					this.special_splatter_sprite.draw(this.context, this.x, this.y, null, null, this.width, this.height);
 				}
 			}
+
 		} else {
 			this.gray_sprite.draw(this.context, this.x, this.y, null, null, this.width, this.height);
 		}

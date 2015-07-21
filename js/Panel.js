@@ -5,18 +5,24 @@ function Panel(bg_canvas, overlay_canvas, pegs) {
 	I.overlay_canvas = overlay_canvas;
 	I.showSpecialPeg = false;
 	I.pegs = pegs;
-	I.speed = .25;
+	I.speed = .75;
 	I.scrollVal = 0;
 	I.bg_image = null;
 
 	I.startY = 0;
 	I.startY2 = -8100
 
+	I.specialPegCounter = 0;
+	I.specialPegCounterLimit = 2;
+
 
 
 	I.splatAll = function() {
 		this.pegs.forEach(function(peg) {
 	    	peg.activated = true;
+	    	if(!peg.splatter_sprite) {
+	    		peg.splatter_sprite = randomSplat();
+	    	}
 	  	});
 	};
 
@@ -24,18 +30,18 @@ function Panel(bg_canvas, overlay_canvas, pegs) {
 		return totalSeconds * this.speed % height;
 	}
 
-	I.moveBG = function() {
+	I.moveBG = function(totalSeconds, img, val) {
 
 
-		this.bg_canvas.getContext('2d').drawImage(this.bg_image,0,this.startY);
-		this.bg_canvas.getContext('2d').drawImage(this.bg_image,0,this.startY2);
+		this.bg_canvas.getContext('2d').drawImage(img,0,this.startY);
+		this.bg_canvas.getContext('2d').drawImage(img,0,this.startY2);
 
-		if (this.startY > this.bg_image.height) {
-		    this.startY = -(this.bg_image.height-1);
+		if (this.startY > img.height) {
+		    this.startY = -(img.height-1);
 		}
 		
-		if (this.startY2 > this.bg_image.height) {
-		   this.startY2 = -(this.bg_image.height-1);
+		if (this.startY2 > img.height) {
+		   this.startY2 = -(img.height-1);
 		}
 
 		  this.startY += this.speed;
@@ -54,9 +60,26 @@ function Panel(bg_canvas, overlay_canvas, pegs) {
 		    var mY = mousePos.y;
 		    if(mX >= peg.x && mX < peg.x+peg.width && mY >= peg.y && mY < peg.y+peg.height && peg.player_assigned) {
 		    	peg.activated = true;
-		    	if(!peg.splatter_sprite) {
-		    		peg.splatter_sprite = randomSplat();
+
+		    	if(peg.isSpecialPeg) {
+		    		that.splatAll();
+		    		peg.splatter_sprite = peg.special_splatter_sprite;
+		    	} else {
+		    		if(!peg.splatter_sprite) {
+			    		peg.splatter_sprite = randomSplat();
+			    	}
 		    	}
+
+		    	/*
+
+		    	if(!peg.splatter_sprite && !peg.isSpecialPeg) {
+		    		peg.splatter_sprite = randomSplat();
+		    	} else {
+		    		peg.showingSpecialPeg = false;
+		    		that.splatAll();
+		    	}
+
+		    	*/
 		    }
 
 	    	if (peg.y > window.innerHeight) {  //Repeat the raindrop when it falls out of view
@@ -64,6 +87,11 @@ function Panel(bg_canvas, overlay_canvas, pegs) {
 		        peg.x = randomValue(90, width-110);
 		        peg.activated = false;   
 		        peg.splatter_sprite = null;
+		        that.specialPegCounter += 1;
+
+		        if(that.specialPegCounter == that.specialPegCounterLimit) {
+		        	peg.isSpecialPeg = true;
+		        }
 		    }
 	  	});
 	}

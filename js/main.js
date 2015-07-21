@@ -19,10 +19,6 @@ var mousePos = {
 	y: 5
 };
 
-var image1;
-var image2;
-var image3;
-
 function getMousePos(_canvas, evt) {
     var rect = _canvas.getBoundingClientRect();
     return {
@@ -57,32 +53,13 @@ function init() {
 	CenterPanel = new Panel(canvas_center, overlay_center, center_pegs);
 	RightPanel = new Panel(canvas_right, overlay_right, right_pegs);
 
-	image1 = new Image();
-	image1.onload = loadImageOne;
-	image1.src = 'background_slice@2x.jpg';
-};
+	LeftPanel.specialPegCounterLimit = randomValue(3, 5);
+	CenterPanel.specialPegCounterLimit = randomValue(6,9);
+	RightPanel.specialPegCounterLimit = randomValue(10,12);
 
-
-function loadImageOne() {
-	image2 = new Image();
-	image2.onload = loadImageTwo;
-	image2.src = 'background_slice@2x.jpg';
-};
-
-function loadImageTwo() {
-	image3 = new Image();
-	image3.onload = loadImageThree;
-	image3.src = 'background_slice@2x.jpg';
-};
-
-function loadImageThree() {
-
-	LeftPanel.bg_image = image1;
-	CenterPanel.bg_image = image2;
-	RightPanel.bg_image = image3;
-
-	draw(0);
-    loop();
+	img = new Image();
+	img.onload = imageLoaded;
+	img.src = 'background_slice@2x.jpg';
 };
 
 function loadSplatterImages() {
@@ -204,8 +181,9 @@ function getPeg(c, x , y) {
 	var pegndex = parseInt(randomValue(0, 8));
 	var filepath = "pegs/pX/PX_" + pegndex;
 	var specialfile = "pegs/pS/PS_" + pegndex;
-	var peg = new Peg(x, y, c, filepath, pegndex, specialfile);
+	var splatter = "paint-splatters/splatter_S";
 
+	var peg = new Peg(x, y, c, filepath, pegndex, specialfile, splatter);
 	return peg;
 }
 
@@ -218,7 +196,8 @@ var totalSeconds = 0;
 
 
 function imageLoaded() {
-    
+    draw(0);
+    loop();
 }
 
 function loop() {
@@ -239,9 +218,9 @@ function draw(delta) {
 	if(timer < 1700) {timer += 1;}
     totalSeconds += delta;
 
-    LeftPanel.moveBG();
-    CenterPanel.moveBG();
-    RightPanel.moveBG();
+    LeftPanel.moveBG(totalSeconds, img, -5500);
+    CenterPanel.moveBG(totalSeconds, img, -5700);
+    RightPanel.moveBG(totalSeconds, img, -5200);
 
     LeftPanel.drawPegs(mousePos);
     CenterPanel.drawPegs(mousePos);
@@ -252,28 +231,28 @@ function draw(delta) {
 
 
 function fakeGamePlay(){
-	if(timer == 350) {
+	if(timer == 25) {
   		LeftPanel.pegs.forEach(function(peg) {
   			peg.playerHasEntered(2);
   			peg.player_assigned = true;
   		});
   	}
 
-  	if(timer == 700) {
+  	if(timer == 50) {
   		CenterPanel.pegs.forEach(function(peg) {
   			peg.playerHasEntered(4);
   			peg.player_assigned = true;
   		});
   	}
 
-  	if(timer == 1050) {
+  	if(timer == 75) {
   		RightPanel.pegs.forEach(function(peg) {
   			peg.playerHasEntered(3);
   			peg.player_assigned = true;
   		});
   	}
 
-  	if(timer == 1400) {
+  /*	if(timer == 1400) {
   		CenterPanel.pegs.forEach(function(peg) {
   			peg.player_assigned = false;
   		});
@@ -289,7 +268,7 @@ function fakeGamePlay(){
   		LeftPanel.pegs.forEach(function(peg) {
   			peg.player_assigned = false;
   		});
-  	}
+  	}*/
 }
 
 init();
