@@ -2,7 +2,7 @@
     "use strict";
 
     var constants = {
-        maxSpeed: 2
+        maxSpeed: 4
     };
 
     var rowCanvas = WinJS.Class.define(
@@ -112,8 +112,8 @@
                   var that = this;
                   var multiplier = 0.001;
 
-                  var xDistance = (playerData['right']['pos']['x'] - 30) - (playerData['spine']['pos']['x']);
-                  var yDistance = (playerData['right']['pos']['y'] - 38) - (playerData['spine']['pos']['y']);
+                  var xDistance = (playerData['right']['pos']['x']) - (playerData['spine']['pos']['x']);
+                  var yDistance = (playerData['right']['pos']['y']) - (playerData['spine']['pos']['y']);
                   var angleDistance = this.calculateAngleDistance(xDistance, yDistance);
 
                   var boatX = that._boats[p].x - that._boats[p].width / 2;
@@ -174,8 +174,6 @@
                                   var otherBoatData = that._canvasContext.getImageData(otherBoat.x - otherBoat.width / 2, otherBoat.y - otherBoat.width / 2, otherBoat.width, otherBoat.width);
 
                                   if (that.isPixelCollision(boatData, boatX, boatY, otherBoatData, otherBoat.x, otherBoat.y, false)) {
-                                      multiplier = 0.003;
-
                                       if ((that._boats[p].dx > 0 && otherBoat.dx > 0) || (that._boats[p].dx < 0 && otherBoat.dx < 0)) {
                                           otherBoat.dx = otherBoat.dx + that._boats[p].dx;
                                           that._boats[p].dx = that._boats[p].dx / 2;
@@ -200,17 +198,21 @@
                   if (this._boats[p].dx > constants.maxSpeed) {
                       this._boats[p].dx = constants.maxSpeed;
                   }
+                  if (this._boats[p].dx < -constants.maxSpeed) {
+                      this._boats[p].dx = -constants.maxSpeed;
+                  }
                   if (this._boats[p].dy > constants.maxSpeed) {
                       this._boats[p].dy = constants.maxSpeed;
+                  }
+                  if (this._boats[p].dy < -constants.maxSpeed) {
+                      this._boats[p].dy = -constants.maxSpeed;
                   }
                   this._boats[p].update();
               }
           },
           removeBoat: function (p) {
-              console.log('Boat to be removed: ', p, this._boats);
               this._boats.splice(p, 1);
               this._boats.splice(p, 0, undefined);
-              console.log('Boats left: ', this._boats);
           },
           collidingCircles: function () {
               var length = this._lilypads.length;
