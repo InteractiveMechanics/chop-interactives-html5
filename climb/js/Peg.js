@@ -1,4 +1,4 @@
-function Peg(x, y, canvas, pegfile, index, specialfile) {
+function Peg(x, y, canvas, pegfile, index, specialfile, specialsplatter) {
 	var I = I || {};
 
 	I.x = x;
@@ -11,7 +11,7 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 	I.player_assigned = false;
 	I.activated = false;
 	I.currentlyActive = false;
-	I.showSpecialPeg = false;
+	I.isSpecialPeg = false;
 
 	I.counter = 0;
 	I.color = null;
@@ -23,6 +23,7 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 	I.splatter_sprite = null;
 	I.gray_sprite = new Sprite('peg', new ImagePainter(pegfile));
 	I.special_sprite = new Sprite('specialpeg', new ImagePainter(specialfile));
+	I.special_splatter_sprite = new Sprite('specialsplatter', new ImagePainter(specialsplatter));
 
 	I.update = function() {
 		
@@ -60,7 +61,7 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 	I.draw = function() {
 		if(this.player_assigned) {
 		    if (!this.activated) {
-		        if (!this.showSpecialPeg) {
+		        if (!this.isSpecialPeg) {
 		            this.context.save();
 		            this.context.shadowColor = this.color;
 		            this.context.shadowBlur = this.counter;
@@ -88,19 +89,39 @@ function Peg(x, y, canvas, pegfile, index, specialfile) {
 		            this.context.restore();
 		        }
 		    } else {
-		        if (this.splatter_sprite) {
+		        if (!this.isSpecialPeg) {
+		            if (this.splatter_sprite) {
+		                this.context.save();
+		                this.context.globalAlpha = 0.85;
+		                this.splatter_sprite.width = 400;
+		                this.splatter_sprite.height = 400;
+		                this.splatter_sprite.left = this.x - 140;
+		                this.splatter_sprite.top = this.y - 140;
+		                this.splatter_sprite.paint(this.context);
+		                this.context.restore();
+		            }
+		        } else {
 		            this.context.save();
-		            this.context.globalAlpha = 0.85;
-		            this.splatter_sprite.width = 400;
-		            this.splatter_sprite.height = 400;
-		            this.splatter_sprite.left = this.x - 140;
-		            this.splatter_sprite.top = this.y - 140;
-		            this.splatter_sprite.paint(this.context);
+		            this.context.globalAlpha = 1;
+		            this.special_splatter_sprite.width = 400;
+		            this.special_splatter_sprite.height = 400;
+		            this.special_splatter_sprite.left = this.x - 140;
+		            this.special_splatter_sprite.top = this.y - 140;
+		            this.special_splatter_sprite.paint(this.context);
 		            this.context.restore();
 		        }
 		    }
 		} else {
-		    if (this.splatter_sprite) {
+		    if (this.isSpecialPeg && this.special_splatter_sprite && this.counter > 50) {
+		        this.context.save();
+		        this.context.globalAlpha = 1;
+		        this.special_splatter_sprite.width = 400;
+		        this.special_splatter_sprite.height = 400;
+		        this.special_splatter_sprite.left = this.x - 140;
+		        this.special_splatter_sprite.top = this.y - 140;
+		        this.special_splatter_sprite.paint(this.context);
+		        this.context.restore();
+		    } else if (this.splatter_sprite) {
 		        this.context.save();
 		        this.context.globalAlpha = 0.9;
 		        this.splatter_sprite.width = 400;

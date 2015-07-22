@@ -5,18 +5,15 @@ function Panel(bg_canvas, overlay_canvas, pegs) {
 	I.overlay_canvas = overlay_canvas;
 	I.showSpecialPeg = false;
 	I.pegs = pegs;
-	I.speed = .25;
+	I.speed = .5;
 	I.scrollVal = 0;
 	I.bg_image = null;
+
+	I.specialPegCounter = 0;
+    I.specialPegCounterLimit = 2;
 	
     I.startY = 0;
 	I.startY2 = -8100
-
-	I.splatAll = function() {
-		this.pegs.forEach(function(peg) {
-	    	peg.activated = true;
-	  	});
-	};
 
 	I.xPosition = function(totalSeconds, height) {
 		return totalSeconds * this.speed % height;
@@ -59,6 +56,13 @@ function Panel(bg_canvas, overlay_canvas, pegs) {
 		        peg.activated = false;   
 		        peg.splatter_sprite = null;
 		        peg.counter = 0;
+		        peg.isSpecialPeg = false;
+		        that.specialPegCounter += 1;
+
+		        if(that.specialPegCounter == that.specialPegCounterLimit) {
+		            peg.isSpecialPeg = true;
+		            that.specialPegCounter = 0;
+		        }
 		    }
 	  	});
 	}

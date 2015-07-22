@@ -32,6 +32,10 @@
               this._CenterPanel = new Panel(canvas_center, overlay_center, this._center_pegs);
               this._RightPanel = new Panel(canvas_right, overlay_right, this._right_pegs);
 
+              this._LeftPanel.specialPegCounterLimit = this.randomValue(15, 20);
+              this._CenterPanel.specialPegCounterLimit = this.randomValue(17, 22);
+              this._RightPanel.specialPegCounterLimit = this.randomValue(19, 24);
+
               this._image1 = new Image();
               this._image2 = new Image();
               this._image3 = new Image();
@@ -91,6 +95,16 @@
                               peg.activated = true;
                               peg.splatter_sprite = that.randomSplat();
 
+                              if(peg.isSpecialPeg) {
+                                  that.splatAll(Panel);
+                                  peg.splatter_sprite = peg.special_sprite;
+                                  Panel.speed += 1.25;
+                              } else {
+                                  if(!peg.splatter_sprite) {
+                                      peg.splatter_sprite = randomSplat();
+                                  }
+                              }
+
                               if (Panel.speed < 5) {
                                   Panel.speed += 0.25;
                               }
@@ -108,6 +122,15 @@
           },
           randomSplat: function () {
               return this._paint_splatters[Math.floor(Math.random() * this._paint_splatters.length)];
+          },
+          splatAll: function (Panel) {
+              var that = this;
+              Panel.pegs.forEach(function(peg) {
+                  peg.activated = true;
+                  if(!peg.splatter_sprite) {
+                      peg.splatter_sprite = that.randomSplat();
+                  }
+              });
           },
 
           createLeftCanvas: function () {
@@ -182,8 +205,9 @@
           getPeg: function (c, x, y) {
               var pegndex = parseInt(this.randomValue(0, 9));
               var filepath = "images/pegs/PX/PX_" + pegndex + '.png';
-              var specialfile = "images/pegs/PS/PS_" + pegndex + '.png';
-              var peg = new Peg(x, y, c, filepath, pegndex, specialfile);
+              var specialfile = "images/pegs/PG/PS_" + pegndex + '.png';
+              var splatter = "images/paint-splatters/splatter_S.png";
+              var peg = new Peg(x, y, c, filepath, pegndex, specialfile, splatter);
 
               return peg;
           },
