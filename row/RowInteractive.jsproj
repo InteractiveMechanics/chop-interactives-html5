@@ -50,8 +50,10 @@
     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
     <PackageCertificateKeyFile>KinectMotionDemo_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <AppxPackageDir>D:\RowInteractive</AppxPackageDir>
+    <AppxBundle>Auto</AppxBundle>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="package.appxmanifest">

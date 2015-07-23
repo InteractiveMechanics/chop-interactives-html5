@@ -5,7 +5,7 @@
         maxPlayers: 3,
         handHeight: 154,
         handWidth: 154,
-        instructionsDuration: 5000,
+        instructionsDuration: 8000,
         tooManyTimeoutDuration: 30000,
         resetTimeoutDuration: 30000
     };
@@ -125,6 +125,9 @@
               if (this._totalBodies > constants.maxPlayers && this._activeTooManyPlayers == false) {
                   var image = new Image();
                   image.src = 'images/too-many-alert@2x.png';
+
+                  that._activeAlert = false;
+                  that._instructions.paused = true;
                   that.clearScreen(that._instructionsContext);
                   that._instructionsContext.drawImage(image, 691, 920, 539, 80);
 

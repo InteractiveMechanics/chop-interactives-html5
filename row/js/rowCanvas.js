@@ -238,11 +238,11 @@
                 for(var i = 0; i < 10; i++) {
                     var weight = Math.floor(Math.random() * 10);
 
-                    if((weight > 0) && (weight <= 3)) {
+                    if((weight > 0) && (weight <= 1)) {
                         this._lilypads.push(new Flower());
                     }
 
-                    if((weight > 3) && (weight <= 6)) {
+                    if((weight > 1) && (weight <= 6)) {
                         this._lilypads.push(new LilyPad());
                     }
 

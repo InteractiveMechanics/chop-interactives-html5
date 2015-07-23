@@ -32,9 +32,9 @@
               this._CenterPanel = new Panel(canvas_center, overlay_center, this._center_pegs);
               this._RightPanel = new Panel(canvas_right, overlay_right, this._right_pegs);
 
-              this._LeftPanel.specialPegCounterLimit = this.randomValue(15, 20);
-              this._CenterPanel.specialPegCounterLimit = this.randomValue(17, 22);
-              this._RightPanel.specialPegCounterLimit = this.randomValue(19, 24);
+              this._LeftPanel.specialPegCounterLimit = this.randomValue(30, 40);
+              this._CenterPanel.specialPegCounterLimit = this.randomValue(32, 42);
+              this._RightPanel.specialPegCounterLimit = this.randomValue(34, 44);
 
               this._image1 = new Image();
               this._image2 = new Image();
