@@ -5,7 +5,7 @@ function Panel(bg_canvas, overlay_canvas, pegs) {
 	I.overlay_canvas = overlay_canvas;
 	I.showSpecialPeg = false;
 	I.pegs = pegs;
-	I.speed = .5;
+	I.speed = 1;
 	I.scrollVal = 0;
 	I.bg_image = null;
 
@@ -47,7 +47,7 @@ function Panel(bg_canvas, overlay_canvas, pegs) {
 	    	peg.y += that.speed;
 
 	    	if (peg.y > window.innerHeight + 100) {  //Repeat the raindrop when it falls out of view
-	    	    if (!peg.activated && that.speed > 0.25) {
+	    	    if (!peg.activated && that.speed > 1) {
 	    	        that.speed -= 0.25;
 	    	    }
 

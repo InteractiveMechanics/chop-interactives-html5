@@ -1,0 +1,38 @@
+﻿#instructionsCanvas {
+    z-index: 20;
+}
+#kinectCanvas {
+    z-index: 10;
+}
+
+#cloudBGCanvas {
+    z-index: 6;
+}
+#planeCanvas {
+    z-index: 5;
+}
+#pathCanvas {
+    z-index: 4;
+}
+#cloudMGCanvas {
+    z-index: 3;
+}
+#cloudBGCanvas {
+    z-index: 2;
+}
+#skyCanvas {
+    z-index: 1;
+}
+
+#instructionsCanvas,
+#kinectCanvas,
+#planeCanvas,
+#skyCanvas,
+#pathCanvas,
+#cloudFGCanvas,
+#cloudMGCanvas,
+#cloudBGCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

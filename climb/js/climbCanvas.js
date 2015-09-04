@@ -85,9 +85,9 @@
                               peg.counter = peg.counter + 1.5;
                           } else {
                               if (Panel.speed > 3) {
-                                  peg.counter = peg.counter + 0.75;
+                                  peg.counter = peg.counter + 1.5;
                               } else {
-                                  peg.counter = peg.counter + 0.5;
+                                  peg.counter = peg.counter + 1;
                               }
                           }
                           

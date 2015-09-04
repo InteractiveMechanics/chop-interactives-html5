@@ -18,7 +18,7 @@
               this._sensorColourFrameDimensions = {};
               this._sensorColourFrameDimensions.width = this._sensor.colorFrameSource.frameDescription.width;
               this._sensorColourFrameDimensions.height = this._sensor.colorFrameSource.frameDescription.height;
-              console.log("Kinect body reader #" + index + " opened.")
+              // console.log("Kinect body reader #" + index + " opened.")
           },
           getSensor: function () {
               var that = this;
@@ -26,7 +26,7 @@
 
               this._sensor = nsKinect.KinectSensor.getDefault();
               this._sensor.open();
-              console.log("Kinect sensor opened.");
+              // console.log("Kinect sensor opened.");
 
               this._bodies = new Array(constants.bodyCount);
               this._bodyDrawers = new Array(constants.bodyCount);
@@ -40,6 +40,7 @@
               setTimeout(function () { that.openReader() }, 2000);
           },
           openReader: function () {
+              var that = this;
               this._boundHandler = this._onFrameArrived.bind(this);
               this._reader = this._sensor.bodyFrameSource.openReader();
               this._reader.addEventListener('framearrived', this._boundHandler);
@@ -48,10 +49,17 @@
               if (!isActive) {
                   // If we're not able to get data from the sensor, let's refresh the page
                   // and try again...
-                  console.log("Kinect sensor isn't active...");
+                  // console.log("Kinect sensor isn't active...");
                   WinJS.Navigation.navigate('default.html');
               } else {
-                  console.log("Kinect reader opened.");
+                  // console.log("Kinect reader opened.");
+                  this._lastKnownTime = new Date().getTime();
+                  this._kinectResetTimeout = setTimeout(function () {
+                      // console.log("Unable to get frames from Kinect, restart the Kinect sensor.");
+                      that.closeReader();
+                      that.releaseSensor();
+                      that.getSensor();
+                  }, 5000);
               }
           },
           closeReader: function () {
@@ -64,11 +72,23 @@
               this._sensor = null;
           },
           _onFrameArrived: function (e) {
+              var that = this;
               var frame = e.frameReference.acquireFrame();
               var players = {};
               var i = 0;
 
               if (frame) {
+                  var currentTime = new Date().getTime();
+                  if (currentTime - this._lastKnownTime < 3000) {
+                      clearTimeout(this._kinectResetTimeout);
+                      this._lastKnownTime = new Date().getTime();
+                      this._kinectResetTimeout = setTimeout(function () {
+                          // console.log("Unable to get frames from Kinect, restart the Kinect sensor.");
+                          that.closeReader();
+                          that.releaseSensor();
+                          that.getSensor();
+                      }, 5000);
+                  }
                   frame.getAndRefreshBodyData(this._bodies);
 
                   for (i = 0; i < constants.bodyCount; i++) {
@@ -190,7 +210,8 @@
           _bodies: null,
 
           // Because sometimes we don't get the Kinect frames...
-          _kinectResetTimeout: null
+          _kinectResetTimeout: null,
+          _lastKnownTime: null
       }
     );
 

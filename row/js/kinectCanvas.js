@@ -30,7 +30,7 @@
               this._lastPlayers = {};
               this._lastConfidentPlayers = {};
 
-              console.log('Kinect canvases initialized.');
+              // console.log('Kinect canvases initialized.');
           },
           clearScreen: function (context) {
               var context = context;
@@ -59,13 +59,13 @@
 
                           that._activeAlert = true;
                           that._instructions.paused = false;
-                          console.log('Show instructions for Player ' + p);
+                          // console.log('Show instructions for Player ' + p);
 
                           setTimeout(function () {
                               that._activeAlert = false;
                               that._instructions.paused = true;
                               that.clearScreen(that._instructionsContext);
-                              console.log('Clear instructions for Player ' + p);
+                              // console.log('Clear instructions for Player ' + p);
                           }, 6000);
 
                           that._rowCanvas.createBoat(p);
@@ -86,7 +86,7 @@
                       if (index > -1) {
                           activePlayers.splice(index, 1);
                           that._rowCanvas.removeBoat(l);
-                          console.log("Player " + l + " left the game.");
+                          // console.log("Player " + l + " left the game.");
                       }
                   }
               }
@@ -113,7 +113,7 @@
                       lastConfidentPlayers = {};
                       that._activeReset = false;
                       that._rowCanvas._boats = [];
-                      console.log("No players present, reseting the game.");
+                      // console.log("No players present, reseting the game.");
                   }, constants.resetTimeoutDuration);
               }
 
@@ -132,19 +132,19 @@
                   that._instructionsContext.drawImage(image, 691, 920, 539, 80);
 
                   this._activeTooManyPlayers = true;
-                  console.log('Show "too many players" alert.');
+                  // console.log('Show "too many players" alert.');
 
                   this.tooManyTimeout = setTimeout(function () {
                       that.clearScreen(that._instructionsContext);
                       this._activeTooManyPlayers = false;
-                      console.log('Remove "too many players" alert.');
+                      // console.log('Remove "too many players" alert.');
                   }, constants.tooManyTimeoutDuration);
               }
               if (this._totalBodies <= constants.maxPlayers && this._activeTooManyPlayers == true) {
                   that.clearScreen(that._instructionsContext);
                   this._activeTooManyPlayers = false;
                   window.clearTimeout(this.tooManyTimeout);
-                  console.log('Remove "too many players" alert.');
+                  // console.log('Remove "too many players" alert.');
               }
 
               this.showInstructions()

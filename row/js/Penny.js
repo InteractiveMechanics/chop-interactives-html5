@@ -1,8 +1,8 @@
 function Penny(I) {
     I = I || {};
 
-    I.x = randomInRange(1900, 20);
-    I.y = randomInRange(1060, 20);
+    I.x = randomInRange(1800, 20);
+    I.y = randomInRange(960, 20);
 
     I.width = 80;
     I.height = 80;

@@ -25,7 +25,7 @@
               this._pondContext.drawImage(background, 0, 0, 1920, 1080);
 
               this.populateCircleArray();
-              console.log('Game canvases initialized.')
+              // console.log('Game canvases initialized.')
           },
           clearScreen: function (context) {
               var context = context;
@@ -52,6 +52,7 @@
           update: function () {
               var i;
               var pennyCount = 0;
+              var totalPennyCount = 0;
 
               this._lilypads.forEach(function (lilypad) {
                   if (Math.abs(lilypad.dx) > lilypad.weight) {
@@ -75,11 +76,12 @@
                   if (!penny.hasBeenHit) {
                       pennyCount++;
                   }
+                  totalPennyCount++;
               });
               if (pennyCount < 4) {
                   this._pennies.push(new Penny());
               }
-              if (pennyCount > 25) {
+              if (totalPennyCount > 25) {
                   this._pennies.splice(0, 1);
               }
 
@@ -235,21 +237,17 @@
               };
           },
           populateCircleArray: function () {
-                for(var i = 0; i < 10; i++) {
-                    var weight = Math.floor(Math.random() * 10);
+               
+                this._lilypads.push(new LilyPad());
+                this._lilypads.push(new LilyPad());
+                this._lilypads.push(new LilyPad());
 
-                    if((weight > 0) && (weight <= 1)) {
-                        this._lilypads.push(new Flower());
-                    }
+                this._lilypads.push(new HeavyLilyPad());
+                this._lilypads.push(new HeavyLilyPad());
+                this._lilypads.push(new HeavyLilyPad());
 
-                    if((weight > 1) && (weight <= 6)) {
-                        this._lilypads.push(new LilyPad());
-                    }
-
-                    if((weight > 6) && (weight <= 9)) {
-                        this._lilypads.push(new HeavyLilyPad());
-                    }
-                }
+                this._lilypads.push(new Flower());
+                this._lilypads.push(new Flower());
 
                 for(var i = 0; i < 4; i++) {
                     this._pennies.push(new Penny());
