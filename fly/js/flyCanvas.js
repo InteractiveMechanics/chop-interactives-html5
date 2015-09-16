@@ -101,18 +101,6 @@
                   }
               });
 
-
-/*              if (this.plane) {
-                  this.plane.move();
-                  this.plane.update();
-
-                  if (this.plane.offScreenCounter > 4) {
-                      this.plane = null;
-                      this.clearScreen(this._planeContext);
-                      //this.clearScreen(this._pathContext);
-                  }
-              }*/
-
               this._foregroundAlpha += this._foregroundSpeed;
               this._midgroundAlpha += this._midgroundSpeed;
               this._backgroundAlpha += this._backgroundSpeed;
@@ -128,24 +116,25 @@
               var distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
               return [angle, distance];
           },
-          checkPlanesR: function (index, player, lastPlayer) {
+          checkPlanesR: function (index, player, lastPlayer, whichHand) {
 
               var xPosition = parseInt(player['pos']['x']);
               var yPosition = parseInt(player['pos']['y']);
 
-              if ((player['status'] === 'closed' && lastPlayer['status'] === 'open')) {
-                  console.log(this._planes);
+              if (player['status'] === 'closed' && !this._planes[index]) {
+                  //console.log(this._planes);
                   this._planes[index] = this.getPlane(index, xPosition, yPosition);
+                  this._planes[index].hand = whichHand;
                   this._planes[index].p.x = xPosition;
                   this._planes[index].p.y = yPosition;
 
                   this.statusText = 'Start: ' + this._planes[index].startX + "," + this._planes[index].startY;
-                  console.log(this._planes);
+                  //console.log(this._planes);
 
                   this._planes[index].lastX = xPosition;
               }
 
-              if (player['status'] === 'closed' && this._planes[index]) {
+              if (player['status'] === 'closed' && this._planes[index] && this._planes[index].hand === whichHand) {
                   this._planes[index] = this.getPlane(index, xPosition, yPosition);
 
                   if (this._planes[index].lastX < xPosition) {
@@ -166,18 +155,26 @@
                   var thrownAtX = xPosition;
                   var thrownAtY = yPosition;
 
-                  if (this._planes[index].startX < thrownAtX) {
-                      this._planes[index].rotatePlane = true;
+                  if (Math.abs(this._planes[index].startX - xPosition) > 10) {
+                      if (this._planes[index].startX < thrownAtX) {
+                          this._planes[index].rotatePlane = true;
+                      }
+
+                      var scale = .2;
+                      this._planes[index].p.x = xPosition;
+                      this._planes[index].p.y = yPosition;
+                      this._planes[index].v.x = (thrownAtX - this._planes[index].startX) * scale;
+                      this._planes[index].v.y = (thrownAtY - this._planes[index].startY) * scale;
+                      this._planes[index].isActive = true;
+
+                      this._activePlanes.push(this._planes[index]);
+                      this._planes[index] = undefined;
+                  } else {
+                      this._planes[index] = undefined;
                   }
+              }
 
-                  var scale = .2;
-                  this._planes[index].p.x = xPosition;
-                  this._planes[index].p.y = yPosition;
-                  this._planes[index].v.x = (thrownAtX - this._planes[index].startX) * scale;
-                  this._planes[index].v.y = (thrownAtY - this._planes[index].startY) * scale;
-                  this._planes[index].isActive = true;
-
-                  this._activePlanes.push(this._planes[index]);
+              if (this._planes[index] && this._planes[index].p.x === this._planes[index].lastX && this._planes[index].p.y === this._planes[index].lastY) {
                   this._planes[index] = undefined;
               }
           },
@@ -189,15 +186,20 @@
               }
               return this.mousePos;
           },
+          removePlane: function(index) {
+              if (this._planes[index]) {
+                  this._planes[index] = undefined;
+              }
+          },
           getPlane: function(index, x, y) {
               if (this._planes[index]) {
                   this._planes[index].p.x = x;
                   this._planes[index].p.y = y
 
-                  console.log('in here');
+                  //console.log('in here');
                   return this._planes[index];
               } else {
-                  console.log('new plane');
+                  //console.log('new plane');
                   return new Plane(this._planeCanvas, x, y);
               }
           },

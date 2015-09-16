@@ -87,6 +87,7 @@
 
                       if (index > -1) {
                           activePlayers.splice(index, 1);
+                          that._flyCanvas.removePlane(l);
                           // console.log("Player " + l + " left the game.");
                       }
                   }
@@ -99,8 +100,8 @@
 
                   if (players[aP]) {
                       that.drawHands(aP, players[aP], that._lastPlayers[aP]);
-                      that._flyCanvas.checkPlanesR(aP, players[aP]['right'], that._lastPlayers[aP]['right']);
-                      //that._flyCanvas.checkPlanesL(aP, players[aP]['left'], that._lastPlayers[aP]['left']);
+                      that._flyCanvas.checkPlanesR(aP, players[aP]['right'], that._lastPlayers[aP]['right'], 'right');
+                      that._flyCanvas.checkPlanesR(aP, players[aP]['left'], that._lastPlayers[aP]['left'], 'left');
                   }
               });
 
@@ -202,10 +203,10 @@
                   }
               }
               if (player['left']['trackingState'] === 2) {
-                  context.drawImage(leftHand, Math.round(player['left']['pos']['x']), Math.round(player['left']['pos']['y']), 60, 76);
+                  context.drawImage(leftHand, Math.round(player['left']['pos']['x'] - constants.handWidth / 2), Math.round(player['left']['pos']['y'] - constants.handHeight / 2), 60, 76);
               } else if (player['left']['trackingState'] === 1 || 0) {
                   context.globalAlpha = 0.5;
-                  context.drawImage(leftHand, Math.round(this._lastConfidentPlayers[p]['left']['pos']['x']), Math.round(this._lastConfidentPlayers[p]['left']['pos']['y']), 60, 76);
+                  context.drawImage(leftHand, Math.round(this._lastConfidentPlayers[p]['left']['pos']['x'] - constants.handWidth / 2), Math.round(this._lastConfidentPlayers[p]['left']['pos']['y'] - constants.handHeight / 2), 60, 76);
               }
               context.restore();
           },

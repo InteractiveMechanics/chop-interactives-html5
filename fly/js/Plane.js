@@ -14,6 +14,7 @@
     this.lineAlpha = 1;
     this.rotatePlane = false;
     this.isDead = false;
+    this.hand = null;
     
     this.playerId = null;
     this.planeType = getRandomPlane();
@@ -62,7 +63,7 @@
 
     this.update = function () {
         var color = getColorValue(this.colorId);
-         if (this.offScreenCounter < 3) {
+         if (this.offScreenCounter < 4) {
             if (this.p.x > canvas.width + 100) {
                 this.p.x = 0;
                 this.offScreenCounter += 1;
@@ -104,9 +105,8 @@
     this.draw = function () {
         var color = getColorValue(this.colorId);
         var context = canvas.getContext("2d");
-        if (this.offScreenCounter < 3) {
+        if (this.offScreenCounter < 4) {
             context.save();
-            //context.clearRect(0, 0, canvas.width, canvas.height);
 
             if (this.isActive) {
                 var time = new Date();
@@ -119,16 +119,16 @@
 
             this.sprite.width = this.width;
             this.sprite.height = this.height;
-            this.sprite.left = this.p.x - this.width / 2;
-            this.sprite.top = this.p.y - this.height / 2;
+            this.sprite.left = 0 - this.width / 2;
+            this.sprite.top = 0 - this.height / 2;
+
 
             if (this.rotatePlane) {
                 //Rotate Logic
-                this.sprite.left = 0;//this.p.x - this.width/2;
-                this.sprite.top = 0;//this.p.y - this.height / 2;
                 context.scale(-1, 1);
-                context.translate(-(Math.round(this.p.x - -100)), Math.round(this.p.y - this.height / 2));
-
+                context.translate(-(Math.round(this.p.x)), Math.round(this.p.y));
+            } else {
+                context.translate(Math.round(this.p.x), Math.round(this.p.y));
             }
 
             if (this.v.x > 0) {
@@ -158,7 +158,7 @@
             //    this._paths.push(new Path(this.lastX, this.lastY, this.p.x, this.p.y, color));
             //}
 
-            if (this.paths.length > 3) {
+            if (this.paths.length > 4) {
                 this.paths.forEach(function (path) {
                     if (path) {
                         path.draw();
