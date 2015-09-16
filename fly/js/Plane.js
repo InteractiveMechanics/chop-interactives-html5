@@ -11,7 +11,11 @@
     this.G = .23; 			// universal gravitational constant.
     this.drag = .99;
     this.offScreenCounter = 0;
-
+    this.lineAlpha = 1;
+    this.rotatePlane = false;
+    this.isDead = false;
+    
+    this.playerId = null;
     this.planeType = getRandomPlane();
     this.colorId = getRandomColor();
 
@@ -22,6 +26,8 @@
     this.startY = startY;
     this.lastX = 0;
     this.lastY = 0;
+    this.paths = [];
+    this.theta = 0;  			// rotational angle.
 
     // everything we need for sprites
     this.paused = true;
@@ -39,7 +45,7 @@
     this.move = function () {
         if (this.isActive) {
             this.v.x *= this.drag;
-            this.v.y *= this.drag;
+            //this.v.y *= this.drag;
 
             this.v.y += this.G;
 
@@ -48,29 +54,38 @@
 
             this.p.x += this.v.x;
             this.p.y += this.v.y;
+
+            this.theta = Math.atan(this.v.y / this.v.x)  || 0;
+            
         }
     };
 
     this.update = function () {
+        var color = getColorValue(this.colorId);
          if (this.offScreenCounter < 3) {
-            if (this.p.x > canvas.width) {
+            if (this.p.x > canvas.width + 100) {
                 this.p.x = 0;
                 this.offScreenCounter += 1;
             }
 
-            if (this.p.x < 0) {
+            if (this.p.x < -100) {
                 this.p.x = canvas.width;
                 this.offScreenCounter += 1;
             }
 
-            if (this.p.y > canvas.height) {
+            if (this.p.y > canvas.height + 100) {
                 this.p.y = 0;
                 this.offScreenCounter += 1;
             }
 
-            if (this.p.y < 0) {
+            if (this.p.y < -100) {
                 this.p.y = canvas.height;
                 this.offScreenCounter += 1;
+                //this.v.y = -this.b * this.v.y;
+            }
+
+            if (this.isActive && Math.abs(this.p.x - this.lastX) < 150 && Math.abs(this.p.y - this.lastY) < 150) {
+                this.paths.push(new Path(this.lastX, this.lastY, this.p.x, this.p.y, color, this.lineWidth, this.lineDash));
             }
         }
     };
@@ -79,51 +94,82 @@
         this.p = { x: 100, y: 100 };
         this.v = { x: 0, y: 0 };
     };
+
+    this.drawText = function (text) {
+        var context = canvas.getContext("2d");
+        context.font = "20px Arial";
+        context.fillText(text, 100, 100);
+    }
     
     this.draw = function () {
         var color = getColorValue(this.colorId);
-
         var context = canvas.getContext("2d");
         if (this.offScreenCounter < 3) {
-            /*
             context.save();
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            context.fillStyle = color;
+            //context.clearRect(0, 0, canvas.width, canvas.height);
 
-            // this draws the ball
-            context.beginPath();
-            context.arc(this.p.x, this.p.y, this.radius, 0, Math.PI * 2, true);
-            context.closePath();
-            context.fill();
-            context.restore();
-            */
-            context.save();
-            context.clearRect(0, 0, canvas.width, canvas.height);
+            if (this.isActive) {
+                var time = new Date();
+                var milli = time.getTime();
+                if (milli - this.lastAdvance > 175) {
+                    this.sprite.painter.advance();
+                    this.lastAdvance = milli;
+                }
+            }
+
             this.sprite.width = this.width;
             this.sprite.height = this.height;
-            this.sprite.left = this.p.x - this.width/2;
-            this.sprite.top = this.p.y - this.height/2;
+            this.sprite.left = this.p.x - this.width / 2;
+            this.sprite.top = this.p.y - this.height / 2;
+
+            if (this.rotatePlane) {
+                //Rotate Logic
+                this.sprite.left = 0;//this.p.x - this.width/2;
+                this.sprite.top = 0;//this.p.y - this.height / 2;
+                context.scale(-1, 1);
+                context.translate(-(Math.round(this.p.x - -100)), Math.round(this.p.y - this.height / 2));
+
+            }
+
+            if (this.v.x > 0) {
+                context.rotate(-this.theta);
+            } else {
+                context.rotate(this.theta);
+            }
+            
             this.sprite.paint(context);
             context.restore();
 
             var _pathCanvas = document.getElementById('pathCanvas');
             var _pathContext = _pathCanvas.getContext("2d");
-            if (this.isActive && Math.abs(this.p.x - this.lastX) < 150 && Math.abs(this.p.y - this.lastY) < 150) {
-                _pathContext.save();
-                _pathContext.setLineDash(this.lineDash);
-                _pathContext.beginPath();
-                _pathContext.lineTo(this.lastX, this.lastY);
-                _pathContext.lineTo(this.p.x, this.p.y);
-                _pathContext.lineWidth = this.lineWidth;
-                _pathContext.lineJoin = 'round';
-                _pathContext.lineCap = 'round';
-                _pathContext.strokeStyle = color;
-                _pathContext.stroke();
-                _pathContext.restore();
+            //if (this.isActive && Math.abs(this.p.x - this.lastX) < 150 && Math.abs(this.p.y - this.lastY) < 150) {
+            //    //_pathContext.save();
+            //    //_pathContext.setLineDash(this.lineDash);
+            //    //_pathContext.beginPath();
+            //    //_pathContext.lineTo(this.lastX, this.lastY);
+            //    //_pathContext.lineTo(this.p.x, this.p.y);
+            //    //_pathContext.lineWidth = this.lineWidth;
+            //    //_pathContext.lineJoin = 'round';
+            //    //_pathContext.lineCap = 'round';
+            //    //_pathContext.strokeStyle = color;
+            //    //_pathContext.stroke();
+            //    //_pathContext.restore();
+
+            //    this._paths.push(new Path(this.lastX, this.lastY, this.p.x, this.p.y, color));
+            //}
+
+            if (this.paths.length > 3) {
+                this.paths.forEach(function (path) {
+                    if (path) {
+                        path.draw();
+                    }
+                });
             }
+            
         } else {
-            context.clearRect(0, 0, canvas.width, canvas.height);
+            //context.clearRect(0, 0, canvas.width, canvas.height);
             this.isActive = false;
+            this.isDead = true;
         }
     }
 }

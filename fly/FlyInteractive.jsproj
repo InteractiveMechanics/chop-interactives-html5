@@ -144,6 +144,7 @@
     <Content Include="js\kinectController.js" />
     <Content Include="js\Instructions.js" />
     <Content Include="js\flyCanvas.js" />
+    <Content Include="js\Path.js" />
     <Content Include="js\Plane.js" />
     <Content Include="js\Sprite.js" />
     <None Include="KinectMotionDemo_TemporaryKey.pfx" />

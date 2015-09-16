@@ -97,7 +97,7 @@
                   that._activeReset = false;
 
                   if (players[aP]) {
-                      that.drawHands(aP, players[aP], that._lastPlayers[aP]);
+                      //that.drawHands(aP, players[aP], that._lastPlayers[aP]);
                       that._rowCanvas.moveBoat(aP, players[aP]);
                   }
               });

@@ -24,17 +24,17 @@
               this._cloudMGContext = this._cloudMGCanvas.getContext('2d');
               this._cloudBGContext = this._cloudBGCanvas.getContext('2d');
 
-              var cloudFG = new Image();
-              cloudFG.src = 'images/backgrounds/clouds_foreground.png';
-              this._cloudFGContext.drawImage(cloudFG, 0, 640, 1920, 640);
+              this.cloudFG = new Image();
+              this.cloudFG.src = 'images/backgrounds/clouds_foreground.png';
+              //this._cloudFGContext.drawImage(this.cloudFG, 0, 640, 1920, 640);
 
-              var cloudMG = new Image();
-              cloudMG.src = 'images/backgrounds/clouds_midground.png';
-              this._cloudMGContext.drawImage(cloudMG, 0, 640, 1920, 640);
+              this.cloudMG = new Image();
+              this.cloudMG.src = 'images/backgrounds/clouds_midground.png';
+              //this._cloudMGContext.drawImage(this.cloudMG, 0, 640, 1920, 640);
 
-              var cloudBG = new Image();
-              cloudBG.src = 'images/backgrounds/clouds_background.png';
-              this._cloudBGContext.drawImage(cloudBG, 0, 640, 1920, 640);
+              this.cloudBG = new Image();
+              this.cloudBG.src = 'images/backgrounds/clouds_background.png';
+              //this._cloudBGContext.drawImage(this.cloudBG, 0, 640, 1920, 640);
 
               var background = new Image();
               background.src = 'images/backgrounds/background.png';
@@ -45,43 +45,140 @@
               context.clearRect(0, 0, 1920, 1080);
           },
           draw: function () {
-              if (this.plane) {
-                  this.plane.draw();
+              this.clearScreen(this._planeContext);
+              this.clearScreen(this._pathContext);
+
+              this._planes.forEach(function (plane) {
+                  if (plane) {
+                      plane.draw();
+                  }
+              });
+
+              this._activePlanes.forEach(function (plane) {
+                  if (plane) {
+                      plane.draw();
+                  }
+              });
+
+              //Foreground
+              if (this.cloudFG) {
+                  this._cloudFGContext.clearRect(0, 0, 1920, 1080);
+                  this._cloudFGContext.globalAlpha = this._foregroundAlpha;
+                  this._cloudFGContext.drawImage(this.cloudFG, 0, 640, 1920, 640);
+              }
+
+              //Mid
+              if (this.cloudMG) {
+                  this._cloudMGContext.clearRect(0, 0, 1920, 1080);
+                  this._cloudMGContext.globalAlpha = this._midgroundAlpha;
+                  this._cloudMGContext.drawImage(this.cloudMG, 0, 640, 1920, 640);
+              }
+
+              //Background
+              if (this.cloudBG) {
+                  this._cloudBGContext.clearRect(0, 0, 1920, 1080);
+                  this._cloudBGContext.globalAlpha = this._backgroundAlpha;
+                  this._cloudBGContext.drawImage(this.cloudBG, 0, 640, 1920, 640);
               }
           },
           update: function () {
-              if (this.plane) {
+              this._planes.forEach(function (plane) {
+                  if (plane) {
+                      plane.move();
+                      plane.update();
+                  }
+                  //plane.drawText(this.statusText);
+              });
+
+              this._activePlanes.forEach(function (plane, index, object) {
+                  if (plane) {
+                      plane.move();
+                      plane.update();
+
+                      if (plane.isDead) {
+                          object.splice(index, 1);
+                      }
+                  }
+              });
+
+
+/*              if (this.plane) {
                   this.plane.move();
                   this.plane.update();
-              }
+
+                  if (this.plane.offScreenCounter > 4) {
+                      this.plane = null;
+                      this.clearScreen(this._planeContext);
+                      //this.clearScreen(this._pathContext);
+                  }
+              }*/
+
+              this._foregroundAlpha += this._foregroundSpeed;
+              this._midgroundAlpha += this._midgroundSpeed;
+              this._backgroundAlpha += this._backgroundSpeed;
+
+              if (this._foregroundAlpha <= 0 || this._foregroundAlpha >= 1.5) this._foregroundSpeed = -this._foregroundSpeed;
+
+              if (this._midgroundAlpha <= 0 || this._midgroundAlpha >= 1.5) this._midgroundSpeed = -this._midgroundSpeed;
+
+              if (this._backgroundAlpha <= 0 || this._backgroundAlpha >= 1.5) this._backgroundSpeed = -this._backgroundSpeed;
           },
           calculateAngleDistance: function (deltaX, deltaY) {
               var angle = Math.atan2(deltaY, deltaX) * Math.PI;
               var distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
               return [angle, distance];
           },
-          checkPlanes: function (player, lastPlayer) {
+          checkPlanesR: function (index, player, lastPlayer) {
 
-              if (player['status'] === 'closed' && lastPlayer['status'] === 'closed') {
-                  this.plane.p.x = player['pos']['x'];
-                  this.plane.p.y = player['pos']['y'];
+              var xPosition = parseInt(player['pos']['x']);
+              var yPosition = parseInt(player['pos']['y']);
+
+              if ((player['status'] === 'closed' && lastPlayer['status'] === 'open')) {
+                  console.log(this._planes);
+                  this._planes[index] = this.getPlane(index, xPosition, yPosition);
+                  this._planes[index].p.x = xPosition;
+                  this._planes[index].p.y = yPosition;
+
+                  this.statusText = 'Start: ' + this._planes[index].startX + "," + this._planes[index].startY;
+                  console.log(this._planes);
+
+                  this._planes[index].lastX = xPosition;
               }
 
-              if (player['status'] === 'closed' && lastPlayer['status'] === 'open') {
-                  this.plane = new Plane(this._planeCanvas, player['pos']['x'], player['pos']['y']);
+              if (player['status'] === 'closed' && this._planes[index]) {
+                  this._planes[index] = this.getPlane(index, xPosition, yPosition);
+
+                  if (this._planes[index].lastX < xPosition) {
+                      this._planes[index].rotatePlane = true;
+                  } else {
+                      this._planes[index].rotatePlane = false;
+                  }
+                  this.statusText = 'Moving: ' + this._planes[index].startX + "," + this._planes[index].startY + '<br /> Postion: ' + xPosition + "," + yPosition;
+
+                  this._planes[index].lastX = xPosition;
               }
 
               if (player['status'] === 'open' && lastPlayer['status'] === 'closed') {
+                  this._planes[index] = this.getPlane(index, xPosition, yPosition);
+                 
+                  this.statusText = 'Start: ' + this._planes[index].startX + "," + this._planes[index].startY + '\n Thrown At: ' + xPosition + "," + yPosition;
                   //throw logic
-                  var thrownAtX = player['pos']['x'];
-                  var thrownAtY = player['pos']['y'];
+                  var thrownAtX = xPosition;
+                  var thrownAtY = yPosition;
+
+                  if (this._planes[index].startX < thrownAtX) {
+                      this._planes[index].rotatePlane = true;
+                  }
 
                   var scale = .2;
-                  this.plane.p.x = player['pos']['x'];
-                  this.plane.p.y = player['pos']['y'];
-                  this.plane.v.x = (thrownAtX - this.plane.startX) * scale;
-                  this.plane.v.y = (thrownAtY - this.plane.startY) * scale;
-                  this.plane.isActive = true;
+                  this._planes[index].p.x = xPosition;
+                  this._planes[index].p.y = yPosition;
+                  this._planes[index].v.x = (thrownAtX - this._planes[index].startX) * scale;
+                  this._planes[index].v.y = (thrownAtY - this._planes[index].startY) * scale;
+                  this._planes[index].isActive = true;
+
+                  this._activePlanes.push(this._planes[index]);
+                  this._planes[index] = undefined;
               }
           },
           getMousePos: function(canvas, evt) {
@@ -91,6 +188,18 @@
                   y: evt.clientY - rect.top
               }
               return this.mousePos;
+          },
+          getPlane: function(index, x, y) {
+              if (this._planes[index]) {
+                  this._planes[index].p.x = x;
+                  this._planes[index].p.y = y
+
+                  console.log('in here');
+                  return this._planes[index];
+              } else {
+                  console.log('new plane');
+                  return new Plane(this._planeCanvas, x, y);
+              }
           },
 
           _planeCanvas: null,
@@ -107,6 +216,19 @@
           _cloudMGContext: null,
           _cloBGContext: null,
 
+          cloudBG: null,
+          cloudMG: null,
+          cloudFG: null,
+
+          _foregroundAlpha: 0,
+          _backgroundAlpha: 0,
+          _midgroundAlpha: 0,
+
+          _foregroundSpeed: 0.025,
+          _midgroundSpeed: 0.01,
+          _backgroundSpeed: 0.0075,
+
+
           plane: null,
           isDragging: false,
           isMouseDown: false,
@@ -116,7 +238,9 @@
           gravity: 5,
           startX: null,
           startY: null,
-          _planes: []
+          statusText: 'open',
+          _planes: [],
+          _activePlanes: []
        }
     );
 

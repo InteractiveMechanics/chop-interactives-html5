@@ -70,6 +70,7 @@
                           }, 6000);
 
                           // CREATE BOAT WENT HERE.
+                         //that._flyCanvas.createPlane(p);
                       }
                   }
               }
@@ -98,7 +99,8 @@
 
                   if (players[aP]) {
                       that.drawHands(aP, players[aP], that._lastPlayers[aP]);
-                      that._flyCanvas.checkPlanes(players[aP]['right'], that._lastPlayers[aP]['right']);
+                      that._flyCanvas.checkPlanesR(aP, players[aP]['right'], that._lastPlayers[aP]['right']);
+                      //that._flyCanvas.checkPlanesL(aP, players[aP]['left'], that._lastPlayers[aP]['left']);
                   }
               });
 
