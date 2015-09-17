@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="CHOPRowInteractive" Version="1.0.0.1" Publisher="CN=InteractiveMechanics" />
+  <Identity Name="CHOPFlyInteractive" Version="1.0.0.0" Publisher="CN=InteractiveMechanics" />
   <Properties>
-    <DisplayName>RowInteractive</DisplayName>
+    <DisplayName>FlyInteractive</DisplayName>
     <PublisherDisplayName>InteractiveMechanics</PublisherDisplayName>
     <Logo>images\storelogo.png</Logo>
   </Properties>

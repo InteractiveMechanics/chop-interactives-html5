@@ -105,11 +105,11 @@
               this._midgroundAlpha += this._midgroundSpeed;
               this._backgroundAlpha += this._backgroundSpeed;
 
-              if (this._foregroundAlpha <= 0 || this._foregroundAlpha >= 1.5) this._foregroundSpeed = -this._foregroundSpeed;
+              if (this._foregroundAlpha <= 0.25 || this._foregroundAlpha >= 1.5) this._foregroundSpeed = -this._foregroundSpeed;
 
-              if (this._midgroundAlpha <= 0 || this._midgroundAlpha >= 1.5) this._midgroundSpeed = -this._midgroundSpeed;
+              if (this._midgroundAlpha <= 0.25 || this._midgroundAlpha >= 1.5) this._midgroundSpeed = -this._midgroundSpeed;
 
-              if (this._backgroundAlpha <= 0 || this._backgroundAlpha >= 1.5) this._backgroundSpeed = -this._backgroundSpeed;
+              if (this._backgroundAlpha <= 0.25 || this._backgroundAlpha >= 1.5) this._backgroundSpeed = -this._backgroundSpeed;
           },
           calculateAngleDistance: function (deltaX, deltaY) {
               var angle = Math.atan2(deltaY, deltaX) * Math.PI;
@@ -222,9 +222,9 @@
           cloudMG: null,
           cloudFG: null,
 
-          _foregroundAlpha: 0,
-          _backgroundAlpha: 0,
-          _midgroundAlpha: 0,
+          _foregroundAlpha: 0.25,
+          _backgroundAlpha: 0.25,
+          _midgroundAlpha: 0.25,
 
           _foregroundSpeed: 0.025,
           _midgroundSpeed: 0.01,
