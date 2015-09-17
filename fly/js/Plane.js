@@ -11,13 +11,14 @@
     this.G = .23; 			// universal gravitational constant.
     this.drag = .99;
     this.offScreenCounter = 0;
+    this.offScreenMax = 4;
     this.lineAlpha = 1;
     this.rotatePlane = false;
     this.isDead = false;
     this.hand = null;
     
     this.playerId = null;
-    this.planeType = getRandomPlane();
+    this.planeType = getRandomPlane(this);
     this.colorId = getRandomColor();
 
     this.lineWidth = 3;
@@ -62,8 +63,8 @@
     };
 
     this.update = function () {
-        var color = getColorValue(this.colorId);
-         if (this.offScreenCounter < 4) {
+        var color = getColorValue(this.colorId, this.planeType);
+        if (this.offScreenCounter < this.offScreenMax) {
             if (this.p.x > canvas.width + 100) {
                 this.p.x = 0;
                 this.offScreenCounter += 1;
@@ -103,9 +104,9 @@
     }
     
     this.draw = function () {
-        var color = getColorValue(this.colorId);
+        var color = getColorValue(this.colorId, this.planeType);
         var context = canvas.getContext("2d");
-        if (this.offScreenCounter < 4) {
+        if (this.offScreenCounter < this.offScreenMax) {
             context.save();
 
             if (this.isActive) {
@@ -142,23 +143,8 @@
 
             var _pathCanvas = document.getElementById('pathCanvas');
             var _pathContext = _pathCanvas.getContext("2d");
-            //if (this.isActive && Math.abs(this.p.x - this.lastX) < 150 && Math.abs(this.p.y - this.lastY) < 150) {
-            //    //_pathContext.save();
-            //    //_pathContext.setLineDash(this.lineDash);
-            //    //_pathContext.beginPath();
-            //    //_pathContext.lineTo(this.lastX, this.lastY);
-            //    //_pathContext.lineTo(this.p.x, this.p.y);
-            //    //_pathContext.lineWidth = this.lineWidth;
-            //    //_pathContext.lineJoin = 'round';
-            //    //_pathContext.lineCap = 'round';
-            //    //_pathContext.strokeStyle = color;
-            //    //_pathContext.stroke();
-            //    //_pathContext.restore();
 
-            //    this._paths.push(new Path(this.lastX, this.lastY, this.p.x, this.p.y, color));
-            //}
-
-            if (this.paths.length > 4) {
+            if (this.paths.length > this.offScreenMax) {
                 this.paths.forEach(function (path) {
                     if (path) {
                         path.draw();
@@ -174,34 +160,49 @@
     }
 }
 
-function getRandomPlane() {
-    var planeId = Math.floor(Math.random() * 5);
+function getRandomPlane(obj) {
+    var that = obj;
+    var planeId = Math.floor(Math.random() * 11);
     switch (planeId) {
-        case 1:
-            this.drag = .99;
-            this.lineDash = [5, 15];
-            this.lineWidth = 2;
-            break;
-        case 2:
-            this.drag = .99;
-            this.lineDash = [3, 20];
-            this.lineWidth = 3;
-            break;
         case 3:
-            this.drag = .99;
-            this.lineDash = [1, 10];
-            this.lineWidth = 2;
-            break;
         case 4:
-            this.drag = .99;
-            this.lineDash = [10, 10];
-            this.lineWidth = 4;
+        case 5:
+            that.drag = .99;
+            that.lineDash = [5, 15];
+            that.lineWidth = 2;
+            planeId = 1;
+            break;
+        case 6:
+        case 7:
+        case 8:
+            that.drag = .99;
+            that.lineDash = [3, 20];
+            that.lineWidth = 3;
+            planeId = 3;
+            break;
+        case 9:
+            that.G = .2;
+            that.lineDash = [1, 0];
+            that.lineWidth = 1;
+            planeId = 2;
+            break;
+        case 10:
+            that.G = -0.1;
+            that.drag = .99;
+            that.lineDash = [10, 10];
+            that.lineWidth = 10;
+            that.offScreenMax = 10;
+            planeId = 4;
             break;
         case 0:
+        case 1:
+        case 2:
         default:
-            this.drag = .99;
-            this.lineDash = [4, 10, 8, 20];
-            this.lineWidth = 1;
+            that.G = .17;
+            that.drag = .94;
+            that.lineDash = [4, 10, 8, 20];
+            that.lineWidth = 1;
+            planeId = 0;
             break;
     }
 
@@ -212,7 +213,7 @@ function getRandomColor() {
     return Math.floor(Math.random() * 9);
 }
 
-function getColorValue(colorId) {
+function getColorValue(colorId, planeId) {
     var hex;
     switch (colorId) {
         case 1:
@@ -247,5 +248,7 @@ function getColorValue(colorId) {
             hex = '#fff200';
             break;
     }
+    if (planeId === 2) { hex = '#666666'; }
+    if (planeId === 4) { hex = '#FFFFFF'; }
     return hex;
 }

@@ -147,7 +147,7 @@
                   this._planes[index].lastX = xPosition;
               }
 
-              if (player['status'] === 'open' && lastPlayer['status'] === 'closed') {
+              if ((player['status'] === 'open' && lastPlayer['status'] === 'closed') || (this._planes[index] && player['status'] === 'open' && lastPlayer['status'] === 'open' && this._planes[index].hand === whichHand)) {
                   this._planes[index] = this.getPlane(index, xPosition, yPosition);
                  
                   this.statusText = 'Start: ' + this._planes[index].startX + "," + this._planes[index].startY + '\n Thrown At: ' + xPosition + "," + yPosition;
