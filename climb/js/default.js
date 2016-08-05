@@ -19,5 +19,15 @@
         }
     };
 
+    
+    document.addEventListener('msvisibilitychange', function () {
+        console.log(document.visibilityState);
+
+        if (document.visibilityState == 'hidden') {
+            console.log('true');
+            window.close();
+        }
+    });
+
     app.start();
 })();

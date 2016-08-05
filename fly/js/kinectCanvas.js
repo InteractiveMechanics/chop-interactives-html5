@@ -95,6 +95,7 @@
 
               // Drawing
               activePlayers.forEach(function (aP) {
+                  console.log('Clearing out reset with timer id: ' + that._resetAllTimeout);
                   window.clearTimeout(that._resetAllTimeout);
                   that._activeReset = false;
 
@@ -117,6 +118,7 @@
                       that._activeReset = false;
                       // console.log("No players present, reseting the game.");
                   }, constants.resetTimeoutDuration);
+                  console.log('Setting reset with timer id: ' + this._resetAllTimeout);
               }
 
               for (var p in players) {

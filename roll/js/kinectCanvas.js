@@ -11,8 +11,8 @@
     };
 
     var drawCanvas = WinJS.Class.define(
-      function (climbCanvas) {
-          this._climbCanvas = climbCanvas
+      function (rollCanvas) {
+          this._rollCanvas = rollCanvas
       },
       {
           init: function () {
@@ -43,85 +43,35 @@
               var lastPlayers = this._lastPlayers;
               var lastConfidentPlayers = this._lastConfidentPlayers;
 
-              var LeftPanel = this._climbCanvas._LeftPanel;
-              var CenterPanel = this._climbCanvas._CenterPanel;
-              var RightPanel = this._climbCanvas._RightPanel;
-
+              this._rollCanvas.draw();
               this.clearScreen(this._context);
               this._totalBodies = 0;
+
+              this._rollCanvas._activePlayerCount = activePlayers.length;
+              this._rollCanvas.update();
 
               // New loop for adding a player
               if (activePlayers.length < constants.maxPlayers) {
                   for (var p in players) {
                       var index = activePlayers.indexOf(p);
                       if (index === -1) {
-                          if (!that._centerPanelPlayer) {
-                              that._centerPanelPlayer = p;
-                              CenterPanel.pegs.forEach(function (peg) {
-                                  peg.playerHasEntered(p);
-                                  peg.player_assigned = true;
-                              });
+                         
+                            // console.log('Player ' + p + ' assigned to Center Panel.');
+                            activePlayers.push(p);
+                            lastConfidentPlayers[p] = players[p];
+                            lastPlayers[p] = players[p];
 
-                              // console.log('Player ' + p + ' assigned to Center Panel.');
-                              activePlayers.push(p);
-                              lastConfidentPlayers[p] = players[p];
-                              lastPlayers[p] = players[p];
+                            that._activeAlert = true;
+                            that._instructions.paused = false;
+                            // console.log('Show instructions for Player ' + p);
 
-                              that._activeAlert = true;
-                              that._instructions.paused = false;
-                              // console.log('Show instructions for Player ' + p);
-
-                              setTimeout(function () {
-                                  that._activeAlert = false;
-                                  that._instructions.paused = true;
-                                  that.clearScreen(that._instructionsContext);
-                                  // console.log('Clear instructions for Player ' + p);
-                              }, 6000);
-                          } else if (players[p]['spine']['pos']['x'] < 960 && !that._leftPanelPlayer) {
-                              that._leftPanelPlayer = p;
-                              LeftPanel.pegs.forEach(function (peg) {
-                                  peg.playerHasEntered(p);
-                                  peg.player_assigned = true;
-                              });
-
-                              // console.log('Player ' + p + ' assigned to Left Panel.');
-                              activePlayers.push(p);
-                              lastConfidentPlayers[p] = players[p];
-                              lastPlayers[p] = players[p];
-
-                              that._activeAlert = true;
-                              that._instructions.paused = false;
-                              // console.log('Show instructions for Player ' + p);
-
-                              setTimeout(function () {
-                                  that._activeAlert = false;
-                                  that._instructions.paused = true;
-                                  that.clearScreen(that._instructionsContext);
-                                  // console.log('Clear instructions for Player ' + p);
-                              }, 6000);
-                          } else if (players[p]['spine']['pos']['x'] > 960 && !that._rightPanelPlayer) {
-                              that._rightPanelPlayer = p;
-                              RightPanel.pegs.forEach(function (peg) {
-                                  peg.playerHasEntered(p);
-                                  peg.player_assigned = true;
-                              });
-
-                              // console.log('Player ' + p + ' assigned to Right Panel.');
-                              activePlayers.push(p);
-                              lastConfidentPlayers[p] = players[p];
-                              lastPlayers[p] = players[p];
-
-                              that._activeAlert = true;
-                              that._instructions.paused = false;
-                              // console.log('Show instructions for Player ' + p);
-
-                              setTimeout(function () {
-                                  that._activeAlert = false;
-                                  that._instructions.paused = true;
-                                  that.clearScreen(that._instructionsContext);
-                                  // console.log('Clear instructions for Player ' + p);
-                              }, 6000);
-                          }
+                            setTimeout(function () {
+                                that._activeAlert = false;
+                                that._instructions.paused = true;
+                                that.clearScreen(that._instructionsContext);
+                                // console.log('Clear instructions for Player ' + p);
+                            }, 6000);
+                           
                       }
                   }
               }
@@ -138,25 +88,6 @@
 
                       if (index > -1) {
                           activePlayers.splice(index, 1);
-                          if (that._centerPanelPlayer == l) {
-                              that._centerPanelPlayer = null;
-                              CenterPanel.pegs.forEach(function (peg) {
-                                  peg.player_assigned = false;
-                              });
-                          }
-                          if (that._leftPanelPlayer == l) {
-                              that._leftPanelPlayer = null;
-                              LeftPanel.pegs.forEach(function (peg) {
-                                  peg.player_assigned = false;
-                              });
-                          }
-                          if (that._rightPanelPlayer == l) {
-                              that._rightPanelPlayer = null;
-                              RightPanel.pegs.forEach(function (peg) {
-                                  peg.player_assigned = false;
-                              });
-                          }
-                          // console.log("Player " + l + " left the game.");
                       }
                   }
               }
@@ -167,22 +98,9 @@
                   that._activeReset = false;
 
                   if (players[aP]) {
-                      if (that._leftPanelPlayer === aP) {
-                          var offset = 0;
-                          var panel = LeftPanel;
-                      }
-                      if (that._centerPanelPlayer === aP) {
-                          var offset = 1;
-                          var panel = CenterPanel;
-                      }
-                      if (that._rightPanelPlayer === aP) {
-                          var offset = 2;
-                          var panel = RightPanel;
-                      }
-
-                      that.drawHands(aP, players[aP], that._lastPlayers[aP], offset);
-                      that._climbCanvas.detectActivated(players[aP]['right'], panel, offset);
-                      that._climbCanvas.detectActivated(players[aP]['left'], panel, offset);
+                      that.drawHands(aP, players[aP], that._lastPlayers[aP]);
+                      that._rollCanvas.checkPieces(aP, players[aP]['right'], that._lastPlayers[aP]['right'], 'right');
+                      that._rollCanvas.checkPieces(aP, players[aP]['left'], that._lastPlayers[aP]['left'], 'left');
                   }
               });
 
@@ -195,11 +113,7 @@
                       pendingPlayers = [];
                       lastPlayers = {};
                       lastConfidentPlayers = {};
-                      that._rightPanelPlayer = null;
-                      that._leftPanelPlayer = null;
-                      that._centerPanelPlayer = null;
                       that._activeReset = false;
-                      // console.log("No players present, reseting the game.");
                   }, constants.resetTimeoutDuration);
               }
 
@@ -234,22 +148,12 @@
               }
 
               this.showInstructions();
-              this._climbCanvas.draw();
               this._lastPlayers = players;
           },
-          drawHands: function (p, player, lastPlayer, panel) {
+          drawHands: function (p, player, lastPlayer) {
               var context = this._context;
               var rightHand = new Image();
               var leftHand = new Image();
-
-              var spineX = player['spine']['pos']['x'];
-              var minX = spineX - 320;
-              var maxX = spineX + 320;
-              var panelMinX = 640 * panel - 30;
-              var panelMaxX = 640 * (panel + 1) + 30;
-
-              player['right']['pos']['x'] = this.map_range(player['right']['pos']['x'], minX, maxX, panelMinX, panelMaxX);
-              player['left']['pos']['x'] = this.map_range(player['left']['pos']['x'], minX, maxX, panelMinX, panelMaxX);
 
               // If the kinect is confident and is able to accurately track the hand, then use that date and store it for the future
               // if the kinect is not confident and is not able to accurately track the hand, then use the last set of confident data that was stored
@@ -330,11 +234,6 @@
           _activePlayers: null,
           _pendingPlayers: null,
           _totalBodies: 0,
-
-          // Keep track of who is which quadrant
-          _leftPanelPlayer: null,
-          _centerPanelPlayer: null,
-          _rightPanelPlayer: null,
 
           // For alerts and messages
           _activeAlert: false,
