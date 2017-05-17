@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="CHOPRowInteractive" Version="1.0.0.1" Publisher="CN=InteractiveMechanics" />
+  <Identity Name="CHOPRowInteractive" Version="1.0.0.15" Publisher="CN=InteractiveMechanics" />
   <Properties>
     <DisplayName>RowInteractive</DisplayName>
     <PublisherDisplayName>InteractiveMechanics</PublisherDisplayName>

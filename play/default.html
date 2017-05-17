@@ -1,0 +1,35 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>CHOP: play Interactive</title>
+
+    <!-- WinJS references -->
+    <link href="//Microsoft.WinJS.2.0/css/ui-dark.css" rel="stylesheet" />
+    <script src="//Microsoft.WinJS.2.0/js/base.js"></script>
+    <script src="//Microsoft.WinJS.2.0/js/ui.js"></script>
+
+    <!-- ClimbInteractive references -->
+    <link href="/css/default.css" rel="stylesheet" />
+
+    <script src="/js/Sprite.js"></script>
+    <script src="/js/Highlight.js"></script>
+    <script src="/js/LiteBrite.js"></script>
+    <script src="/js/RemoveIcon.js"></script>
+    <script src="/js/Iterable.js"></script>
+    <script src="/js/Instructions.js"></script>
+
+    <script src="/js/kinectController.js"></script>
+    <script src="/js/kinectCanvas.js"></script>
+    <script src="/js/climbCanvas.js"></script>
+    <script src="/js/default.js"></script>
+</head>
+<body>
+    <canvas id="instructionsCanvas" width="1920" height="1080"></canvas>
+    <canvas id="kinectCanvas" width="1920" height="1080"></canvas>
+
+    <canvas width="1920" height="1080" id="background" style="z-index:10; position:absolute; background:rgb(102, 102, 102); top:0; left:0;"></canvas>
+    <canvas width="1920" height="1080" id="litebrite" style="z-index:20; position:absolute;  top:0; left:0;"></canvas>
+    <canvas width="1920" height="1080" id="highlight" style="z-index:30; position:absolute; top:0; left:0;"></canvas>
+</body>
+</html>

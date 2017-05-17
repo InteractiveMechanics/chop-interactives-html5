@@ -2,10 +2,10 @@
     "use strict";
 
     var constants = {
-        maxPlayers: 3,
+        maxPlayers: 2,
         handHeight: 154,
         handWidth: 154,
-        instructionsDuration: 8000,
+        instructionsDuration: 11000,
         tooManyTimeoutDuration: 30000,
         resetTimeoutDuration: 30000
     };
@@ -59,14 +59,9 @@
 
                           that._activeAlert = true;
                           that._instructions.paused = false;
-                          // console.log('Show instructions for Player ' + p);
+                          that._rowCanvas.newPlayerAdded();
 
-                          setTimeout(function () {
-                              that._activeAlert = false;
-                              that._instructions.paused = true;
-                              that.clearScreen(that._instructionsContext);
-                              // console.log('Clear instructions for Player ' + p);
-                          }, 6000);
+                          // console.log('Show instructions for Player ' + p);
 
                           that._rowCanvas.createBoat(p);
                       }
@@ -97,7 +92,7 @@
                   that._activeReset = false;
 
                   if (players[aP]) {
-                      //that.drawHands(aP, players[aP], that._lastPlayers[aP]);
+                     // that.drawHands(aP, players[aP], that._lastPlayers[aP]);
                       that._rowCanvas.moveBoat(aP, players[aP]);
                   }
               });
@@ -147,7 +142,9 @@
                   // console.log('Remove "too many players" alert.');
               }
 
-              this.showInstructions()
+              //this.showInstructions();
+              
+              this._rowCanvas.showInstructions();
               this._rowCanvas.draw();
               this._lastPlayers = players;
           },

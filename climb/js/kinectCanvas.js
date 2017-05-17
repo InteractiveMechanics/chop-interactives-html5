@@ -71,12 +71,8 @@
                               that._instructions.paused = false;
                               // console.log('Show instructions for Player ' + p);
 
-                              setTimeout(function () {
-                                  that._activeAlert = false;
-                                  that._instructions.paused = true;
-                                  that.clearScreen(that._instructionsContext);
-                                  // console.log('Clear instructions for Player ' + p);
-                              }, 6000);
+                              that._climbCanvas.newPlayerAdded();
+
                           } else if (players[p]['spine']['pos']['x'] < 960 && !that._leftPanelPlayer) {
                               that._leftPanelPlayer = p;
                               LeftPanel.pegs.forEach(function (peg) {
@@ -115,12 +111,12 @@
                               that._instructions.paused = false;
                               // console.log('Show instructions for Player ' + p);
 
-                              setTimeout(function () {
+                              /*setTimeout(function () {
                                   that._activeAlert = false;
                                   that._instructions.paused = true;
                                   that.clearScreen(that._instructionsContext);
                                   // console.log('Clear instructions for Player ' + p);
-                              }, 6000);
+                              }, 6000);*/
                           }
                       }
                   }
@@ -233,7 +229,8 @@
                   // console.log('Remove "too many players" alert.');
               }
 
-              this.showInstructions();
+              //this.showInstructions();
+              //this._climbCanvas.showInstructions();
               this._climbCanvas.draw();
               this._lastPlayers = players;
           },
@@ -310,8 +307,8 @@
               var that = this;
 
               if (this._activeAlert) {
-                  this._instructions.x = 860;
-                  this._instructions.y = 800;
+                  this._instructions.x = 920;
+                  this._instructions.y = 870;
                   this._instructions.draw(context);
               }
           },

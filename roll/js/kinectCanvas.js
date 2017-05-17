@@ -62,15 +62,17 @@
                             lastPlayers[p] = players[p];
 
                             that._activeAlert = true;
-                            that._instructions.paused = false;
-                            // console.log('Show instructions for Player ' + p);
+                            //that._instructions.paused = false;
+                          //// console.log('Show instructions for Player ' + p);
 
-                            setTimeout(function () {
+                            that._rollCanvas.newPlayerAdded();
+
+                            /*setTimeout(function () {
                                 that._activeAlert = false;
                                 that._instructions.paused = true;
                                 that.clearScreen(that._instructionsContext);
                                 // console.log('Clear instructions for Player ' + p);
-                            }, 6000);
+                            }, 6000);*/
                            
                       }
                   }
@@ -147,7 +149,7 @@
                   // console.log('Remove "too many players" alert.');
               }
 
-              this.showInstructions();
+              //this.showInstructions();
               this._lastPlayers = players;
           },
           drawHands: function (p, player, lastPlayer) {
@@ -174,10 +176,10 @@
               }
               context.scale(-1, 1);
               if (player['right']['trackingState'] === 2) {
-                  context.translate(-(Math.round(player['right']['pos']['x'] - constants.handWidth / 2)), Math.round(player['right']['pos']['y'] - constants.handHeight / 2));
+                  context.translate(-parseInt(Math.round(player['right']['pos']['x'] - constants.handWidth / 2)), parseInt(Math.round(player['right']['pos']['y'] - constants.handHeight / 2)));
                   context.drawImage(rightHand, -60, 0, 60, 76);
               } else if (player['right']['trackingState'] === 1 || 0) {
-                  context.translate(-(Math.round(this._lastConfidentPlayers[p]['right']['pos']['x'] - constants.handWidth / 2)), Math.round(this._lastConfidentPlayers[p]['right']['pos']['y'] - constants.handHeight / 2));
+                  context.translate(-parseInt(Math.round(this._lastConfidentPlayers[p]['right']['pos']['x'] - constants.handWidth / 2)), parseInt(Math.round(this._lastConfidentPlayers[p]['right']['pos']['y'] - constants.handHeight / 2)));
                   context.globalAlpha = 0.5;
                   context.drawImage(rightHand, -60, 0, 60, 76);
               }
@@ -199,10 +201,10 @@
                   }
               }
               if (player['left']['trackingState'] === 2) {
-                  context.drawImage(leftHand, Math.round(player['left']['pos']['x']), Math.round(player['left']['pos']['y']), 60, 76);
+                  context.drawImage(leftHand, parseInt(Math.round(player['left']['pos']['x'])), parseInt(Math.round(player['left']['pos']['y'])), 60, 76);
               } else if (player['left']['trackingState'] === 1 || 0) {
                   context.globalAlpha = 0.5;
-                  context.drawImage(leftHand, Math.round(this._lastConfidentPlayers[p]['left']['pos']['x']), Math.round(this._lastConfidentPlayers[p]['left']['pos']['y']), 60, 76);
+                  context.drawImage(leftHand, parseInt(Math.round(this._lastConfidentPlayers[p]['left']['pos']['x'])), parseInt(Math.round(this._lastConfidentPlayers[p]['left']['pos']['y'])), 60, 76);
               }
               context.restore();
           },

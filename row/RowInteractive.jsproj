@@ -49,11 +49,12 @@
     <RequiredPlatformVersion>8.1</RequiredPlatformVersion>
     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <PackageCertificateKeyFile>KinectMotionDemo_TemporaryKey.pfx</PackageCertificateKeyFile>
-    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <PackageCertificateKeyFile>RowInteractive_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
-    <AppxPackageDir>D:\RowInteractive</AppxPackageDir>
+    <AppxPackageDir>D:\Games\CHOP-Berger\New1\RowInteractive</AppxPackageDir>
     <AppxBundle>Auto</AppxBundle>
+    <PackageCertificateThumbprint>CD53CC4A3408D86B2A19A4B03B5546080CFA0811</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="package.appxmanifest">
@@ -71,6 +72,10 @@
     <Content Include="images\coin@2x.png" />
     <Content Include="images\coin_sprite@2x.png" />
     <Content Include="images\flower@2x.png" />
+    <Content Include="images\gold_coin_sprite@2x.png" />
+    <Content Include="images\Instructions-Row.png" />
+    <Content Include="images\Instructions-Row2x.png" />
+    <Content Include="images\Instructions-Row4x.png" />
     <Content Include="images\instructions@2x.png" />
     <Content Include="images\instructions\P0_instruction_01.png" />
     <Content Include="images\instructions\P0_instruction_02.png" />
@@ -131,6 +136,7 @@
     <Content Include="js\Penny.js" />
     <Content Include="js\rowCanvas.js" />
     <Content Include="js\Sprite.js" />
+    <None Include="RowInteractive_TemporaryKey.pfx" />
     <None Include="KinectMotionDemo_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

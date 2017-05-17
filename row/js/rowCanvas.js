@@ -19,6 +19,8 @@
               this._canvas2Context = this._canvas2.getContext('2d');
               this._pennyContext = this._pennyCanvas.getContext('2d');
               this._pondContext = this._pondCanvas.getContext('2d');
+              this._instructionsCanvas = document.getElementById('instructionsCanvas');
+              this._instructionsContext = this._instructionsCanvas.getContext('2d');
 
               var background = new Image();
               background.src = 'images/background@2x.png';
@@ -26,6 +28,9 @@
 
               this.populateCircleArray();
               // console.log('Game canvases initialized.')
+
+
+              this.showInstructions();
           },
           clearScreen: function (context) {
               var context = context;
@@ -36,6 +41,16 @@
               this.clearScreen(this._canvasContext);
               this.clearScreen(this._canvas2Context);
               this.clearScreen(this._pennyContext);
+
+              if (this.playerAdded) {
+                  this._instructions.draw(this._instructionsContext);
+              }
+
+              //this._canvas2Context.fillStyle = "red";
+              //this._canvas2Context.font = "bold 16px Arial";
+              //this._canvas2Context.fillText(this.left_z, 100, 50);
+              //this._canvas2Context.fillText(this.right_z, 1800, 50);
+
 
               this._boats.forEach(function (boat, index) {
                   if (boat != undefined) {
@@ -87,6 +102,15 @@
 
               this.collidingCircles();
           },
+          newPlayerAdded: function () {
+              this.playerAdded = true;
+              this._instructions.paused = false;
+          },
+          showInstructions: function () {
+              this._instructions.x = 1715;
+              this._instructions.y = 775;
+              this._instructions.draw(this._instructionsContext);
+          },
           createBoat: function (p) {
               if (!this._boats[p]) {
                   this._boats[p] = new Boat();
@@ -95,14 +119,17 @@
                   this._boats[p].x = randomInRange(1900, 20);
                   this._boats[p].y = randomInRange(1060, 20);
               }
+
+              this._boats[p].playerHasEntered(p);
           },
           validBoatXAndY: function (p) {
               var that = this;
               this._lilypads.forEach(function (lilypad) {
-                  var boatRect = new Rectangle(that._boats[p].x, that._boats[p].y, that._boats[p].width, that._boats[p].width);
-                  var lilypadRect = new Rectangle(lilypad.x, lilypad.y, lilypad.width, lilypad.width);
+                  var boatRect = new Rectangle(that._boats[p].x, that._boats[p].y, that._boats[p].width, that._boats[p].height);
+                  var lilypadRect = new Rectangle(lilypad.x, lilypad.y, lilypad.width, lilypad.height);
 
-                  if (boatRect.intersectsWith(lilypadRect)) {
+                  if (!boatRect.intersectsWith(lilypadRect)) {
+                     
                       return false;
                   }
               });
@@ -114,8 +141,28 @@
                   var that = this;
                   var multiplier = 0.001;
 
-                  var xDistance = (playerData['right']['pos']['x']) - (playerData['spine']['pos']['x']);
-                  var yDistance = (playerData['right']['pos']['y']) - (playerData['spine']['pos']['y']);
+                  this.left_z = parseInt(playerData['left']['pos']['z'] * 10) + 2;
+                  this.right_z = parseInt(playerData['right']['pos']['z'] * 10);
+
+                  var properX = 0;
+                  var properY = 0;
+
+                  
+
+                  if (this.right_z <= this.left_z) {
+                      properX = playerData['right']['pos']['x'];
+                      properY = playerData['right']['pos']['y'];
+                  } else {
+                      properX = playerData['left']['pos']['x'];
+                      properY = playerData['left']['pos']['y'];
+                  }
+
+                  var xDistance = (properX - (playerData['spine']['pos']['x']));
+                  var yDistance = (properY - (playerData['spine']['pos']['y']));
+
+                  //var xDistance = (playerData['right']['pos']['x']) - (playerData['spine']['pos']['x']);
+                  //var yDistance = (playerData['right']['pos']['y']) - (playerData['spine']['pos']['y']);
+
                   var angleDistance = this.calculateAngleDistance(xDistance, yDistance);
 
                   var boatX = that._boats[p].x - that._boats[p].width / 2;
@@ -136,6 +183,16 @@
                               if (that.isPixelCollision(boatData, boatX, boatY, pennyData, penny.x, penny.y, false)) {
                                   penny.hasBeenHit = true;
                                   penny.paused = false;
+
+                                  if (penny.isGolden) {
+                                      that._boats[p].maxSpeed = 10;
+
+                                      setTimeout(function () {
+                                          if(that._boats[p]) {
+                                              that._boats[p].maxSpeed = 3;
+                                          }
+                                      }, 5000);
+                                  }
                               }
                           }
                       }
@@ -154,7 +211,7 @@
                                   that._boats[p].dx = -that._boats[p].dx;
                               } else {
                                   lilypad.dx = -lilypad.dx * 2;
-                                  that._boats[p].dx = -that._boats[p].dx * 2;
+                                  that._boats[p].dx = -that._boats[p].dx * 1.5;
                               }
 
                               if ((that._boats[p].dy > 0 && lilypad.dy > 0) || (that._boats[p].dy < 0 && lilypad.dy < 0)) {
@@ -162,7 +219,7 @@
                                   that._boats[p].dy = -that._boats[p].dy;
                               } else {
                                   lilypad.dy = -lilypad.dy * 2;
-                                  that._boats[p].dy = -that._boats[p].dy * 2;
+                                  that._boats[p].dy = -that._boats[p].dy * 1.5;
                               }
                           }
                       }
@@ -178,15 +235,15 @@
                                   if (that.isPixelCollision(boatData, boatX, boatY, otherBoatData, otherBoat.x, otherBoat.y, false)) {
                                       if ((that._boats[p].dx > 0 && otherBoat.dx > 0) || (that._boats[p].dx < 0 && otherBoat.dx < 0)) {
                                           otherBoat.dx = otherBoat.dx + that._boats[p].dx;
-                                          that._boats[p].dx = that._boats[p].dx / 2;
+                                          that._boats[p].dx = that._boats[p].dx / 1.5;
                                       } else {
                                           otherBoat.dx = -otherBoat.dx;
                                           that._boats[p].dx = -that._boats[p].dx;
                                       }
 
                                       if ((that._boats[p].dy > 0 && otherBoat.dy > 0) || (that._boats[p].dy < 0 && otherBoat.dy < 0)) {
-                                          otherBoat.dy = otherBoat.dy + that._boats[p].dy / 2;
-                                          that._boats[p].dy = that._boats[p].dy / 2;
+                                          otherBoat.dy = otherBoat.dy + that._boats[p].dy / 1.5;
+                                          that._boats[p].dy = that._boats[p].dy / 1.5;
                                       } else {
                                           otherBoat.dy = -otherBoat.dy;
                                           that._boats[p].dy = -that._boats[p].dy;
@@ -197,17 +254,17 @@
                       }
                   });
 
-                  if (this._boats[p].dx > constants.maxSpeed) {
-                      this._boats[p].dx = constants.maxSpeed;
+                  if (this._boats[p].dx > this._boats[p].maxSpeed) {
+                      this._boats[p].dx = this._boats[p].maxSpeed;
                   }
-                  if (this._boats[p].dx < -constants.maxSpeed) {
-                      this._boats[p].dx = -constants.maxSpeed;
+                  if (this._boats[p].dx < -this._boats[p].maxSpeed) {
+                      this._boats[p].dx = -this._boats[p].maxSpeed;
                   }
-                  if (this._boats[p].dy > constants.maxSpeed) {
-                      this._boats[p].dy = constants.maxSpeed;
+                  if (this._boats[p].dy > this._boats[p].maxSpeed) {
+                      this._boats[p].dy = this._boats[p].maxSpeed;
                   }
-                  if (this._boats[p].dy < -constants.maxSpeed) {
-                      this._boats[p].dy = -constants.maxSpeed;
+                  if (this._boats[p].dy < -this._boats[p].maxSpeed) {
+                      this._boats[p].dy = -this._boats[p].maxSpeed;
                   }
                   this._boats[p].update();
               }
@@ -249,9 +306,21 @@
                 this._lilypads.push(new Flower());
                 this._lilypads.push(new Flower());
 
-                for(var i = 0; i < 4; i++) {
-                    this._pennies.push(new Penny());
+                for (var i = 0; i < 4; i++) {
+                    var rand = this.randomInRange(6, 0);
+                    var p = new Penny();
+
+                    if (rand == 3 || rand == 2) {
+                        p.isGolden = true;
+                        this._pennies.push(p);
+                    } else {
+                        this._pennies.push(p);
+                    }
                 }
+          },
+          randomInRange: function(limit, offset) {
+              var r = Math.random();
+              return Math.floor(r * limit + offset);
           },
           collides: function (ax, ay, awidth, bx, by, bwidth) {
               if (ax < bx + bwidth &&
@@ -361,13 +430,20 @@
           _pennyCanvas: null,
           _pondCanvas: null,
 
+          left_z: -1,
+          right_z: -1,
+
           _canvasContext: null,
           _canvas2Context: null,
           _pennyContext: null,
           _pondContext: null,
           _lilypads: [],
           _pennies: [],
-          _boats: []
+          _boats: [],
+          _instructionsCanvas: null,
+          _instructionsContext: null,
+          _instructions: new Instructions(),
+          playerAdded: false
        }
     );
 

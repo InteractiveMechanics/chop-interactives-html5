@@ -1,5 +1,4 @@
 ﻿(function () {
-    "use strict";
 
     var nsKinect = WindowsPreview.Kinect;
     var constants = {
@@ -15,6 +14,9 @@
               this._index = index;
               this._sensor = sensor;
 
+              this._sensor.depthFrameSource.depthMaxReliableDistance = 500;
+              
+
               this._sensorColourFrameDimensions = {};
               this._sensorColourFrameDimensions.width = this._sensor.colorFrameSource.frameDescription.width;
               this._sensorColourFrameDimensions.height = this._sensor.colorFrameSource.frameDescription.height;
@@ -25,6 +27,7 @@
               var bodyCount = 0;
 
               this._sensor = nsKinect.KinectSensor.getDefault();
+              this._sensor.depthFrameSource.depthMaxReliableDistance = 500;
               this._sensor.open();
               // console.log("Kinect sensor opened.");
 
@@ -93,7 +96,10 @@
 
                   for (i = 0; i < constants.bodyCount; i++) {
                       if (this._bodies[i].isTracked) {
-                          players[i] = this._getPlayerData(i, this._bodies[i]);
+                          var trackedPlayer = this._getPlayerData(i, this._bodies[i]);
+                          if (trackedPlayer) {
+                              players[i] = trackedPlayer;
+                          }
                       }
                   }
                   this._canvas.draw(players);
@@ -105,7 +111,10 @@
               var left = this._getJointPositions(body, 7);
               var spine = this._getJointPositions(body, 1);
 
-              var player = {};
+              var zValue = spine[0].z;
+              if (zValue < this.zIndexValue) {
+
+                  var player = {};
                   player['right'] = {};
                   player['right']['status'] = this._getHandStatus(body, 'right');
                   player['right']['confidence'] = this._getHandConfidence(body, 'right');
@@ -125,7 +134,11 @@
                   player['spine']['pos'] = spine[0];
                   player['spine']['trackingState'] = spine[1];
 
-              return (player);
+                  return (player);
+              }
+              else {
+                  return null;
+              }
           },
           _getHandStatus: function (body, hand) {
               var handStatus;
@@ -179,6 +192,7 @@
                     var isTracked = joint.trackingState === nsKinect.TrackingState.tracked;
                     var mappedPoint = that._mapPointToCanvasSpace(joint.position);
 
+
                     if (joint.jointType === jointNumber) {
                         jointPositions = mappedPoint;
                         trackingStates = joint.trackingState;
@@ -193,7 +207,15 @@
               colourPoint.x *= (1920 / this._sensorColourFrameDimensions.width);
               colourPoint.y *= (1080 / this._sensorColourFrameDimensions.height);
 
-              return (colourPoint);
+              colourPoint.z = cameraSpacePoint.z;
+
+
+              //return (colourPoint);
+              return {
+                  x: colourPoint.x,
+                  y: colourPoint.y,
+                  z: cameraSpacePoint.z
+              };
           },
           _boundHandler: null,
           _clearCanvas: null,
@@ -204,6 +226,7 @@
           _reader: null,
           _bodyDrawers: null,
           _bodies: null,
+          zIndexValue: 3,
 
           // Because sometimes we don't get the Kinect frames...
           _kinectResetTimeout: null,

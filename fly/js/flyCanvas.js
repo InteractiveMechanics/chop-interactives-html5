@@ -10,6 +10,9 @@
           init: function () {
               var that = this;
 
+              this._instructionsCanvas = document.getElementById('instructionsCanvas');
+              this._instructionsContext = this._instructionsCanvas.getContext('2d');
+
               this._planeCanvas = document.getElementById('planeCanvas');
               this._pathCanvas = document.getElementById('pathCanvas');
               this._skyCanvas = document.getElementById('skyCanvas');
@@ -39,14 +42,39 @@
               var background = new Image();
               background.src = 'images/backgrounds/background.png';
               this._skyContext.drawImage(background, 0, 0, 1920, 1080);
+
+              this.showInstructions();
           },
           clearScreen: function (context) {
               var context = context;
               context.clearRect(0, 0, 1920, 1080);
           },
+          showInstructions: function () {
+              this._instructions.x = 1715;
+              this._instructions.y = 775;
+              this._instructions.draw(this._instructionsContext);
+          },
+          newPlayerAdded: function () {
+              this.playerAdded = true;
+              this._instructions.paused = false;
+          },
+          newPlayerRemoved: function () {
+              this.playerAdded = false;
+              this._instructions.paused = true;
+          },
+          playInstructions: function () {
+              var count = 0;
+              setTimeout(function () {
+
+              });
+          },
           draw: function () {
               this.clearScreen(this._planeContext);
               this.clearScreen(this._pathContext);
+
+              if (this.playerAdded) {
+                  this._instructions.draw(this._instructionsContext);
+              }
 
               this._planes.forEach(function (plane) {
                   if (plane) {
@@ -116,10 +144,19 @@
               var distance = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
               return [angle, distance];
           },
+
+          isOverHelpIcon: function (mX, mY) {
+              return (mX >= this._instructions.x && mX < this._instructions.x + 200 && mY >= this._instructions.y && mY < this._instructions.y + 200);
+          },
+          
           checkPlanesR: function (index, player, lastPlayer, whichHand) {
 
               var xPosition = parseInt(player['pos']['x']);
               var yPosition = parseInt(player['pos']['y']);
+
+              if (this.isOverHelpIcon(xPosition, yPosition)) {
+                  this._instructions.paused = false;
+              }
 
               if (player['status'] === 'closed' && !this._planes[index]) {
                   //console.log(this._planes);
@@ -242,7 +279,11 @@
           startY: null,
           statusText: 'open',
           _planes: [],
-          _activePlanes: []
+          _activePlanes: [],
+          _instructionsCanvas: null,
+          _instructionsContext: null,
+          _instructions: new Instructions(),
+          playerAdded: false
        }
     );
 

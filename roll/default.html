@@ -17,7 +17,9 @@
 
     <script src="/js/Sprite.js"></script>
     <script src="js/Ball.js"></script>
+    <script src="js/PinballPieceLight.js"></script>
     <script src="js/PinballPiece.js"></script>
+    <script src="js/Objective.js"></script>
     <script src="/js/Iterable.js"></script>
     <script src="/js/Instructions.js"></script>
 
@@ -31,8 +33,10 @@
 <body>
     <canvas id="instructionsCanvas" width="1920" height="1080"></canvas>
     <canvas id="kinectCanvas" width="1920" height="1080"></canvas>
-    <canvas id='ball-canvas' width="1920" height="1080" style="z-index:1; position:absolute; left:0px; top:0px;"></canvas>
-    <canvas id='enviroment-canvas' width="1920" height="1080" style="z-index:2; position:absolute; left:0px; top:0px;"></canvas>
-    <canvas id='canvas' width="1920" height="1080" style="z-index:0; background: url(images/bg.jpg) no-repeat center center fixed; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; position:absolute; left:0px; top:0px;"></canvas>
+    <canvas id='light-canvas' width="1920" height="1080" style="z-index:2; position:absolute; left:0px; top:0px;"></canvas>
+    <canvas id='ball-canvas' width="1920" height="1080" style="z-index:3; position:absolute; left:0px; top:0px;"></canvas>
+    <canvas id='enviroment-canvas' width="1920" height="1080" style="z-index:4; position:absolute; left:0px; top:0px;"></canvas>
+    <canvas id='objective-canvas' width="1920" height="1080" style="z-index:1; position:absolute; left:0px; top:0px;"></canvas>
+    <canvas id='canvas' width="1920" height="1080" style="z-index:0; -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover; position:absolute; left:0px; top:0px;"></canvas>
 </body>
 </html>

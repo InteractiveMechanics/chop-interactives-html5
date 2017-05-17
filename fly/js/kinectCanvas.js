@@ -58,16 +58,10 @@
                           lastConfidentPlayers[p] = players[p];
                           lastPlayers[p] = players[p];
 
-                          that._activeAlert = true;
-                          that._instructions.paused = false;
+                          that._flyCanvas.newPlayerAdded();
                           // console.log('Show instructions for Player ' + p);
 
-                          setTimeout(function () {
-                              that._activeAlert = false;
-                              that._instructions.paused = true;
-                              that.clearScreen(that._instructionsContext);
-                              // console.log('Clear instructions for Player ' + p);
-                          }, 6000);
+                          
 
                           // CREATE BOAT WENT HERE.
                          //that._flyCanvas.createPlane(p);
@@ -95,7 +89,6 @@
 
               // Drawing
               activePlayers.forEach(function (aP) {
-                  console.log('Clearing out reset with timer id: ' + that._resetAllTimeout);
                   window.clearTimeout(that._resetAllTimeout);
                   that._activeReset = false;
 
@@ -151,7 +144,7 @@
                   // console.log('Remove "too many players" alert.');
               }
 
-              this.showInstructions()
+              //this.showInstructions()
               // DRAW FUNCTION:  
               this._flyCanvas.draw();
               this._lastPlayers = players;

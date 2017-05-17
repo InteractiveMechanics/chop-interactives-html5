@@ -12,6 +12,9 @@
               var canvas_center = this.createCenterCanvas();
               var canvas_right = this.createRightCanvas();
 
+              this._instructionsCanvas = document.getElementById('instructionsCanvas');
+              this._instructionsContext = this._instructionsCanvas.getContext('2d');
+
               document.body.appendChild(canvas_left);
               document.body.appendChild(canvas_right);
               document.body.appendChild(canvas_center);
@@ -45,12 +48,19 @@
               this._image3.src = 'images/background_slice03@2x.jpg';
 
               this._image3.onload = this.loadImageThree();
+
+              this.showInstructions();
           },
           clearScreen: function (context) {
               var context = context;
               context.clearRect(0, 0, 1920, 1080);
           },
 
+          showInstructions: function () {
+              this._instructions.x = 1715;
+              this._instructions.y = 775;
+              this._instructions.draw(this._instructionsContext);
+          },
           loadImageThree: function () {
               this._LeftPanel.bg_image = this._image1;
               this._CenterPanel.bg_image = this._image2;
@@ -59,6 +69,10 @@
 
           draw: function () {
               var that = this;
+
+              if (this.playerAdded) {
+                  this._instructions.draw(this._instructionsContext);
+              }
 
               var now = Date.now();
               var delta = (now - this._lastFrameTime) / 1000;
@@ -73,6 +87,20 @@
               this._CenterPanel.drawPegs();
               this._RightPanel.drawPegs();
           },
+          newPlayerAdded: function(){
+              this.playerAdded = true;
+              this._instructions.paused = false;
+          },
+          newPlayerRemoved: function () {
+              this.playerAdded = false;
+              this._instructions.paused = true;
+          },
+          playInstructions: function() {
+              var count = 0;
+              setTimeout(function () {
+
+              });
+          },
           detectActivated: function (player, Panel, index) {
               var that = this;
               var mX = player['pos']['x'] - (640 * index);
@@ -85,13 +113,13 @@
                               peg.counter = peg.counter + 1.5;
                           } else {
                               if (Panel.speed > 3) {
-                                  peg.counter = peg.counter + 1.5;
+                                  peg.counter = peg.counter + 4;
                               } else {
                                   peg.counter = peg.counter + 1;
                               }
                           }
                           
-                          if (!peg.splatter_sprite && peg.counter > 50) {
+                          if (!peg.splatter_sprite && peg.counter > 45) {
                               peg.activated = true;
                               peg.splatter_sprite = that.randomSplat();
 
@@ -233,7 +261,11 @@
           _image1: null,
           _image2: null,
           _image3: null,
-          _width: 635
+          _width: 635,
+          _instructionsCanvas: null,
+          _instructionsContext: null,
+          _instructions: new Instructions(),
+          playerAdded: false
       }
     );
 

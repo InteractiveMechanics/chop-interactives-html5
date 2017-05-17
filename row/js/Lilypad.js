@@ -2,8 +2,8 @@ function HeavyLilyPad(I) {
     I = I || {};
 
     I.color = '#FF0000';
-    I.x = randomInRange(1900, 20);
-    I.y = randomInRange(1060, 20);
+    I.x = randomInRange(1900, 200);
+    I.y = randomInRange(1060, 200);
     I.dx = random_dx_dy();
     I.dy = random_dx_dy();
 
@@ -46,8 +46,8 @@ function LilyPad(I) {
     I = I || {};
 
     I.color = '#FF0000';
-    I.x = randomInRange(1900, 20);
-    I.y = randomInRange(1060, 20);
+    I.x = randomInRange(1900, 200);
+    I.y = randomInRange(1060, 200);
     I.dx = random_dx_dy();
     I.dy = random_dx_dy();
 
@@ -91,8 +91,8 @@ function Flower(I) {
     I = I || {};
 
     I.color = '#FF0000';
-    I.x = randomInRange(1900, 20);
-    I.y = randomInRange(1060, 20);
+    I.x = randomInRange(1900, 200);
+    I.y = randomInRange(1060, 200);
     I.dx = random_dx_dy();
     I.dy = random_dx_dy();
 
@@ -154,11 +154,14 @@ function Rectangle(x, y, width, height) {
 
     I.x = x;
     I.y = y;
-    I.width = width;
-    I.height = height;
+    I.width = width + 75;
+    I.height = height + 75;
 
     I.intersectsWith = function (rect) {
-        return (rect.x < this.x + this.width && this.x < rect.x + rect.width && rect.y < this.y + this.height)
+        if (rect.x < this.x + this.width && this.x < rect.x + rect.width && rect.y < this.y + this.height) {
+            return this.y < rect.y + rect.height;
+        }
+        return false;
     }
 
     return I;

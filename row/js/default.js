@@ -1,5 +1,4 @@
 ﻿(function () {
-    "use strict";
 
     var app = WinJS.Application;
     var activation = Windows.ApplicationModel.Activation;

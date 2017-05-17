@@ -1,0 +1,395 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|ARM">
+      <Configuration>Debug</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x86">
+      <Configuration>Debug</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|ARM">
+      <Configuration>Release</Configuration>
+      <Platform>ARM</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x86">
+      <Configuration>Release</Configuration>
+      <Platform>x86</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>8049de6e-5089-4a40-a977-3d2c1d36b744</ProjectGuid>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup Condition="'$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0'">
+    <VisualStudioVersion>12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).Default.props" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).props" />
+  <PropertyGroup>
+    <TargetPlatformIdentifier>Windows</TargetPlatformIdentifier>
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <RequiredPlatformVersion>8.1</RequiredPlatformVersion>
+    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <PackageCertificateKeyFile>ExploreInteractive_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxPackageDir>D:\Games\CHOP-Berger\New1\ExploreInteractive</AppxPackageDir>
+    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <PackageCertificateThumbprint>7B8EDE3427F765E0596835D2718ED81543DAA209</PackageCertificateThumbprint>
+  </PropertyGroup>
+  <ItemGroup>
+    <AppxManifest Include="package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <Content Include="animations\big_buck_bunny.mp4" />
+    <Content Include="animations\CHOP_Steg-end.html" />
+    <Content Include="animations\CHOP_Steg-end.js" />
+    <Content Include="animations\CHOP_Trex-end.html" />
+    <Content Include="animations\CHOP_Trex-end.js" />
+    <Content Include="animations\CHOP_Tric-end.html" />
+    <Content Include="animations\CHOP_Tric-end.js" />
+    <Content Include="animations\libs\createjs-2015.11.26.min.js" />
+    <Content Include="animations\stegAni.mp4" />
+    <Content Include="animations\trexAni.mp4" />
+    <Content Include="animations\tricAni.mp4" />
+    <Content Include="default.html" />
+    <None Include="ExploreInteractive_TemporaryKey.pfx" />
+    <Content Include="images\background@2x.png" />
+    <Content Include="images\background_slice01@2x.jpg" />
+    <Content Include="images\background_slice02@2x.jpg" />
+    <Content Include="images\background_slice03@2x.jpg" />
+    <Content Include="images\CHOP_DiggingUpDinos_bkgr.jpg" />
+    <Content Include="images\CHOP_DiggingUpDinos_grass-01.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_grass-02.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_object-28.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_object-29.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_object-30.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_object-31.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_rock-01.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_rock-02.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_rock-03.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_rock-04.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_rock-05.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_rock-06.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_rock-07.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_sand.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_steg-outline_btm-darken.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_steg-outline_middle-multiply.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_steg-outline_top.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_steg-skeleton-FULL.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_steg-skeleton-hips.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_steg-skeleton-ribs.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_steg-skeleton-skull.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_steg-skeleton-tail.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_trex-outline_btm-darken.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_trex-outline_middle-multiply.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_trex-outline_top.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_trex-skeleton-FULL.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_trex-skeleton-hips.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_trex-skeleton-ribs.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_trex-skeleton-skull.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_trex-skeleton-tail.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_tri-outline_btm-darken.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_tri-outline_middle-multiply.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_tri-outline_top.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_tri-skeleton-FULL.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_tri-skeleton-hips.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_tri-skeleton-ribs.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_tri-skeleton-skull.png" />
+    <Content Include="images\CHOP_DiggingUpDinos_tri-skeleton-tail.png" />
+    <Content Include="images\CHOP_LiteBrite_all.png" />
+    <Content Include="images\Instructions-Explore.png" />
+    <Content Include="images\instructions@2x.png" />
+    <Content Include="images\LB_1.png" />
+    <Content Include="images\LB_10.png" />
+    <Content Include="images\LB_11.png" />
+    <Content Include="images\LB_12.png" />
+    <Content Include="images\LB_13.png" />
+    <Content Include="images\LB_14.png" />
+    <Content Include="images\LB_15.png" />
+    <Content Include="images\LB_16.png" />
+    <Content Include="images\LB_17.png" />
+    <Content Include="images\LB_18.png" />
+    <Content Include="images\LB_19.png" />
+    <Content Include="images\LB_2.png" />
+    <Content Include="images\LB_20.png" />
+    <Content Include="images\LB_21.png" />
+    <Content Include="images\LB_22.png" />
+    <Content Include="images\LB_23.png" />
+    <Content Include="images\LB_24.png" />
+    <Content Include="images\LB_25.png" />
+    <Content Include="images\LB_26.png" />
+    <Content Include="images\LB_27.png" />
+    <Content Include="images\LB_28.png" />
+    <Content Include="images\LB_29.png" />
+    <Content Include="images\LB_3.png" />
+    <Content Include="images\LB_30.png" />
+    <Content Include="images\LB_4.png" />
+    <Content Include="images\LB_5.png" />
+    <Content Include="images\LB_6.png" />
+    <Content Include="images\LB_7.png" />
+    <Content Include="images\LB_8.png" />
+    <Content Include="images\LB_9.png" />
+    <Content Include="images\LB_blue.png" />
+    <Content Include="images\LB_close-btn.png" />
+    <Content Include="images\LB_color-bar.png" />
+    <Content Include="images\LB_gray.png" />
+    <Content Include="images\LB_green.png" />
+    <Content Include="images\LB_orange.png" />
+    <Content Include="images\LB_pink.png" />
+    <Content Include="images\LB_shine.png" />
+    <Content Include="images\LB_yellow.png" />
+    <Content Include="images\logo.scale-100.png" />
+    <Content Include="images\logo.scale-140.png" />
+    <Content Include="images\logo.scale-180.png" />
+    <Content Include="images\paint-splatters\splatter_0.png" />
+    <Content Include="images\paint-splatters\splatter_1.png" />
+    <Content Include="images\paint-splatters\splatter_10.png" />
+    <Content Include="images\paint-splatters\splatter_11.png" />
+    <Content Include="images\paint-splatters\splatter_12.png" />
+    <Content Include="images\paint-splatters\splatter_13.png" />
+    <Content Include="images\paint-splatters\splatter_14.png" />
+    <Content Include="images\paint-splatters\splatter_15.png" />
+    <Content Include="images\paint-splatters\splatter_16.png" />
+    <Content Include="images\paint-splatters\splatter_17.png" />
+    <Content Include="images\paint-splatters\splatter_18.png" />
+    <Content Include="images\paint-splatters\splatter_19.png" />
+    <Content Include="images\paint-splatters\splatter_2.png" />
+    <Content Include="images\paint-splatters\splatter_20.png" />
+    <Content Include="images\paint-splatters\splatter_21.png" />
+    <Content Include="images\paint-splatters\splatter_22.png" />
+    <Content Include="images\paint-splatters\splatter_23.png" />
+    <Content Include="images\paint-splatters\splatter_24.png" />
+    <Content Include="images\paint-splatters\splatter_25.png" />
+    <Content Include="images\paint-splatters\splatter_26.png" />
+    <Content Include="images\paint-splatters\splatter_27.png" />
+    <Content Include="images\paint-splatters\splatter_28.png" />
+    <Content Include="images\paint-splatters\splatter_29.png" />
+    <Content Include="images\paint-splatters\splatter_3.png" />
+    <Content Include="images\paint-splatters\splatter_30.png" />
+    <Content Include="images\paint-splatters\splatter_31.png" />
+    <Content Include="images\paint-splatters\splatter_32.png" />
+    <Content Include="images\paint-splatters\splatter_33.png" />
+    <Content Include="images\paint-splatters\splatter_34.png" />
+    <Content Include="images\paint-splatters\splatter_35.png" />
+    <Content Include="images\paint-splatters\splatter_36.png" />
+    <Content Include="images\paint-splatters\splatter_37.png" />
+    <Content Include="images\paint-splatters\splatter_38.png" />
+    <Content Include="images\paint-splatters\splatter_39.png" />
+    <Content Include="images\paint-splatters\splatter_4.png" />
+    <Content Include="images\paint-splatters\splatter_40.png" />
+    <Content Include="images\paint-splatters\splatter_41.png" />
+    <Content Include="images\paint-splatters\splatter_42.png" />
+    <Content Include="images\paint-splatters\splatter_43.png" />
+    <Content Include="images\paint-splatters\splatter_44.png" />
+    <Content Include="images\paint-splatters\splatter_45.png" />
+    <Content Include="images\paint-splatters\splatter_46.png" />
+    <Content Include="images\paint-splatters\splatter_47.png" />
+    <Content Include="images\paint-splatters\splatter_48.png" />
+    <Content Include="images\paint-splatters\splatter_49.png" />
+    <Content Include="images\paint-splatters\splatter_5.png" />
+    <Content Include="images\paint-splatters\splatter_50.png" />
+    <Content Include="images\paint-splatters\splatter_51.png" />
+    <Content Include="images\paint-splatters\splatter_52.png" />
+    <Content Include="images\paint-splatters\splatter_53.png" />
+    <Content Include="images\paint-splatters\splatter_54.png" />
+    <Content Include="images\paint-splatters\splatter_55.png" />
+    <Content Include="images\paint-splatters\splatter_56.png" />
+    <Content Include="images\paint-splatters\splatter_57.png" />
+    <Content Include="images\paint-splatters\splatter_58.png" />
+    <Content Include="images\paint-splatters\splatter_59.png" />
+    <Content Include="images\paint-splatters\splatter_6.png" />
+    <Content Include="images\paint-splatters\splatter_7.png" />
+    <Content Include="images\paint-splatters\splatter_8.png" />
+    <Content Include="images\paint-splatters\splatter_9.png" />
+    <Content Include="images\paint-splatters\splatter_S.png" />
+    <Content Include="images\pegs\.DS_Store" />
+    <Content Include="images\pegs\P0\.DS_Store" />
+    <Content Include="images\pegs\P0\P0_0-faded.png" />
+    <Content Include="images\pegs\P0\P0_0.png" />
+    <Content Include="images\pegs\P0\P0_1-faded.png" />
+    <Content Include="images\pegs\P0\P0_1.png" />
+    <Content Include="images\pegs\P0\P0_2-faded.png" />
+    <Content Include="images\pegs\P0\P0_2.png" />
+    <Content Include="images\pegs\P0\P0_3-faded.png" />
+    <Content Include="images\pegs\P0\P0_3.png" />
+    <Content Include="images\pegs\P0\P0_4-faded.png" />
+    <Content Include="images\pegs\P0\P0_4.png" />
+    <Content Include="images\pegs\P0\P0_5-faded.png" />
+    <Content Include="images\pegs\P0\P0_5.png" />
+    <Content Include="images\pegs\P0\P0_6-faded.png" />
+    <Content Include="images\pegs\P0\P0_6.png" />
+    <Content Include="images\pegs\P0\P0_7-faded.png" />
+    <Content Include="images\pegs\P0\P0_7.png" />
+    <Content Include="images\pegs\P0\P0_8-faded.png" />
+    <Content Include="images\pegs\P0\P0_8.png" />
+    <Content Include="images\pegs\P0\P0_9-faded.png" />
+    <Content Include="images\pegs\P0\P0_9.png" />
+    <Content Include="images\pegs\P1\.DS_Store" />
+    <Content Include="images\pegs\P1\P1_0-faded.png" />
+    <Content Include="images\pegs\P1\P1_0.png" />
+    <Content Include="images\pegs\P1\P1_1-faded.png" />
+    <Content Include="images\pegs\P1\P1_1.png" />
+    <Content Include="images\pegs\P1\P1_2-faded.png" />
+    <Content Include="images\pegs\P1\P1_2.png" />
+    <Content Include="images\pegs\P1\P1_3-faded.png" />
+    <Content Include="images\pegs\P1\P1_3.png" />
+    <Content Include="images\pegs\P1\P1_4-faded.png" />
+    <Content Include="images\pegs\P1\P1_4.png" />
+    <Content Include="images\pegs\P1\P1_5-faded.png" />
+    <Content Include="images\pegs\P1\P1_5.png" />
+    <Content Include="images\pegs\P1\P1_6-faded.png" />
+    <Content Include="images\pegs\P1\P1_6.png" />
+    <Content Include="images\pegs\P1\P1_7-faded.png" />
+    <Content Include="images\pegs\P1\P1_7.png" />
+    <Content Include="images\pegs\P1\P1_8-faded.png" />
+    <Content Include="images\pegs\P1\P1_8.png" />
+    <Content Include="images\pegs\P1\P1_9-faded.png" />
+    <Content Include="images\pegs\P1\P1_9.png" />
+    <Content Include="images\pegs\P2\.DS_Store" />
+    <Content Include="images\pegs\P2\P2_0-faded.png" />
+    <Content Include="images\pegs\P2\P2_0.png" />
+    <Content Include="images\pegs\P2\P2_1-faded.png" />
+    <Content Include="images\pegs\P2\P2_1.png" />
+    <Content Include="images\pegs\P2\P2_2-faded.png" />
+    <Content Include="images\pegs\P2\P2_2.png" />
+    <Content Include="images\pegs\P2\P2_3-faded.png" />
+    <Content Include="images\pegs\P2\P2_3.png" />
+    <Content Include="images\pegs\P2\P2_4-faded.png" />
+    <Content Include="images\pegs\P2\P2_4.png" />
+    <Content Include="images\pegs\P2\P2_5-faded.png" />
+    <Content Include="images\pegs\P2\P2_5.png" />
+    <Content Include="images\pegs\P2\P2_6-faded.png" />
+    <Content Include="images\pegs\P2\P2_6.png" />
+    <Content Include="images\pegs\P2\P2_7-faded.png" />
+    <Content Include="images\pegs\P2\P2_7.png" />
+    <Content Include="images\pegs\P2\P2_8-faded.png" />
+    <Content Include="images\pegs\P2\P2_8.png" />
+    <Content Include="images\pegs\P2\P2_9-faded.png" />
+    <Content Include="images\pegs\P2\P2_9.png" />
+    <Content Include="images\pegs\P3\P3_0.png" />
+    <Content Include="images\pegs\P3\P3_1.png" />
+    <Content Include="images\pegs\P3\P3_2.png" />
+    <Content Include="images\pegs\P3\P3_3.png" />
+    <Content Include="images\pegs\P3\P3_4.png" />
+    <Content Include="images\pegs\P3\P3_5.png" />
+    <Content Include="images\pegs\P3\P3_6.png" />
+    <Content Include="images\pegs\P3\P3_7.png" />
+    <Content Include="images\pegs\P3\P3_8.png" />
+    <Content Include="images\pegs\P3\P3_9.png" />
+    <Content Include="images\pegs\P4\P4_0.png" />
+    <Content Include="images\pegs\P4\P4_1.png" />
+    <Content Include="images\pegs\P4\P4_2.png" />
+    <Content Include="images\pegs\P4\P4_3.png" />
+    <Content Include="images\pegs\P4\P4_4.png" />
+    <Content Include="images\pegs\P4\P4_5.png" />
+    <Content Include="images\pegs\P4\P4_6.png" />
+    <Content Include="images\pegs\P4\P4_7.png" />
+    <Content Include="images\pegs\P4\P4_8.png" />
+    <Content Include="images\pegs\P4\P4_9.png" />
+    <Content Include="images\pegs\P5\P5_0.png" />
+    <Content Include="images\pegs\P5\P5_1.png" />
+    <Content Include="images\pegs\P5\P5_2.png" />
+    <Content Include="images\pegs\P5\P5_3.png" />
+    <Content Include="images\pegs\P5\P5_4.png" />
+    <Content Include="images\pegs\P5\P5_5.png" />
+    <Content Include="images\pegs\P5\P5_6.png" />
+    <Content Include="images\pegs\P5\P5_7.png" />
+    <Content Include="images\pegs\P5\P5_8.png" />
+    <Content Include="images\pegs\P5\P5_9.png" />
+    <Content Include="images\pegs\PG\PS_0.png" />
+    <Content Include="images\pegs\PG\PS_1.png" />
+    <Content Include="images\pegs\PG\PS_2.png" />
+    <Content Include="images\pegs\PG\PS_3.png" />
+    <Content Include="images\pegs\PG\PS_4.png" />
+    <Content Include="images\pegs\PG\PS_5.png" />
+    <Content Include="images\pegs\PG\PS_6.png" />
+    <Content Include="images\pegs\PG\PS_7.png" />
+    <Content Include="images\pegs\PG\PS_8.png" />
+    <Content Include="images\pegs\PG\PS_9.png" />
+    <Content Include="images\pegs\PX\PX_0.png" />
+    <Content Include="images\pegs\PX\PX_1.png" />
+    <Content Include="images\pegs\PX\PX_2.png" />
+    <Content Include="images\pegs\PX\PX_3.png" />
+    <Content Include="images\pegs\PX\PX_4.png" />
+    <Content Include="images\pegs\PX\PX_5.png" />
+    <Content Include="images\pegs\PX\PX_6.png" />
+    <Content Include="images\pegs\PX\PX_7.png" />
+    <Content Include="images\pegs\PX\PX_8.png" />
+    <Content Include="images\pegs\PX\PX_9.png" />
+    <Content Include="images\shared\P0_closed.png" />
+    <Content Include="images\shared\P0_open.png" />
+    <Content Include="images\shared\P1_closed.png" />
+    <Content Include="images\shared\P1_open.png" />
+    <Content Include="images\shared\P2_closed.png" />
+    <Content Include="images\shared\P2_open.png" />
+    <Content Include="images\shared\P3_closed.png" />
+    <Content Include="images\shared\P3_open.png" />
+    <Content Include="images\shared\P4_closed.png" />
+    <Content Include="images\shared\P4_open.png" />
+    <Content Include="images\shared\P5_closed.png" />
+    <Content Include="images\shared\P5_open.png" />
+    <Content Include="images\smalllogo.scale-100.png" />
+    <Content Include="images\splashscreen.scale-100.png" />
+    <Content Include="images\splashscreen.scale-140.png" />
+    <Content Include="images\splashscreen.scale-180.png" />
+    <Content Include="images\storelogo.scale-100.png" />
+    <Content Include="css\default.css" />
+    <Content Include="images\too-many-alert@2x.png" />
+    <Content Include="js\Bones.js" />
+    <Content Include="js\climbCanvas.js" />
+    <Content Include="js\default.js" />
+    <Content Include="js\Highlight.js" />
+    <Content Include="js\Instructions.js" />
+    <Content Include="js\kinectCanvas.js" />
+    <Content Include="js\Iterable.js" />
+    <Content Include="js\kinectController.js" />
+    <Content Include="js\LiteBrite.js" />
+    <Content Include="js\Artifact.js" />
+    <Content Include="js\Panel.js" />
+    <Content Include="js\Peg.js" />
+    <Content Include="js\RemoveIcon.js" />
+    <Content Include="js\Sediment.js" />
+    <Content Include="js\Sprite.js" />
+    <Content Include="js\Stegosaurus.js" />
+    <Content Include="js\StegosaurusBones.js" />
+    <Content Include="js\Trex.js" />
+    <Content Include="js\Triceratop.js" />
+    <None Include="KinectMotionDemo_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <SDKReference Include="Microsoft.VCLibs, version=12.0" />
+    <SDKReference Include="Microsoft.WinJS.2.0, Version=1.0" />
+    <SDKReference Include="WindowsPreview.Kinect, Version=2.0" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\$(WMSJSProjectDirectory)\Microsoft.VisualStudio.$(WMSJSProject).targets" />
+  <!-- To modify your build process, add your task inside one of the targets below then uncomment
+       that target and the DisableFastUpToDateCheck PropertyGroup. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  <PropertyGroup>
+    <DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+  </PropertyGroup>
+  -->
+</Project>

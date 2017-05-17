@@ -1,0 +1,11 @@
+﻿canvas {
+    position: absolute;
+    top: 0;
+}
+
+#instructionsCanvas {
+    z-index: 50;
+}
+#kinectCanvas {
+    z-index: 40;
+}

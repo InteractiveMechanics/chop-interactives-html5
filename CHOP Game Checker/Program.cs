@@ -16,7 +16,7 @@ namespace CHOP_Game_Checker
             if (!isRunning)
             {
                 //Kill All Script
-                ProcessStartInfo killAllProcess = new ProcessStartInfo("cmd.exe", "/c " + "C:\\tasks\\killtask.bat");
+                ProcessStartInfo killAllProcess = new ProcessStartInfo("cmd.exe", "/c " + "C:\\tasks\\kill.bat");
                 killAllProcess.CreateNoWindow = true;
                 killAllProcess.UseShellExecute = false;
 

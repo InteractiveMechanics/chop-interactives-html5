@@ -93,7 +93,10 @@
 
                   for (i = 0; i < constants.bodyCount; i++) {
                       if (this._bodies[i].isTracked) {
-                          players[i] = this._getPlayerData(i, this._bodies[i]);
+                          var trackedPlayer = this._getPlayerData(i, this._bodies[i]);
+                          if (trackedPlayer) {
+                              players[i] = trackedPlayer;
+                          }
                       }
                   }
                   this._canvas.draw(players);
@@ -109,27 +112,32 @@
               var left = this._getJointPositions(body, 7);
               var spine = this._getJointPositions(body, 1);
 
-              var player = {};
-              player['right'] = {};
-              player['right']['status'] = this._getHandStatus(body, 'right');
-              player['right']['confidence'] = this._getHandConfidence(body, 'right');
-              player['right']['pos'] = {};
-              player['right']['pos'] = right[0];
-              player['right']['trackingState'] = right[1];
+              var zValue = spine[0].z;
+              if (zValue < this.zIndexValue) {
+                  var player = {};
+                  player['right'] = {};
+                  player['right']['status'] = this._getHandStatus(body, 'right');
+                  player['right']['confidence'] = this._getHandConfidence(body, 'right');
+                  player['right']['pos'] = {};
+                  player['right']['pos'] = right[0];
+                  player['right']['trackingState'] = right[1];
 
-              player['left'] = {};
-              player['left']['status'] = this._getHandStatus(body, 'left');
-              player['left']['confidence'] = this._getHandConfidence(body, 'left');
-              player['left']['pos'] = {};
-              player['left']['pos'] = left[0];
-              player['left']['trackingState'] = left[1];
+                  player['left'] = {};
+                  player['left']['status'] = this._getHandStatus(body, 'left');
+                  player['left']['confidence'] = this._getHandConfidence(body, 'left');
+                  player['left']['pos'] = {};
+                  player['left']['pos'] = left[0];
+                  player['left']['trackingState'] = left[1];
 
-              player['spine'] = {};
-              player['spine']['pos'] = {};
-              player['spine']['pos'] = spine[0];
-              player['spine']['trackingState'] = spine[1];
+                  player['spine'] = {};
+                  player['spine']['pos'] = {};
+                  player['spine']['pos'] = spine[0];
+                  player['spine']['trackingState'] = spine[1];
 
-              return (player);
+                  return (player);
+              } else {
+                  return null;
+              }
           },
           _getHandStatus: function (body, hand) {
               var handStatus;
@@ -197,7 +205,12 @@
               colourPoint.x *= (1920 / this._sensorColourFrameDimensions.width);
               colourPoint.y *= (1080 / this._sensorColourFrameDimensions.height);
 
-              return (colourPoint);
+              //return (colourPoint);
+              return {
+                  x: colourPoint.x,
+                  y: colourPoint.y,
+                  z: cameraSpacePoint.z
+              };
           },
           _boundHandler: null,
           _clearCanvas: null,
@@ -208,6 +221,7 @@
           _reader: null,
           _bodyDrawers: null,
           _bodies: null,
+          zIndexValue: 3,
 
           // Because sometimes we don't get the Kinect frames...
           _kinectResetTimeout: null,

@@ -15,6 +15,8 @@
               this._index = index;
               this._sensor = sensor;
 
+              this._movementPercentage = .45;
+
               this._sensorColourFrameDimensions = {};
               this._sensorColourFrameDimensions.width = this._sensor.colorFrameSource.frameDescription.width;
               this._sensorColourFrameDimensions.height = this._sensor.colorFrameSource.frameDescription.height;
@@ -59,6 +61,7 @@
                       that.closeReader();
                       that.releaseSensor();
                       that.getSensor();
+                      that.openReader();
                   }, 5000);
               }
           },
@@ -77,6 +80,16 @@
               var players = {};
               var i = 0;
 
+              //Horrible Thread.sleep();
+             /* var rand = Math.floor(Math.random() * (20 - 1 + 1)) + 1;
+              console.log(rand);
+
+              if(rand == 5){
+                  var e = new Date().getTime() + (6 * 1000);
+                  while (new Date().getTime() <= e) { }
+                  frame = null;
+              }*/
+
               if (frame) {
                   var currentTime = new Date().getTime();
                   if (currentTime - this._lastKnownTime < 3000) {
@@ -93,7 +106,11 @@
 
                   for (i = 0; i < constants.bodyCount; i++) {
                       if (this._bodies[i].isTracked) {
-                          players[i] = this._getPlayerData(i, this._bodies[i]);
+                          //players[i] = this._getPlayerData(i, this._bodies[i]);
+                          var trackedPlayer = this._getPlayerData(i, this._bodies[i]);
+                          if (trackedPlayer) {
+                              players[i] = trackedPlayer;
+                          }
                       }
                   }
                   this._canvas.draw(players);
@@ -107,29 +124,96 @@
           _getPlayerData: function (i, body) {
               var right = this._getJointPositions(body, 11);
               var left = this._getJointPositions(body, 7);
-              var spine = this._getJointPositions(body, 1);
+              var spine = this._getJointPositions(body, 20);
+              var leftshoulder = this._getJointPositions(body, 4);
+              var rightshoulder = this._getJointPositions(body, 8);
+              var neck = this._getJointPositions(body, 3);
 
-              var player = {};
-              player['right'] = {};
-              player['right']['status'] = this._getHandStatus(body, 'right');
-              player['right']['confidence'] = this._getHandConfidence(body, 'right');
-              player['right']['pos'] = {};
-              player['right']['pos'] = right[0];
-              player['right']['trackingState'] = right[1];
+              var zValue = spine[0].z;
+              if (zValue < this.zIndexValue) {
 
-              player['left'] = {};
-              player['left']['status'] = this._getHandStatus(body, 'left');
-              player['left']['confidence'] = this._getHandConfidence(body, 'left');
-              player['left']['pos'] = {};
-              player['left']['pos'] = left[0];
-              player['left']['trackingState'] = left[1];
+                  var player = {};
+                  player['spine'] = {};
+                  player['spine']['pos'] = {};
+                  player['spine']['pos'] = spine[0];
+                  player['spine']['trackingState'] = spine[1];
 
-              player['spine'] = {};
-              player['spine']['pos'] = {};
-              player['spine']['pos'] = spine[0];
-              player['spine']['trackingState'] = spine[1];
+                  player['neck'] = {};
+                  player['neck']['pos'] = {};
+                  player['neck']['pos'] = neck[0];
+                  player['neck']['trackingState'] = neck[1];
 
-              return (player);
+                  player['rightshoulder'] = {};
+                  player['rightshoulder']['pos'] = {};
+                  player['rightshoulder']['pos'] = rightshoulder[0];
+                  player['rightshoulder']['trackingState'] = rightshoulder[1];
+
+                  player['leftshoulder'] = {};
+                  player['leftshoulder']['pos'] = {};
+                  player['leftshoulder']['pos'] = leftshoulder[0];
+                  player['leftshoulder']['trackingState'] = leftshoulder[1];
+
+                  var shoulderdist = rightshoulder[0]['x'] - leftshoulder[0]['x'];
+                  var spinedist = spine[0]['y'] - neck[0]['y'];
+
+                  player['right'] = {};
+                  player['right']['status'] = this._getHandStatus(body, 'right');
+                  player['right']['confidence'] = this._getHandConfidence(body, 'right');
+                  player['right']['pos'] = {};
+                  player['right']['pos']['x'] = (((right[0]['x'] - leftshoulder[0]['x']) * 1920) / shoulderdist) * this._movementPercentage;
+
+                  if (player['right']['pos']['x'] < 0) {
+                      player['right']['pos']['x'] = 30;
+                  }
+
+                  if (player['right']['pos']['x'] > 1920) {
+                      player['right']['pos']['x'] = 1890;
+                  }
+
+                  player['right']['pos']['y'] = (((right[0]['y'] - neck[0]['y']) * 1080) / spinedist) * this._movementPercentage;
+
+                  if (player['right']['pos']['y'] < 0) {
+                      player['right']['pos']['y'] = 20;
+                  }
+
+                  if (player['right']['pos']['y'] > 1080) {
+                      player['right']['pos']['y'] = 1050;
+                  }
+
+                  player['right']['trackingState'] = right[1];
+
+                  player['left'] = {};
+                  player['left']['status'] = this._getHandStatus(body, 'left');
+                  player['left']['confidence'] = this._getHandConfidence(body, 'left');
+                  player['left']['pos'] = {};
+                  player['left']['pos']['x'] = (((left[0]['x'] - leftshoulder[0]['x']) * 1920) / shoulderdist) * this._movementPercentage;
+
+                  if (player['left']['pos']['x'] < 0) {
+                      player['left']['pos']['x'] = 30;
+                  }
+
+                  if (player['left']['pos']['x'] > 1920) {
+                      player['left']['pos']['x'] = 1890;
+                  }
+
+                  player['left']['pos']['y'] = (((left[0]['y'] - neck[0]['y']) * 1080) / spinedist) * this._movementPercentage;
+
+                  if (player['left']['pos']['y'] < 0) {
+                      player['left']['pos']['y'] = 20;
+                  }
+
+                  if (player['left']['pos']['y'] > 1080) {
+                      player['left']['pos']['y'] = 1050;
+                  }
+
+                  player['left']['trackingState'] = left[1];
+
+
+
+                  return (player);
+              } else {
+                  return null;
+              }
           },
           _getHandStatus: function (body, hand) {
               var handStatus;
@@ -197,7 +281,15 @@
               colourPoint.x *= (1920 / this._sensorColourFrameDimensions.width);
               colourPoint.y *= (1080 / this._sensorColourFrameDimensions.height);
 
-              return (colourPoint);
+              //colourPoint.z = cameraSpacePoint.z;
+
+
+              //return (colourPoint);
+              return {
+                  x: colourPoint.x,
+                  y: colourPoint.y,
+                  z: cameraSpacePoint.z
+              };
           },
           _boundHandler: null,
           _clearCanvas: null,
@@ -208,6 +300,8 @@
           _reader: null,
           _bodyDrawers: null,
           _bodies: null,
+          _movementPercentage: .5,
+          zIndexValue: 3,
 
           // Because sometimes we don't get the Kinect frames...
           _kinectResetTimeout: null,
