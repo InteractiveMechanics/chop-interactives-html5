@@ -1,0 +1,25 @@
+body {
+	margin: 0px;
+}
+
+#left, #center, #right {
+	position: absolute;
+	width: 33.3333vw;
+	height: 100%;
+	overflow: hidden;
+}
+
+#stage {
+	position: absolute;
+	z-index: 0;
+}
+
+
+
+#center {
+	left: 33.333vw;
+}
+
+#right {
+	left: 66.666vw;
+}
