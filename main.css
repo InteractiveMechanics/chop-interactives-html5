@@ -1,25 +1,38 @@
 body {
-	margin: 0px;
+	margin: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 1920px;
+    height: 1080px;
 }
 
 #left, #center, #right {
 	position: absolute;
-	width: 33.3333vw;
-	height: 100%;
-	overflow: hidden;
+	width: 640px;
+	height: 1080px;
+    z-index: 1;
 }
-
 #stage {
 	position: absolute;
 	z-index: 0;
+    width: 1920px;
+    height: 1080px;
 }
 
+/*
+    These are designed for 1920 x 1080 screens only,
+    so I'd suggest just using pixel values so we can
+    more accurately align everything to the final
+    screen size.
+*/
 
-
+#left {
+    left: 40px;
+}
 #center {
-	left: 33.333vw;
+	left: 665px;
 }
 
 #right {
-	left: 66.666vw;
+	left: 1290px;
 }

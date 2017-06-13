@@ -6,11 +6,22 @@
 	 <link rel="stylesheet" href="main.css">
 </head>
 <body>
-	<canvas id="stage"></canvas>
+    <!--
+        I would be a bit more explicit with naming here. For instance:
+        stage = background_stage
+        left = left_curtain
+        center = center_curtain
+        right = right_curtain
+
+        Later, you'll probably have a few other canvases:
+        left_character
+        center_character
+        right_character
+    -->
+    <canvas id="stage"></canvas>
 	<canvas id="left"></canvas>
 	<canvas id="center"></canvas>
 	<canvas id="right"></canvas>
-
 
 	<script type="text/javascript" src="./stage.js"></script>
 </body>

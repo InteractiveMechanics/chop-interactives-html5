@@ -1,27 +1,43 @@
-function setStage() {
-	var stage = document.getElementById('stage');
-	var context = stage.getContext('2d');
-	context.canvas.width = window.innerWidth;
-  	context.canvas.height = window.innerHeight;
+var stageCanvas = document.getElementById('stage');
+var stageContext = stage.getContext('2d');
 
+stageCanvas.width = 1920;
+stageCanvas.height = 1080;
+
+var leftCurtainCanvas = document.getElementById('left');
+var centerCurtainCanvas = document.getElementById('center');
+var rightCurtainCanvas = document.getElementById('right');
+
+leftCurtainCanvas.width = 640;
+leftCurtainCanvas.height = 1080;
+
+centerCurtainCanvas.width = 640;
+centerCurtainCanvas.height = 1080;
+
+rightCurtainCanvas.width = 640;
+rightCurtainCanvas.height = 1080;
+
+var leftCurtainContext = leftCurtainCanvas.getContext('2d');
+var centerCurtainContext = centerCurtainCanvas.getContext('2d');
+var rightCurtainContext = rightCurtainCanvas.getContext('2d');
+
+function setStage() {
 	drawStage();
 
-
 	function drawStage() {
-		placeStage(context, stageImg, 0, 0, window.innerWidth, window.innerHeight);
+		placeStage(stageContext, stageImg, 0, 0, 1920, 1080);
 	}
-
 	function placeStage(ctx, obj, posX, posY, width, height) {
 		if (width && height) {
-			context.drawImage(obj, posX, posY, width, height);
+			ctx.drawImage(obj, posX, posY, width, height);
 		} else {
-			context.drawImage(obj, posX, posY);
+			ctx.drawImage(obj, posX, posY);
 		}
 	}
-
 }
 
 
+/*
 function setLeft() {
 	var curtainLeft = document.getElementById('left');
 	var context = curtainLeft.getContext('2d');
@@ -61,6 +77,7 @@ function setCenter() {
 	}
 
 }
+*/
 
 // THIS WORKS
 // function setRight() {
@@ -85,34 +102,21 @@ function setCenter() {
 
 
 // THIS DOES NOT WORK
-function setCurtain(el, img) {
-	var curtain = document.getElementById(el);
-	var context = curtain.getContext('2d');
-	
+function setCurtain(ctx, img) {	
 	drawCurtain();
 
 	function drawCurtain() {
-		placeCurtain(context, img, 0, 0, curtain.width, curtain.height);
+		placeCurtain(ctx, img, 0, 0, 640, 1080);
 	}
-
 
 	function placeCurtain(ctx, obj, posX, posY, width, height) {
 		if (width && height) {
-			context.drawImage(obj, posX, posY, width, height);
+			ctx.drawImage(obj, posX, posY, width, height);
 		} else {
-			context.drawImage(obj, posX, posY);
+			ctx.drawImage(obj, posX, posY);
 		}
 	}
-
-	console.log(img);
-	console.log(el);
-
 }
-
-
-
-
-
 
 
 
@@ -120,20 +124,11 @@ var stageImg = new Image();
 stageImg.addEventListener('load', setStage, false);
 stageImg.src = "./images/bkgr.png";
 
-var leftImg = new Image();
-leftImg.addEventListener('load', setLeft, false);
-leftImg.src = "./images/curtains.png";
 
-var centerImg = new Image();
-centerImg.addEventListener('load', setCenter, false);
-centerImg.src = "./images/curtains.png";
+var curtainImg = new Image();
+curtainImg.src = "./images/curtains.png";
 
-var rightImg = new Image();
-
-//rightImg.addEventListener('load', setCurtain('right', rightImg), false);
-setCurtain('right', rightImg);
-
-rightImg.src = "./images/curtains.png";
-
-
+curtainImg.addEventListener('load', setCurtain(leftCurtainContext, curtainImg), false);
+curtainImg.addEventListener('load', setCurtain(centerCurtainContext, curtainImg), false);
+curtainImg.addEventListener('load', setCurtain(rightCurtainContext, curtainImg), false);
 
