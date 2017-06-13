@@ -6,18 +6,20 @@ body {
     height: 1080px;
 }
 
-#left, #center, #right {
+#left_curtain, #center_curtain, #right_curtain {
 	position: absolute;
 	width: 640px;
 	height: 1080px;
     z-index: 1;
 }
-#stage {
+#background_stage {
 	position: absolute;
 	z-index: 0;
     width: 1920px;
     height: 1080px;
 }
+
+
 
 /*
     These are designed for 1920 x 1080 screens only,
@@ -26,13 +28,21 @@ body {
     screen size.
 */
 
-#left {
+#left_curtain {
     left: 40px;
 }
-#center {
+
+#center_curtain {
 	left: 665px;
 }
 
-#right {
+#right_curtain {
 	left: 1290px;
 }
+
+#left_feet, #center_feet, #right_feet {
+    position: absolute;
+    z-index: 2;
+    border: 1px solid red;
+}
+
