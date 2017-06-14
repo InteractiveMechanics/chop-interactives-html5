@@ -44,5 +44,23 @@ body {
     position: absolute;
     z-index: 2;
     border: 1px solid red;
+    top: 750px;
 }
+
+#left_feet {
+    left: 40px;
+}
+
+
+#center_feet {
+    left: 665px;
+    border-color: green;
+}
+
+#right_feet {
+    left: 1290px;
+    border-color: blue;
+}
+
+
 

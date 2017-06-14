@@ -61,8 +61,9 @@ stageImg.src = "./images/bkgr.png";
 
 var curtainImg = new Image();
 
-curtainImg.addEventListener('load', setCurtain(leftCurtainContext, curtainImg), false);
-curtainImg.addEventListener('load', setCurtain(centerCurtainContext, curtainImg), false);
-curtainImg.addEventListener('load', setCurtain(rightCurtainContext, curtainImg), false);
+var testingLeftContext = 
+curtainImg.addEventListener('load', function (ctx, img) {setCurtain(leftCurtainContext,curtainImg)}, false);
+curtainImg.addEventListener('load', function (ctx, img) {setCurtain(centerCurtainContext, curtainImg)}, false);
+curtainImg.addEventListener('load', function (ctx, img) {setCurtain(rightCurtainContext, curtainImg)}, false);
 curtainImg.src = "./images/curtains.png";
 

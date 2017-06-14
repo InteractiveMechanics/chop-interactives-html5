@@ -1,9 +1,23 @@
 var leftFeetCanvas = document.getElementById('left_feet');
 var leftFeetContext = leftFeetCanvas.getContext('2d');
 
-leftFeetCanvas.width = 700;
-leftFeetCanvas.height = 1000;
+var centerFeetCanvas = document.getElementById('center_feet');
+var centerFeetContext = centerFeetCanvas.getContext('2d');
 
+var rightFeetCanvas = document.getElementById('right_feet');
+var rightFeetContext = rightFeetCanvas.getContext('2d');
+
+var feetWidth = 600;
+var feetHeight = 175;
+
+leftFeetCanvas.width = feetWidth;
+leftFeetCanvas.height = feetHeight;
+
+centerFeetCanvas.width = feetWidth;
+centerFeetCanvas.height = feetHeight;
+
+rightFeetCanvas.width = feetWidth;
+rightFeetCanvas.height = feetHeight;
 
 
 var animationFrames = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -29,14 +43,16 @@ function drawFeet(ctx, obj, posX, posY) {
 	ctx.drawImage(feetImage, sourceX, sourceY, 952.1, 506, posX, posY, 317.3, 168.3);
 
 	frameIndex++;
-	console.log(frameIndex);
-	if (frameIndex == animationFrames.length) {
+	if (frameIndex == animationFrames.length - 1) {
 		frameIndex = 0;
-		console.log(frameIndex);
-	}
+	} 
 
 }
 
 function startFeet() {
-	setInterval(drawFeet(leftFeetContext, leftFeetCanvas, 250, 700), 1000);
+	setInterval(drawFeet, 1000, leftFeetContext, leftFeetCanvas, 141, 0);
+	setInterval(drawFeet, 1000, centerFeetContext, centerFeetCanvas, 141, 0);
+	setInterval(drawFeet, 1000, rightFeetContext, rightFeetCanvas, 141, 0);
+	
+
 }
