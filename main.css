@@ -51,7 +51,6 @@ body {
     left: 40px;
 }
 
-
 #center_feet {
     left: 665px;
     border-color: green;
@@ -61,6 +60,76 @@ body {
     left: 1290px;
     border-color: blue;
 }
+
+#left_body, #center_body, #right_body {
+    position: absolute;
+    z-index: 2;
+    border: 1px solid red;
+    top: 550px;
+    overflow: auto;
+}
+
+#left_body {
+    left: 40px;
+}
+
+#center_body {
+    left: 665px;
+    border-color: green;
+}
+
+#right_body {
+    left: 1290px;
+    border-color: blue;
+}
+
+#left_face, #center_face, #right_face {
+    position: absolute;
+    z-index: 3;
+    border: 1px solid red;
+    top: 455px;
+    overflow: auto;
+}
+
+#left_face {
+    left: 40px;
+}
+
+#center_face {
+    left: 665px;
+    border-color: green;
+}
+
+#right_face {
+    left: 1290px;
+    border-color: blue;
+}
+
+#left_hat, #center_hat, #right_hat {
+    position: absolute;
+    z-index: 2;
+    border: 1px solid red;
+    top: 455px;
+    overflow: auto;
+}
+
+#left_hat {
+    left: 40px;
+}
+
+#center_hat {
+    left: 665px;
+    border-color: green;
+}
+
+#right_hat {
+    left: 1290px;
+    border-color: blue;
+}
+
+
+
+
 
 
 
