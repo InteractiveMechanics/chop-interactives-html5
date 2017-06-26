@@ -4,13 +4,14 @@ body {
     overflow: hidden;
     width: 1920px;
     height: 1080px;
+    background-color: blue;
 }
 
 #left_curtain, #center_curtain, #right_curtain {
 	position: absolute;
 	width: 640px;
 	height: 1080px;
-    z-index: 1;
+    z-index: 2;
 }
 #background_stage {
 	position: absolute;
@@ -29,107 +30,57 @@ body {
 */
 
 #left_curtain {
-    left: 40px;
+    left: 10px; /*40px*/
 }
 
 #center_curtain {
-	left: 665px;
+	left: 625px; /*665px*/
 }
 
 #right_curtain {
-	left: 1290px;
+	left: 1250px; /*1290px*/
 }
 
-#left_feet, #center_feet, #right_feet {
+#left_spotlight, #center_spotlight, #right_spotlight {
     position: absolute;
-    z-index: 2;
+    z-index: 1;
     border: 1px solid red;
-    top: 750px;
+    top: 50px;
 }
 
-#left_feet {
-    left: 40px;
+#left_spotlight {
+    left: 130px; /*40px*/
 }
 
-#center_feet {
-    left: 665px;
+#center_spotlight {
+    left: 747px;
     border-color: green;
 }
 
-#right_feet {
-    left: 1290px;
+#right_spotlight{
+    left: 1374px;
     border-color: blue;
 }
 
-#left_body, #center_body, #right_body {
-    position: absolute;
-    z-index: 2;
-    border: 1px solid red;
-    top: 550px;
-    overflow: auto;
-}
-
-#left_body {
-    left: 40px;
-}
-
-#center_body {
-    left: 665px;
-    border-color: green;
-}
-
-#right_body {
-    left: 1290px;
-    border-color: blue;
-}
-
-#left_face, #center_face, #right_face {
+#left_hero, #center_hero, #right_hero {
     position: absolute;
     z-index: 3;
     border: 1px solid red;
-    top: 455px;
-    overflow: auto;
+    top: 50px;
 }
 
-#left_face {
-    left: 40px;
+#left_hero {
+    left: 149px;
 }
 
-#center_face {
-    left: 665px;
+#center_hero {
+    left: 773px;
     border-color: green;
 }
 
-#right_face {
-    left: 1290px;
+#right_hero {
+    left: 1409px;
     border-color: blue;
 }
-
-#left_hat, #center_hat, #right_hat {
-    position: absolute;
-    z-index: 2;
-    border: 1px solid red;
-    top: 455px;
-    overflow: auto;
-}
-
-#left_hat {
-    left: 40px;
-}
-
-#center_hat {
-    left: 665px;
-    border-color: green;
-}
-
-#right_hat {
-    left: 1290px;
-    border-color: blue;
-}
-
-
-
-
-
 
 
