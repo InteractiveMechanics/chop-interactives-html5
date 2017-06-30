@@ -14,16 +14,28 @@ function Hero(I) {
 	I.body = new Body();
 	I.face = new Face();
 	I.hat = new Hat();
+	I.arrows = new Arrows();
 	
 	I.draw = function(context) {
 		if (this.isActive){
+			this.arrows.draw(context);
 			this.feet.draw(context);
+			this.body.draw(context);
+			this.face.draw(context);
+			this.hat.draw(context);
+			
 		}
-		this.feet.draw(context);
-		this.body.draw(context);
-		this.face.draw(context);
-		this.hat.draw(context);
+
 	}
+
+	I.update = function() {
+		// TODO: add update :-|
+	}
+
+	I.reset = function() {
+		// reset happens with kinect integration?????
+	}
+
 	return I;
 }
 

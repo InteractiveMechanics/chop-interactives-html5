@@ -83,4 +83,12 @@ body {
     border-color: blue;
 }
 
+#arrowL1 {
+    z-index: 4;
+    position: absolute;
+    border: 1px solid purple;
+    top: 645px;
+    left: 59px;
+}
+
 

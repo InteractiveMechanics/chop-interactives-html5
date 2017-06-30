@@ -14,9 +14,13 @@ function Spotlight(bg_canvas) {
 	var I = I || {};
 	I.bg_canvas = bg_canvas;
 	I.bg_image = null;
+	I.isActive = false;
+
 
 	I.staticBG = function(img) {
-		this.bg_canvas.getContext('2d').drawImage(img, 0,0, 375, 1080);
+		if (this.isActive) {
+			this.bg_canvas.getContext('2d').drawImage(img, 0,0, 375, 1080);
+		}
 	}
 
 	return I;
@@ -29,6 +33,18 @@ function Stage(bg_canvas) {
 
 	I.staticBG = function(img) {
 		this.bg_canvas.getContext('2d').drawImage(img, 0,0, 1920, 1080);
+	}
+
+	return I;
+}
+
+function Arrow(bg_canvas) {
+	var I = I || {};
+	I.bg_canvas = bg_canvas;
+	I.bg_image = null;
+
+	I.staticBG = function(img) {
+		this.bg_canvas.getContext('2d').drawImage(img, 0,0, 75, 150);
 	}
 
 	return I;
@@ -51,15 +67,23 @@ var RightCurtain;
 var RightSpotlight;
 var RightHero;
 
+var ArrowL1;
+
+
 var curtainImg;
 var stageImg;
 var spotlightImg;
+var arrowImg;
 
 var width = 640;
 var spotlightWidth = 375;
-var heroWidth = 640;
+var heroWidth = 375;
+var arrowWidth = 75;
 
 var height = 1080;
+var arrowHeight = 150;
+
+
 
 function init() {
 
@@ -76,6 +100,8 @@ function init() {
 	var right_curtain = createRightCurtain();
 	var right_spotlight = createRightSpotlight();
 	var right_hero = createRightHero();
+
+	var arrowL1 = createArrowL1();
 	
 	document.body.appendChild(background_stage);
 
@@ -91,6 +117,8 @@ function init() {
 	document.body.appendChild(right_curtain);
 	document.body.appendChild(right_spotlight);
 	document.body.appendChild(right_hero);
+
+	document.body.appendChild(arrowL1);
 
 	BackgroundStage = new Stage(background_stage);
 
@@ -112,6 +140,7 @@ function init() {
 	RightHeroContext = right_hero.getContext('2d');
 	RightHero = new Hero();
 
+	ArrowL1 = new Arrow(arrowL1);
 
 	stageImg = new Image();
 	stageImg.onload = imageLoaded;
@@ -124,6 +153,11 @@ function init() {
 	spotlightImg = new Image();
 	spotlightImg.onload = imageLoaded;
 	spotlightImg.src = './images/spotlight.png';
+
+	arrowImg = new Image();
+	arrowImg.onload = imageLoaded;
+	arrowImg.src = './images/arrow-L.png';
+
 
 };
 
@@ -146,10 +180,12 @@ function createLeftCurtain() {
 }
 
 function createLeftSpotlight() {
+
 	var left_spotlight = document.createElement('canvas');
 	left_spotlight.id = "left_spotlight";
 	left_spotlight.width = spotlightWidth;
 	left_spotlight.height = height;
+	left_spotlight.isActive
 
 	return left_spotlight;
 }
@@ -157,10 +193,19 @@ function createLeftSpotlight() {
 function createLeftHero() {
 	var left_hero = document.createElement('canvas');
 	left_hero.id = "left_hero";
-	left_hero.wdith = heroWidth;
+	left_hero.width = heroWidth;
 	left_hero.height = height;
 
 	return left_hero;
+}
+
+function createArrowL1() {
+	var arrowL1 = document.createElement('canvas');
+	arrowL1.id = "arrowL1";
+	arrowL1.width = arrowWidth;
+	arrowL1.height = arrowHeight;
+
+	return arrowL1;
 }
 
 
@@ -185,11 +230,12 @@ function createCenterSpotlight() {
 function createCenterHero() {
 	var center_hero = document.createElement('canvas');
 	center_hero.id = "center_hero";
-	center_hero.wdith = heroWidth;
+	center_hero.width = heroWidth;
 	center_hero.height = height;
 
 	return center_hero;
 }
+
 
 function createRightCurtain() {
 	var right_curtain = document.createElement('canvas');
@@ -212,7 +258,7 @@ function createRightSpotlight() {
 function createRightHero() {
 	var right_hero = document.createElement('canvas');
 	right_hero.id = "right_hero";
-	right_hero.wdith = heroWidth;
+	right_hero.width = heroWidth;
 	right_hero.height = height;
 
 	return right_hero;
@@ -220,25 +266,63 @@ function createRightHero() {
 
 function imageLoaded() {
     draw();
+    drawHero();
 }
 
 function draw() {
 	LeftCurtain.staticBG(img);
-	LeftSpotlight.staticBG(spotlightImg);
-	LeftHero.draw(LeftHeroContext);
+	//eftSpotlight.staticBG(spotlightImg);
+	//LeftHero.draw(LeftHeroContext);
 
 	CenterCurtain.staticBG(img);
-	CenterSpotlight.staticBG(spotlightImg);
-	CenterHero.draw(CenterHeroContext);
+	//CenterHero.draw(CenterHeroContext);
+	//CenterSpotlight.staticBG(spotlightImg);
 
 
 	RightCurtain.staticBG(img);
-	RightSpotlight.staticBG(spotlightImg);
-	RightHero.draw(RightHeroContext);
+	//RightSpotlight.staticBG(spotlightImg);
+	//RightHero.draw(RightHeroContext);
 
 	BackgroundStage.staticBG(stageImg);
+	//ArrowL1.staticBG(arrowImg);
+
 
 }
+
+function drawHero() {
+	$('#left_hero').mouseover(function() {
+		if (!LeftHero.isActive) {
+			LeftHero.isActive = true;
+			LeftSpotlight.isActive = true;
+			LeftHero.draw(LeftHeroContext);
+			LeftSpotlight.staticBG(spotlightImg);
+			ArrowL1.staticBG(arrowImg);
+		}
+	});
+
+	$('#center_hero').mouseover(function(){
+		if (!CenterHero.isActive) {
+			CenterHero.isActive = true;
+			CenterSpotlight.isActive = true;
+			CenterHero.draw(CenterHeroContext);
+			CenterSpotlight.staticBG(spotlightImg);
+		} 
+	});
+
+	$('#right_hero').mouseover(function() {
+		if (!RightHero.isActive) {
+			RightHero.isActive = true;
+			RightSpotlight.isActive = true;
+			RightHero.draw(RightHeroContext);
+			RightSpotlight.staticBG(spotlightImg);
+		}
+	});
+}
+
+
+
+
+
 
 init();
 

@@ -9,9 +9,17 @@ function Feet(I) {
 	I.paused = true;
 
 
+	function getRandomInt(min, max) {
+  		min = Math.ceil(min);
+  		max = Math.floor(max);
+  		return Math.floor(Math.random() * (max - min)) + min; 
+	}
+
+
 	I.lastAdvance = 0;
 	I.frames = 0;
 	I.totalFrames = 10;
+	//console.log(I.totalFrames);
 
 	I.cells = [
 		{left: 0, top: 0, width: 652, height: 253},
@@ -41,6 +49,13 @@ function Feet(I) {
 
 		context.save();
 
+		if (!this.paused) {
+			that.sprite.painter.advance();
+			that.lastAdvance = that.lastAdvance;
+			//that.frames++;
+			console.log(that.lastAdvance);
+		}
+
 		// if (!this.paused) {
 		// 	var time = new Date();
 		// 	var milli = time.getTime();
@@ -55,10 +70,17 @@ function Feet(I) {
 
 		// }
 
+		
+
+
 		this.sprite.paint(context);
 		context.restore();
-
 	}
+
+	// I.update = function(context) {
+		
+	// }
+
 
 
 	return I;
