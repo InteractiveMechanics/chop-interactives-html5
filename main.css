@@ -9,7 +9,7 @@ body {
 
 #left_curtain, #center_curtain, #right_curtain {
 	position: absolute;
-	width: 640px;
+	width: 660px;
 	height: 1080px;
     z-index: 2;
 }
@@ -30,15 +30,15 @@ body {
 */
 
 #left_curtain {
-    left: 10px; /*40px*/
+    left: -10px; /*40px*/
 }
 
 #center_curtain {
-	left: 625px; /*665px*/
+	left: 620px; /*665px*/
 }
 
 #right_curtain {
-	left: 1250px; /*1290px*/
+	left: 1260px; /*1290px*/
 }
 
 #left_spotlight, #center_spotlight, #right_spotlight {

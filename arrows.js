@@ -9,7 +9,8 @@ function Arrows(I) {
 	I.timeoutSet = false;
 	I.paused = true;
 
-
+    I.width = 113;
+    I.height = 203;
 	
 
 	I.sprite = new Sprite('arrows', new ImagePainter('./images/arrow-L.png'));
