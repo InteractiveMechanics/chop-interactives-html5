@@ -31,7 +31,7 @@ function Feet(I) {
 		{left: 3912, top: 0, width: 652, height: 253},
 		{left: 4564, top: 0, width: 652, height: 253},
 		{left: 5216, top: 0, width: 652, height: 253},
-		{left: 5868, top: 0, width: 652, height: 253},
+		{left: 5868, top: 0, width: 652, height: 253}
 	];
 
 	I.spritesheet = new Image();
@@ -52,8 +52,12 @@ function Feet(I) {
 		if (!this.paused) {
 			that.sprite.painter.advance();
 			that.lastAdvance = that.lastAdvance;
-			//that.frames++;
-			console.log(that.lastAdvance);
+			that.frames++;
+		}
+
+		if (that.frames == that.totalFrames - 1) {
+			that.paused = true;
+			
 		}
 
 		// if (!this.paused) {
@@ -77,9 +81,12 @@ function Feet(I) {
 		context.restore();
 	}
 
-	// I.update = function(context) {
-		
-	// }
+	I.update = function(context) {
+		if (this.paused) {
+			this.paused = false;
+		}
+		this.draw(context);
+	}
 
 
 

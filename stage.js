@@ -4,7 +4,7 @@ function Panel(bg_canvas) {
 	I.bg_image = null;
 
 	I.staticBG = function(img) {
-		this.bg_canvas.getContext('2d').drawImage(img, 0, 0, 640, 1080);
+		this.bg_canvas.getContext('2d').drawImage(img, 0, 0, 840, 1380);
 	}
 
 	return I;
@@ -267,6 +267,7 @@ function createRightHero() {
 function imageLoaded() {
     draw();
     drawHero();
+    updateFeet();
 }
 
 function draw() {
@@ -306,6 +307,7 @@ function drawHero() {
 			CenterSpotlight.isActive = true;
 			CenterHero.draw(CenterHeroContext);
 			CenterSpotlight.staticBG(spotlightImg);
+			ArrowL1.staticBG(arrowImg);
 		} 
 	});
 
@@ -318,6 +320,18 @@ function drawHero() {
 		}
 	});
 }
+
+function drawLeftHero() {
+	LeftHero.update(LeftHeroContext);
+}
+
+function updateFeet() {
+	$('#arrowL1').mouseover(function() {
+		
+		drawLeftHero();
+	})
+}
+
 
 
 

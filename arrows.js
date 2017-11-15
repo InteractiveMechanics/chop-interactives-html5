@@ -20,7 +20,7 @@ function Arrows(I) {
 		this.sprite.width = this.width;
 		this.sprite.height = this.height;
 		this.sprite.left = this.x; //this.x
-		this.sprite.top = 200; //this.y;
+		this.sprite.top = this.y; //this.y;
 
 		context.save();
 

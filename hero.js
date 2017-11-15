@@ -28,8 +28,12 @@ function Hero(I) {
 
 	}
 
-	I.update = function() {
+	I.update = function(context) {
 		// TODO: add update :-|
+		if (this.isActive) {
+			this.feet.update(context);
+		}
+
 	}
 
 	I.reset = function() {
