@@ -1,8 +1,8 @@
 function SandBag(canvas) {
 	var I = I || {};
 
-	I.x = randomValue(0,1000);
-	I.y = 10;
+	I.x = -1;
+	I.y = -1;
 
 
 

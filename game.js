@@ -57,9 +57,14 @@ function setup() {
 
 	setInterval(function() {
 		if(sandBags.length < 3) {
-			sandBags.push(
-				new SandBag(sandbag_canvas)
-			);
+			
+			var bag =  new SandBag(sandbag_canvas);
+			var cloud =  getRandomCloud();
+
+			bag.x = cloud.x + (cloud.width / 2);
+			bag.y = cloud.y + (cloud.height / 2);
+			
+			sandBags.push(bag);
 		}
 	}, 5000);
 
@@ -179,6 +184,11 @@ function draw() {
 	});
 
 	ballon.draw();
+}
+
+function getRandomCloud() {
+	return cloudArray[Math.floor(Math.random() * cloudArray.length)];
+
 }
 
 
