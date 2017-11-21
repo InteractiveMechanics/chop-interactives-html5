@@ -14,7 +14,7 @@ function Stage(bg_canvas) {
 
 var BackgroundStage;
 var LeftFeet;
-var width = 640; 
+var width = 652; 
 var height = 1080;
 
 
@@ -50,28 +50,18 @@ function createBackgroundStage() {
 function createLeftFeet() {
 	var left_feet = document.createElement('canvas');
 	left_feet.id = "left_feet";
-	left_feet.width = 700;
-	left_feet.height = 600;
 
 	return left_feet;
 }
 
-function drawLeftFeet() {
-	LeftFeet.isActive = true;
-	LeftFeet.draw(LeftFeetContext);
-}
-
 function imageLoaded() {
     draw();
-    //drawLeftFeet();
 }
 
 function draw() {
 	BackgroundStage.staticBG(stageImg);
 
-	LeftFeet.isActive = true;
 	LeftFeet.draw(LeftFeetContext);
-	
 }
 
 

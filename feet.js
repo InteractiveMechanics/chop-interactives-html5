@@ -3,13 +3,13 @@ function Feet(I) {
 
 	I.x = 0;
 	I.y = 0;
-	I.height = "pencil"; //253 value doesn't affect canvas
-	I.width; //652
+
+	I.height = 253;
+	I.width = 652;
 
 	I.isActive = false;
 	I.timeoutSet = false;
 	I.paused = true;
-
 
 	function getRandomInt(min, max) {
   		min = Math.ceil(min);
@@ -19,9 +19,8 @@ function Feet(I) {
 
 
 	I.lastAdvance = 0;
-	I.frames = 0;
+	I.frame = 0;
 	I.totalFrames = 10;
-	//console.log(I.totalFrames);
 
 	I.cells = [
 		{left: 0, top: 0, width: 652, height: 253},
@@ -36,42 +35,22 @@ function Feet(I) {
 		{left: 5868, top: 0, width: 652, height: 253}
 	];
 
-	I.spritesheet = new Image();
-
 	I.sprite = new Sprite('feet', new SpriteSheetPainter('./images/feet.png', I.cells));
-	//I.sprite = new Sprite('greypeg', new ImagePainter('./images/LB_gray.png'));
 
 	I.draw = function(context) {
 		var that = this;
 
-		this.sprite.width = '20px'; //value doesn't affect canvas
-		this.sprite.height = 'pencil'; //value doesn't affect canvas
-		that.sprite.left = 200; //this.x
-		this.sprite.top = this.y; //this.y;
-		console.log('feet is running');
+		this.sprite.width = this.width;
+		this.sprite.height = this.height;
+		this.sprite.left = this.x;
+		this.sprite.top = this.y;
 
 		context.save();
-
-		if (!this.paused) {
-			that.sprite.painter.advance();
-			that.lastAdvance = that.lastAdvance;
-			that.frames++;
-		}
-
-		if (that.frames == that.totalFrames - 1) {
-			that.paused = true;
-			
-		}		
-
-
 		this.sprite.paint(context);
 		context.restore();
 	}
 
 	I.update = function(context) {
-		if (this.paused) {
-			this.paused = false;
-		}
 		this.draw(context);
 	}
 
