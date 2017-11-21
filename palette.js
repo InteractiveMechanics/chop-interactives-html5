@@ -1,8 +1,9 @@
-function Palette(x, y, canvas) {
+function Palette(x, y, r, canvas) {
 	// var I = I || {};
 
 	this.x = x;
 	this.y = y;
+  this.r = r;
 
 	this.arrayIndex = 0;
 
@@ -16,7 +17,7 @@ function Palette(x, y, canvas) {
 
 	//Color Sprites
 	//I.gray = new Sprite('default', new ImagePainter('./images/LB_gray.png'));
-	this.paletteColorArray = []
+	this.paletteColors = []
 
 
 	// I.update = function() {
@@ -32,7 +33,7 @@ function Palette(x, y, canvas) {
 	this.draw = function() {
     this.context.save();
     this.context.beginPath();
-    this.context.arc(this.x, this.y, 25, 0, 2 * Math.PI, false);
+    this.context.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
     this.context.closePath();
     this.context.fillStyle = 'black';
     this.context.fill();
