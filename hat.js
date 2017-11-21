@@ -3,6 +3,8 @@ function Hat(I) {
 
 	I.x = 0;
 	I.y = 0;
+	I.width = 652;
+	I.height = 431;
 
 	I.isActive = false;
 	I.timeoutSet = false;
@@ -31,15 +33,12 @@ function Hat(I) {
 	I.sprite = new Sprite('hat', new SpriteSheetPainter('./images/hat.png', I.cells));
 
 	I.draw = function(context) {
-		var that = this;
-
-		this.sprite.width = this.width;
-		this.sprite.height = this.height;
-		this.sprite.left = this.x;
-		this.sprite.top = 395;
+		this.sprite.width = this.width; //this.width 
+		this.sprite.height = this.height; //this.height
+		this.sprite.left = 0;
+		this.sprite.top = 0;
 
 		context.save();
-
 		this.sprite.paint(context);
 		context.restore();
 	}

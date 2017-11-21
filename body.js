@@ -3,6 +3,8 @@ function Body(I) {
 
 	I.x = 0;
 	I.y = 0;
+	I.width = 439;
+	I.height = 652;
 
 	I.isActive = false;
 	I.timeoutSet = false;

@@ -3,6 +3,8 @@ function Feet(I) {
 
 	I.x = 0;
 	I.y = 0;
+	I.height = "pencil"; //253 value doesn't affect canvas
+	I.width; //652
 
 	I.isActive = false;
 	I.timeoutSet = false;
@@ -42,10 +44,11 @@ function Feet(I) {
 	I.draw = function(context) {
 		var that = this;
 
-		this.sprite.width = this.width;
-		this.sprite.height = this.height;
-		this.sprite.left = this.x; //this.x
-		this.sprite.top = 700; //this.y;
+		this.sprite.width = '20px'; //value doesn't affect canvas
+		this.sprite.height = 'pencil'; //value doesn't affect canvas
+		that.sprite.left = 200; //this.x
+		this.sprite.top = this.y; //this.y;
+		console.log('feet is running');
 
 		context.save();
 
@@ -58,23 +61,7 @@ function Feet(I) {
 		if (that.frames == that.totalFrames - 1) {
 			that.paused = true;
 			
-		}
-
-		// if (!this.paused) {
-		// 	var time = new Date();
-		// 	var milli = time.getTime();
-		// 	if (milli - that.lastAdvance > 100) {
-		// 		that.sprite.painter.advance();
-		// 		that.lastAdvance = milli;
-		// 		that.frames++;
-		// 	}
-		// 	if (that.frames == that.totalFrames - 1) {
-		// 		that.paused = true;
-		// 	}
-
-		// }
-
-		
+		}		
 
 
 		this.sprite.paint(context);

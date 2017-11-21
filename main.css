@@ -4,13 +4,13 @@ body {
     overflow: hidden;
     width: 1920px;
     height: 1080px;
-    background-color: blue;
+    background-color: #6b81b7;
 }
 
 #left_curtain, #center_curtain, #right_curtain {
 	position: absolute;
-	width: 660px;
-	height: 1080px;
+	width: 660px; /* 660px */
+	height: 1030px; /* 1080px */
     z-index: 2;
 }
 #background_stage {
@@ -45,20 +45,21 @@ body {
     position: absolute;
     z-index: 1;
     border: 1px solid red;
-    top: 50px;
+    /*top: 50px;*/
+    top: -71px;
 }
 
 #left_spotlight {
-    left: 130px; /*40px*/
+    left: 141px;
 }
 
 #center_spotlight {
-    left: 747px;
+    left: 775px;
     border-color: green;
 }
 
 #right_spotlight{
-    left: 1374px;
+    left: 1416px;
     border-color: blue;
 }
 
@@ -66,20 +67,20 @@ body {
     position: absolute;
     z-index: 3;
     border: 1px solid red;
-    top: 50px;
+    /*top: 50px;*/
 }
 
 #left_hero {
-    left: 149px;
+    left: 0px; /*149px*/
 }
 
 #center_hero {
-    left: 773px;
+    left: 640px; /*773px*/
     border-color: green;
 }
 
 #right_hero {
-    left: 1409px;
+    left: 1280px; /*1409px*/
     border-color: blue;
 }
 
@@ -91,4 +92,9 @@ body {
     left: 59px;
 }
 
+#left_feet {
+    position: absolute;
+    bottom: 50px;
+    border: 1px solid white;
+}
 

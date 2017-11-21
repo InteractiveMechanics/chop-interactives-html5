@@ -4,7 +4,8 @@ function Hero(I) {
 	I.x = 0;
 	I.y = 0;
 
-
+	I.width = 1920;
+	I.height = 1080;
 
 	I.isActive = false;
 	I.timeoutSet = false;
@@ -25,7 +26,6 @@ function Hero(I) {
 			this.hat.draw(context);
 			
 		}
-
 	}
 
 	I.update = function(context) {

@@ -40,6 +40,7 @@ function Face(I) {
 		this.sprite.height = this.height;
 		this.sprite.left = this.x;
 		this.sprite.top = 400;
+		console.log(this.sprite.top);
 
 		context.save();
 

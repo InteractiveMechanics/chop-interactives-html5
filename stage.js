@@ -58,6 +58,7 @@ var BackgroundStage;
 var LeftCurtain;
 var LeftSpotlight;
 var LeftHero;
+var LeftFeet;
 
 var CenterCurtain;
 var CenterSpotlight;
@@ -75,14 +76,13 @@ var stageImg;
 var spotlightImg;
 var arrowImg;
 
-var width = 640;
+var width = 640; //640
 var spotlightWidth = 375;
-var heroWidth = 375;
+//var heroWidth = 375;
 var arrowWidth = 75;
 
 var height = 1080;
 var arrowHeight = 150;
-
 
 
 function init() {
@@ -92,6 +92,7 @@ function init() {
 	var left_curtain = createLeftCurtain();
 	var left_spotlight = createLeftSpotlight();
 	var left_hero = createLeftHero();
+	var left_feet = createLeftFeet();
 
 	var center_curtain = createCenterCurtain();
 	var center_spotlight = createCenterSpotlight();
@@ -102,12 +103,15 @@ function init() {
 	var right_hero = createRightHero();
 
 	var arrowL1 = createArrowL1();
+
+	
 	
 	document.body.appendChild(background_stage);
 
 	document.body.appendChild(left_curtain);
 	document.body.appendChild(left_spotlight);
 	document.body.appendChild(left_hero);
+	document.body.appendChild(left_feet);
 
 	document.body.appendChild(center_curtain);
 	document.body.appendChild(center_spotlight);
@@ -128,6 +132,9 @@ function init() {
 	LeftHeroContext = left_hero.getContext('2d');
 	LeftHero = new Hero();
 
+	LeftFeetContext = left_feet.getContext('2d');
+	LeftFeet = new Feet();
+
 	CenterCurtain = new Panel(center_curtain);
 	CenterSpotlight = new Spotlight(center_spotlight);
 
@@ -141,6 +148,8 @@ function init() {
 	RightHero = new Hero();
 
 	ArrowL1 = new Arrow(arrowL1);
+
+	
 
 	stageImg = new Image();
 	stageImg.onload = imageLoaded;
@@ -193,7 +202,7 @@ function createLeftSpotlight() {
 function createLeftHero() {
 	var left_hero = document.createElement('canvas');
 	left_hero.id = "left_hero";
-	left_hero.width = heroWidth;
+	left_hero.width = width;
 	left_hero.height = height;
 
 	return left_hero;
@@ -230,7 +239,7 @@ function createCenterSpotlight() {
 function createCenterHero() {
 	var center_hero = document.createElement('canvas');
 	center_hero.id = "center_hero";
-	center_hero.width = heroWidth;
+	center_hero.width = width;
 	center_hero.height = height;
 
 	return center_hero;
@@ -258,15 +267,25 @@ function createRightSpotlight() {
 function createRightHero() {
 	var right_hero = document.createElement('canvas');
 	right_hero.id = "right_hero";
-	right_hero.width = heroWidth;
+	right_hero.width = width;
 	right_hero.height = height;
 
 	return right_hero;
 }
 
+function createLeftFeet() {
+	var left_feet = document.createElement('canvas');
+	left_feet.id = "left_feet";
+	left_feet.width = width;
+
+	return left_feet;
+}
+
+
 function imageLoaded() {
     draw();
     drawHero();
+    drawLeftFeet();
     updateFeet();
 }
 
@@ -289,6 +308,13 @@ function draw() {
 
 
 }
+
+
+function drawLeftFeet() {
+	LeftFeet.isActive = true;
+	LeftFeet.draw(LeftFeetContext);
+}
+
 
 function drawHero() {
 	$('#left_hero').mouseover(function() {
@@ -320,6 +346,7 @@ function drawHero() {
 		}
 	});
 }
+
 
 function drawLeftHero() {
 	LeftHero.update(LeftHeroContext);
