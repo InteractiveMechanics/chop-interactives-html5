@@ -12,8 +12,8 @@ var paletteHeight = 200;
 var palettePosX = 50;
 var palettePosY = uiCanvas.height - (paletteHeight/2);
 var paletteSpacing = paletteWidth/16;
-var paletteRadius = 25;
-var numberOfColors = 12;
+var paletteRadius = 40;
+//var numberOfColors = 12;
 
 var isMouseDown = false;
 var mousePos = {
@@ -21,23 +21,17 @@ var mousePos = {
       y: -1
 };
 
-for(var i = 0; i < numberOfColors; i++) {
-		var x = (i * paletteSpacing)
-		var y = palettePosY;
-		createPalette(x, y, paletteRadius);
+var paletteNames = ['blue-lt', 'blue', 'purple', 'pink', 'red', 'orange', 'yellow', 'green-lt', 'green', 'black', 'white', 'brown'];
+
+function createPalette() {
+  for(var i = 0; i < paletteNames.length; i++) {
+    colorName = paletteNames[i];
+    colorFile = 'images/btn-' + colorName + '.png';
+    posX = palettePosX + (paletteSpacing*i);
+    posY = palettePosY;
+    paletteColors.push(new PaletteColor(colorName, colorFile, posX, posY, paletteRadius));
+  }
 }
-
-
-console.log(paletteColors[0]);
-
-function createPalette(x, y, radius) {
-	var palette = new Palette(x, y, radius, uiCanvas);
-	palette.loadPaletteColors();
-
-	paletteColors.push(palette);
-	// highlights.push(new Highlight(x, y, hightlighCanvas));
-}
-
 
 function mouseDown(e) {
 	isMouseDown = true;
@@ -61,6 +55,7 @@ function mouseMove(e) {
 }
 
 function draw() {
+  uiContext.clearRect(0, 0, uiCanvas.width, uiCanvas.height);
 	paletteColors.forEach(function(color){
 		color.draw();
 	});
@@ -73,24 +68,11 @@ function update() {
   for(var i = 0; i < paletteColors.length; i++) {
     var paletteColor = paletteColors[i];
     if  (isOverPaletteColor(mouseX, mouseY, paletteColor) && isMouseDown) {
-      console.log('color '+ (i+1))
+      console.log(paletteColor.name)
     }else{
           // alert('clicked outside paletteColor');
       }
   }
-
-	// for(var i = 0; i < highlights.length; i++) {
-	// 	var liteBright = liteBrights[i];
-	// 	var highlight = highlights[i];
-	// 	if (isOverLiteBright(mouseX, mouseY, highlight) && isMouseDown) {
-	// 		liteBright.sprite = liteBright.gray
-	// 	}
-  //
-	// 	if(isOverLiteBright(mouseX, mouseY, highlight) && !isMouseDown) {
-	// 		sleep();
-	// 		liteBright.sprite = liteBright.getSprite();
-	// 	}
-	// }
 }
 
 // function sleep() {
@@ -100,7 +82,7 @@ function update() {
 
 function isOverPaletteColor(mX, mY, circle) {
 	//return (mX >= paletteColor.x && mX < paletteColor.x + paletteColor.width && mY >= paletteColor.y && mY < paletteColor.y + paletteColor.height);
-  return Math.sqrt((mX-circle.x)*(mX-circle.x) + (mY-circle.y)*(mY-circle.y)) < circle.r
+  return Math.sqrt((mX-circle.x)*(mX-circle.x) + (mY-circle.y)*(mY-circle.y)) < circle.r;
 }
 
 function loop() {
@@ -109,6 +91,7 @@ function loop() {
 }
 
 function main() {
+  createPalette();
 	setInterval(loop, 1000/60);
 }
 
