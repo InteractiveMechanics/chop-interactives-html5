@@ -23,46 +23,47 @@ function Region(x, y, canvas) {
   //  generateRegionData(this);
   // }
   this.img.crossOrigin = "Anonymous";
-  this.img.src = 'test-black.png';
+  this.img.src = './images/test-white.png';
 
 	this.draw = function() {
     this.context.save();
+    //console.log(this.img);
     this.context.drawImage(this.img, this.x, this.y);
     this.context.restore();
 	}
 
-  // this.getPixels = function(mX, mY) {
-  //   // use the intrinsic size of image in CSS pixels for the canvas element
-  //   tcanvas.width = this.img.naturalWidth; /// set width = shape width
-  //   tcanvas.height = this.img.naturalHeight;
-  //   tctx.translate(-this.x, -this.y); /// make sure shape is drawn at origin //not needed
-  //   tctx.drawImage(this.img, this.img.width, this.img.height);
-  //   pixels = tctx.getImageData(0, 0, tcanvas.width, tcanvas.height); /// return image (or use getImageData)
-  //   return {
-  //     r: pixels.data[index],
-  //     g: pixels.data[index + 1],
-  //     b: pixels.data[index + 2],
-  //     a: pixels.data[index + 3]
-  //   };
-  // }
-
-  // generateRegionData = function() {
-  //   // use the intrinsic size of image in CSS pixels for the canvas element
-  //   tcanvas.width = this.width; /// set width = shape width
-  //   tcanvas.height = this.height;
-  //   tctx.translate(-this.x, -this.y); /// make sure shape is drawn at origin
-  //   tctx.drawImage(this.img,this.x,this.y);
-  //   this.pixels = tctx.getImageData(0, 0, tcanvas.width, tcanvas.height); /// return image (or use getImageData)
-  //   // var index = ((100 * (pixels.width * 4)) + (100 * 4));
-  //   //
-  //   // return {
-  //   //   r: pixels.data[index],
-  //   //   g: pixels.data[index + 1],
-  //   //   b: pixels.data[index + 2],
-  //   //   a: pixels.data[index + 3]
-  //   // };
-  // }
-
 
 	return this;
 }
+
+// this.getPixels = function(mX, mY) {
+//   // use the intrinsic size of image in CSS pixels for the canvas element
+//   tcanvas.width = this.img.naturalWidth; /// set width = shape width
+//   tcanvas.height = this.img.naturalHeight;
+//   tctx.translate(-this.x, -this.y); /// make sure shape is drawn at origin //not needed
+//   tctx.drawImage(this.img, this.img.width, this.img.height);
+//   pixels = tctx.getImageData(0, 0, tcanvas.width, tcanvas.height); /// return image (or use getImageData)
+//   return {
+//     r: pixels.data[index],
+//     g: pixels.data[index + 1],
+//     b: pixels.data[index + 2],
+//     a: pixels.data[index + 3]
+//   };
+// }
+
+// generateRegionData = function() {
+//   // use the intrinsic size of image in CSS pixels for the canvas element
+//   tcanvas.width = this.width; /// set width = shape width
+//   tcanvas.height = this.height;
+//   tctx.translate(-this.x, -this.y); /// make sure shape is drawn at origin
+//   tctx.drawImage(this.img,this.x,this.y);
+//   this.pixels = tctx.getImageData(0, 0, tcanvas.width, tcanvas.height); /// return image (or use getImageData)
+//   // var index = ((100 * (pixels.width * 4)) + (100 * 4));
+//   //
+//   // return {
+//   //   r: pixels.data[index],
+//   //   g: pixels.data[index + 1],
+//   //   b: pixels.data[index + 2],
+//   //   a: pixels.data[index + 3]
+//   // };
+// }

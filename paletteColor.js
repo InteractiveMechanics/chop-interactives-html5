@@ -1,4 +1,4 @@
-function PaletteColor(name, file, x, y, r) {
+function PaletteColor(name, color, file, x, y, r) {
 
 	this.x = x;
 	this.y = y;
@@ -14,8 +14,11 @@ function PaletteColor(name, file, x, y, r) {
 
   this.name = name;
   this.file = file;
+  this.colorRGBA = color;
 
 	this.sprite = new Sprite(name, new ImagePainter(file));
+
+
 
 	this.draw = function() {
 		this.context.save();

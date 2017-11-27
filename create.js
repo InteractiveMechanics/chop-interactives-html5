@@ -14,7 +14,7 @@ var palettePosX = 50;
 var palettePosY = uiCanvas.height - (paletteHeight/2);
 var paletteSpacing = paletteWidth/16;
 var paletteRadius = 40;
-var currentColor = 'white';
+var currentColor = [];
 //var numberOfColors = 12;
 
 var isMouseDown = false;
@@ -23,21 +23,38 @@ var mousePos = {
       y: -1
 };
 
-var paletteNames = ['blue-lt', 'blue', 'purple', 'pink', 'red', 'orange', 'yellow', 'green-lt', 'green', 'black', 'white', 'brown'];
+//var paletteNames = ['blue-lt', 'blue', 'purple', 'pink', 'red', 'orange', 'yellow', 'green-lt', 'green', 'black', 'white', 'brown'];
+var colorData = [
+  ['blue-lt', 20, 178, 218, 1.00],
+  ['blue', 53, 53, 168, 1.00],
+  ['purple', 148, 40, 138, 1.00],
+  ['pink', 238, 26, 119, 1.00],
+  ['red', 255, 0, 26, 1.00],
+  ['orange', 247, 146, 60, 1.00],
+  ['yellow', 254, 254, 86, 1.00],
+  ['green-lt', 139, 198, 87, 1.00],
+  ['green', 0, 104, 34, 1.00],
+  ['black', 0, 0, 0, 1.00],
+  ['white', 255, 255, 255, 1.00],
+  ['brown', 89, 49, 22, 1.00]
+]
 
 function createPalette() {
-  for(var i = 0; i < paletteNames.length; i++) {
-    colorName = paletteNames[i];
+  for(var i = 0; i < colorData.length; i++) {
+    colorName = colorData[i][0];
+    colorRGBA = [colorData[i][1], colorData[i][2], colorData[i][3], colorData[i][4]];
     colorFile = 'images/btn-' + colorName + '.png';
     posX = palettePosX + (paletteSpacing*i);
     posY = palettePosY;
-    paletteColors.push(new PaletteColor(colorName, colorFile, posX, posY, paletteRadius));
+    paletteColors.push(new PaletteColor(colorName, colorRGBA, colorFile, posX, posY, paletteRadius));
   }
 }
 
 function createPage() {
-    regions.push(new Region(0 ,0, uiCanvas));
-
+    regions.push(new Region(0 ,400, uiCanvas));
+    regions.push(new Region(50 ,200, uiCanvas));
+    regions.push(new Region(100 ,100, uiCanvas));
+    //console.log(getPixels(regions[0].img));
 }
 
 function mouseDown(e) {
@@ -67,7 +84,18 @@ function draw() {
 		color.draw();
 	});
   regions.forEach(function(region){
-    region.draw();
+
+    if (region.imgData){
+      var tcanvas = document.createElement('canvas'), /// create temp canvas
+      tctx = tcanvas.getContext('2d');
+      tcanvas.width = region.img.width;
+      tcanvas.height = region.img.height;
+      tctx.putImageData(region.imgData, 0, 0);
+      uiContext.drawImage(tcanvas,region.x,region.y);
+    }
+    else{
+      region.draw();
+    }
   });
 }
 
@@ -78,8 +106,7 @@ function update() {
   for(var i = 0; i < paletteColors.length; i++) {
     var paletteColor = paletteColors[i];
     if  (isOverPaletteColor(mouseX, mouseY, paletteColor) && isMouseDown) {
-      currentColor = paletteColor.name;
-      console.log(currentColor);
+      currentColor = paletteColor.colorRGBA;
     }else{
           // alert('clicked outside paletteColor');
       }
@@ -87,12 +114,14 @@ function update() {
   for(var i = 0; i < regions.length; i++) {
 		var region = regions[i];
     if (region.img.width){  //if width, img is loaded
-      hover = getPixelAlpha(region.img, mouseX, mouseY);
+      var rX = mouseX - region.x;
+      var rY = mouseY - region.y;
+      hover = getPixelAlpha(region.img, rX, rY);
       if ((hover > 0) && isMouseDown){
-        region.color = currentColor;
-        console.log(region.color);
+        var newImage = changeColor(region.img, currentColor);
+        regions[i].imgData = newImage;
       } else {
-        console.log(region.color);
+        //console.log(region.color);
       }
       }
   }
@@ -114,7 +143,7 @@ function getPixelAlpha(img,mX,mY){
   var height = img.height;
   var tcanvas = document.createElement('canvas'), /// create temp canvas
   tctx = tcanvas.getContext('2d');
-  tcanvas.width = img.naturalWidth; /// set width = shape width
+  tcanvas.width = img.naturalWidth; /// set width = region width
   tcanvas.height = img.naturalHeight;
   tctx.drawImage(img, 0, 0);
   var pixel = tctx.getImageData(mX, mY, 1, 1);
@@ -124,37 +153,48 @@ function getPixelAlpha(img,mX,mY){
   return(data[3] / 255);
 }
 
+function getPixels(img){
+  var width = img.width;
+  var height = img.height;
+  var tcanvas = document.createElement('canvas'), /// create temp canvas
+  tctx = tcanvas.getContext('2d');
+  tcanvas.width = img.naturalWidth; /// set width = region width
+  tcanvas.height = img.naturalHeight;
+  tctx.drawImage(img, 0, 0);
+  var pixels = tctx.getImageData(0, 0, width, height);
+  return pixels;
+}
 
-//from roll.js
-// function getDataOfImage(img,x,y,w,h)
-// {
-// 	x = parseInt(x);
-// 	y = parseInt(y);
-// 	w = parseInt(w);
-// 	h = parseInt(h);
-// 	if(w==0) w=1;
-// 	if(h==0) h=1;
-// 	var c = document.createElement('canvas');
-// 	c.width = img.width;
-// 	c.height = img.height;
-// 	var ct = c.getContext("2d");
-// 	ct.clearRect(0,0,c.width,c.height);
-// 	ct.drawImage(img,0,0);
-// 	var imagedata = ct.getImageData(x,y,w,h);
-// 	var rgb = imagedata.data;
-// 	var pixels=new Array(parseInt(w*h));
-// 	var i=0;
-// 	for(var y=0;y<h;y++)
-// 	{
-// 		for(var x=0;x<w;x++)
-// 		{
-// 			var p=(y*w+x)*4;
-// 			pixels[i]=(rgb[p+3]<<24)|(rgb[p]<< 16)|(rgb[p+1]<<8)|rgb[p+2];
-// 			i++;
-// 		}
-// 	}
-// 	return pixels;
-// }
+function changeColor(img, color){
+  var newImage;
+  var width = img.width;
+  var height = img.height;
+  var tcanvas = document.createElement('canvas'), /// create temp canvas
+  tctx = tcanvas.getContext('2d');
+  tcanvas.width = img.naturalWidth;
+  tcanvas.height = img.naturalHeight;
+  tctx.drawImage(img, 0, 0);
+  var imageData = tctx.getImageData(0, 0, width, height);
+  var data = imageData.data;
+  var newColor = color;
+  for (var i = 0; i < data.length; i += 4) {
+    if (data[i + 3] > 0){
+    data[i]     = newColor[0];     // red
+    data[i + 1] = newColor[1]; // green
+    data[i + 2] = newColor[2]; // blue
+  }
+  else{
+    data[i]     = 0;     // red
+    data[i + 1] = 0; // green
+    data[i + 2] = 0; // blue
+    data[i + 3] = 0;
+  }
+  }
+  imageData.data = data;
+  console.log(imageData);
+  return imageData;
+}
+
 
 function loop() {
 	draw();
