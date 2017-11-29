@@ -2,11 +2,24 @@
 var paletteColors = [];
 var regions = [];
 
+var linesCanvas = document.getElementById('lines-canvas'); /// create temp canvas
+var linesContext = linesCanvas.getContext('2d'); /// temp context
+
 var uiCanvas = document.getElementById('ui-canvas');
 var uiContext = uiCanvas.getContext("2d");
 
 uiCanvas.width = window.innerWidth;
 uiCanvas.height = window.innerHeight;
+
+var linesImg = new Image();
+linesImg.onload = function() {
+  linesCanvas.width = linesImg.naturalWidth;
+  linesCanvas.height = linesImg.naturalHeight;
+  linesContext.drawImage(linesImg,0,0);
+}
+linesImg.src = './images/lines-dogs.png';
+
+
 
 var paletteWidth = uiCanvas.width;
 var paletteHeight = 200;
@@ -39,6 +52,18 @@ var colorData = [
   ['brown', 89, 49, 22, 1.00]
 ]
 
+var dogPage = [
+  ['ldog-01', 12, 466],
+  ['ldog-02', 99, 800],
+  ['ldog-03', 177, 627],
+  ['ldog-04', 293, 494],
+  ['ldog-05', 229, 894]
+]
+
+
+
+
+
 function createPalette() {
   for(var i = 0; i < colorData.length; i++) {
     colorName = colorData[i][0];
@@ -51,10 +76,10 @@ function createPalette() {
 }
 
 function createPage() {
-    regions.push(new Region(0 ,400, uiCanvas));
-    regions.push(new Region(50 ,200, uiCanvas));
-    regions.push(new Region(100 ,100, uiCanvas));
-    //console.log(getPixels(regions[0].img));
+
+  for(var i = 0; i < dogPage.length; i++){
+    regions.push(new Region(dogPage[i][0] ,dogPage[i][1], dogPage[i][2], uiCanvas));
+  }
 }
 
 function mouseDown(e) {
@@ -80,9 +105,7 @@ function mouseMove(e) {
 
 function draw() {
   uiContext.clearRect(0, 0, uiCanvas.width, uiCanvas.height);
-	paletteColors.forEach(function(color){
-		color.draw();
-	});
+
   regions.forEach(function(region){
 
     if (region.imgData){
@@ -97,7 +120,12 @@ function draw() {
       region.draw();
     }
   });
+  paletteColors.forEach(function(color){
+		color.draw();
+	});
 }
+
+
 
 function update() {
 	var mouseX = mousePos.x;
@@ -191,7 +219,7 @@ function changeColor(img, color){
   }
   }
   imageData.data = data;
-  console.log(imageData);
+  // console.log(imageData);
   return imageData;
 }
 

@@ -1,4 +1,4 @@
-function Region(x, y, canvas) {
+function Region(name, x, y, canvas) {
 	//var I = I || {};
 
 	this.x = x;
@@ -9,6 +9,8 @@ function Region(x, y, canvas) {
 	this.width = 166;
 	this.height = 155;
   var pixels = [];
+
+  this.name = name;
 
 	this.canvas = canvas;
 	this.context = canvas.getContext('2d');
@@ -23,7 +25,7 @@ function Region(x, y, canvas) {
   //  generateRegionData(this);
   // }
   this.img.crossOrigin = "Anonymous";
-  this.img.src = './images/test-white.png';
+  this.img.src = './images/' + name +'.png';
 
 	this.draw = function() {
     this.context.save();
