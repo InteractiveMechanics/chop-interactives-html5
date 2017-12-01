@@ -5,14 +5,14 @@ mainCanvas.width = window.innerWidth;
 mainCanvas.height = window.innerHeight;
 
 var lightPaintings = [];
-var numPaintings = 5;
-var paintingWidth = 200;
+var numPaintings = 2;
+var paintingWidth = 300;
 var paintingHeight = 300;
 var paintingBorder = [20,20,50,20];
 var marginX = 50;
 var marginY = 50;
 var paintingSpacing = (mainCanvas.width-(marginX*2))/5;
-var startPaintings = [];
+//var startPaintings = [];
 
 var isMouseDown = false;
 var mousePos = {
@@ -45,14 +45,27 @@ function hangLightPaintings() {
   for(var i = 0; i < numPaintings; i++) {
     x = (i*paintingSpacing) + marginX;
     y = marginY;
-    canvas = "canvas" + i;
-    lightPaintings.push(new LightPainting(canvas, x, y, paintingWidth, paintingHeight, paintingBorder, 1));
+    lightPaintings.push(new LightPainting(mainCanvas, x, y, paintingWidth, paintingHeight, paintingBorder, 1));
   }
 }
 
 function draw() {
   mainContext.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
 
+  lightPaintings.forEach(function(painting){
+    if (painting.imgData){
+      painting.draw();
+      var tcanvas = document.createElement('canvas'); /// create temp canvas
+      tctx = tcanvas.getContext('2d');
+      tcanvas.width = painting.intWidth;
+      tcanvas.height = painting.intHeight;
+      tctx.putImageData(painting.imgData, 0, 0);
+      mainContext.drawImage(tcanvas,painting.x,painting.y);
+    }
+    else{
+      painting.draw();
+    }
+	});
 }
 
 function update() {
