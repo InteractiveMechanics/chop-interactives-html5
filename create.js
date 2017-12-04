@@ -28,6 +28,7 @@ var palettePosY = uiCanvas.height - (paletteHeight/2);
 var paletteSpacing = paletteWidth/16;
 var paletteRadius = 40;
 var currentColor = [];
+var currentPage = 0;
 //var numberOfColors = 12;
 
 var isMouseDown = false;
@@ -52,7 +53,8 @@ var colorData = [
   ['brown', 89, 49, 22, 1.00]
 ]
 
-var dogPage = [
+var pages = [
+  [
   ['dogs-1', 12, 466],
   ['dogs-2', 99, 800],
   ['dogs-3', 177, 627],
@@ -84,6 +86,39 @@ var dogPage = [
   ['dogs-29', 1443, 316],
   ['dogs-30', 1558, 875],
   ['dogs-31', 367, 17]
+],[
+  ['dogs-1', 12, 466],
+  ['dogs-2', 99, 800],
+  ['dogs-3', 177, 627],
+  ['dogs-4', 293, 494],
+  ['dogs-5', 229, 25],
+  ['dogs-6', 1240, 18],
+  ['dogs-7', 22, 28],
+  ['dogs-8', 43, 86],
+  ['dogs-9', 55, 302],
+  ['dogs-10', 9, 826],
+  ['dogs-11', 511, 997],
+  ['dogs-12', 482, 760],
+  ['dogs-13', 43, 355],
+  ['dogs-14', 232, 40],
+  ['dogs-15', 776, 378],
+  ['dogs-16', 856, 182],
+  ['dogs-17', 721, 24],
+  ['dogs-18', 1134, 599],
+  ['dogs-19', 1202, 574],
+  ['dogs-20', 846, 392],
+  ['dogs-21', 1234, 856],
+  ['dogs-22', 1545, 39],
+  ['dogs-23', 1742, 170],
+  ['dogs-24', 1171, 345],
+  ['dogs-25', 1473, 316],
+  ['dogs-26', 1498, 538],
+  ['dogs-27', 1458, 798],
+  ['dogs-28', 1637, 866],
+  ['dogs-29', 1443, 316],
+  ['dogs-30', 1558, 875],
+  ['dogs-31', 367, 17]
+]
 ]
 
 
@@ -101,11 +136,23 @@ function createPalette() {
   }
 }
 
-function createPage() {
+function createPager() {
 
-  for(var i = 0; i < dogPage.length; i++){
-    regions.push(new Region(dogPage[i][0] ,dogPage[i][1], dogPage[i][2], uiCanvas));
+}
+
+function createPage() {
+  page = pages[currentPage];
+  for(var i = 0; i < page.length; i++){
+    regions.push(new Region(page[i][0] ,page[i][1], page[i][2], uiCanvas));
   }
+}
+
+function changePageLeft() {
+  currentPage --;
+}
+
+function changePageRight() {
+  currentPage ++;
 }
 
 function mouseDown(e) {
@@ -151,8 +198,6 @@ function draw() {
 	});
 }
 
-
-
 function update() {
 	var mouseX = mousePos.x;
 	var mouseY = mousePos.y;
@@ -177,8 +222,20 @@ function update() {
       } else {
         //console.log(region.color);
       }
-      }
+    }
   }
+  if (pageRight){
+    var rX = mouseX - pageRight.x;
+    var rY = mouseY - pageRight.y;
+    hover = getPixelAlpha(pageRight.img, rX, rY);
+    if ((hover > 0) && isMouseDown){
+      curentPage ++;
+      console.log(currentPage);
+    } else {
+      //console.log(region.color);
+    }
+  }
+
 
 }
 
