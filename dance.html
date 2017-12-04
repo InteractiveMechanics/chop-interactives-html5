@@ -8,19 +8,24 @@
 			padding: 0px;
 			background-color:rgb(0,0,0)
 		}
-		#lines-canvas {
+		.inactive-canvas {
 			pointer-events: none;
+		}
+		.active-canvas {
+			pointer-events: auto;
 		}
 	</style>
 </head>
 <body>
 
-	<canvas id='main-canvas' style="z-index:1; position:absolute; left:0px; top:0px;"></canvas>
+	<canvas id='main-canvas' class="active-canvas" style="z-index:1; position:absolute; left:0px; top:0px;"></canvas>
+	<canvas id='paint-canvas' class="inactive-canvas" style="z-index:2; position:absolute; left:0px; top:0px;"></canvas>
 
 	<script type="text/javascript" src="./jquery.min.js"></script>
 	<script type="text/javascript" src="./sprite.js"></script>
-	<script type="text/javascript" src="./start.js"></script>
-	<script type="text/javascript" src="./lightPainting.js"></script>
+	<script type="text/javascript" src="./button.js"></script>
+	<script type="text/javascript" src="./thumbnail.js"></script>
+	<script type="text/javascript" src="./painting.js"></script>
 
 	<script type="text/javascript" src="./dance.js"></script>
 

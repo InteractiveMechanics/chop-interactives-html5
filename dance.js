@@ -4,21 +4,39 @@ var mainContext = mainCanvas.getContext("2d");
 mainCanvas.width = window.innerWidth;
 mainCanvas.height = window.innerHeight;
 
-var lightPaintings = [];
-var numPaintings = 2;
+var paintCanvas = document.getElementById('paint-canvas');
+var paintContext = paintCanvas.getContext("2d");
+
+paintCanvas.width = window.innerWidth;
+paintCanvas.height = window.innerHeight;
+
+var currentCanvas = mainCanvas;
+
+var painting = new Painting(paintCanvas, 0, 0, paintCanvas.width, paintCanvas.height, 20);
+
+var thumbnails = [];
+var numPaintings = 1;
 var paintingWidth = 300;
 var paintingHeight = 300;
 var paintingBorder = [20,20,50,20];
 var marginX = 50;
 var marginY = 50;
 var paintingSpacing = (mainCanvas.width-(marginX*2))/5;
-//var startPaintings = [];
 
 var isMouseDown = false;
 var mousePos = {
       x: -1,
       y: -1
 };
+var mouseX = mousePos.x;
+var mouseY = mousePos.y;
+var lastMouseX, lastMouseY;
+
+var startButton = new Button('start', './images/btn-play.png', 1500, 638, 185);
+
+function isOverButton(mX, mY, circle) {
+  return Math.sqrt((mX-circle.x)*(mX-circle.x) + (mY-circle.y)*(mY-circle.y)) < circle.r;
+}
 
 function mouseDown(e) {
 	isMouseDown = true;
@@ -41,45 +59,125 @@ function mouseMove(e) {
 	mousePos = getMousePos(mainCanvas, e);
 }
 
-function hangLightPaintings() {
+function hangThumbnails() {
   for(var i = 0; i < numPaintings; i++) {
     x = (i*paintingSpacing) + marginX;
     y = marginY;
-    lightPaintings.push(new LightPainting(mainCanvas, x, y, paintingWidth, paintingHeight, paintingBorder, 1));
+    thumbnails.push(new Thumbnail(mainCanvas, x, y, paintingWidth, paintingHeight, paintingBorder, 1));
   }
 }
 
-function draw() {
-  mainContext.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
-
-  lightPaintings.forEach(function(painting){
-    if (painting.imgData){
-      painting.draw();
+function drawThumbnails() {
+  thumbnails.forEach(function(thumbnail){
+    if (thumbnail.imgData){
+      thumbnail.draw();
       var tcanvas = document.createElement('canvas'); /// create temp canvas
       tctx = tcanvas.getContext('2d');
-      tcanvas.width = painting.intWidth;
-      tcanvas.height = painting.intHeight;
-      tctx.putImageData(painting.imgData, 0, 0);
-      mainContext.drawImage(tcanvas,painting.x,painting.y);
+      tcanvas.width = thumbnail.imgData.width;
+      tcanvas.height = thumbnail.imgData.width;
+      tctx.putImageData(thumbnail.imgData, 0, 0);
+      mainContext.drawImage(tcanvas,thumbnail.x,thumbnail.y, thumbnail.width, thumbnail.height);
+      //ctx.drawImage(image, dx, dy, dWidth, dHeight);
     }
     else{
-      painting.draw();
+      thumbnail.draw();
     }
 	});
 }
 
-function update() {
-	var mouseX = mousePos.x;
-	var mouseY = mousePos.y;
+function paint() {
+  if (painting && (currentCanvas == paintCanvas)){
+    painting.draw(lastMouseX, lastMouseY, mouseX, mouseY);
+  }
+}
 
-  // for(var i = 0; i < paletteColors.length; i++) {
-  //   var paletteColor = paletteColors[i];
-  //   if  (isOverPaletteColor(mouseX, mouseY, paletteColor) && isMouseDown) {
-  //     currentColor = paletteColor.colorRGBA;
-  //   }else{
-  //         // alert('clicked outside paletteColor');
-  //     }
-  // }
+
+function draw() {
+  mainContext.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+  startButton.draw();
+
+  drawThumbnails();
+
+  drawVideo();
+  paint();
+
+
+
+}
+
+function update() {
+  cursorCanvas(currentCanvas);
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+	mouseX = mousePos.x;
+	mouseY = mousePos.y;
+  painting.update();
+
+  if (painting.imgData) {
+    console.log(painting.imgData);
+    paintingToThumbnail(painting);
+  }
+  checkStart();
+  videoLoop();
+}
+
+function checkStart(){
+  if  (isOverButton(mouseX, mouseY, startButton) && isMouseDown && (currentCanvas == mainCanvas)) {
+      videoStop();
+      switchCanvas(mainCanvas, paintCanvas);
+  }
+}
+
+function paintingToThumbnail(painting){
+  x = marginX;
+  y = marginY;
+  thumbnail = new Thumbnail(mainCanvas, x, y, paintingWidth, paintingHeight, paintingBorder, 1)
+  thumbnails.push(thumbnail);
+  thumbnail.imgData = painting.imgData;
+  painting.imgData = null;
+}
+
+function drawVideo() {
+  if (video && !video.paused && !video.ended) {
+      mainContext.drawImage(video, 50, 490, 960, 540);
+      //setTimeout(videoLoop, 1000 / 30);
+  }
+}
+
+function videoStop() {
+    if (video) {
+        video.pause();
+        video = null;
+        mainContext.clearRect(50, 490, 960, 540);
+    }
+}
+
+function videoLoop() {
+    if (video && video.ended) {
+        videoStop();
+        setTimeout(videoStart, 3000);;
+    }
+}
+
+function videoStart() {
+      video = document.createElement("video");
+      video.src = "./video/2017-03-20_Dance_demo-screen-ani_v01.mp4";
+      video.addEventListener('loadeddata', function() {
+          console.log("loadeddata");
+          video.play();
+          //setTimeout(videoLoop, 1000 / 30);
+      });
+}
+
+
+
+function switchCanvas(o,n) {
+  o.classList.remove('active-canvas');
+  n.classList.remove('inactive-canvas');
+  o.classList.add('inactive-canvas');
+  n.classList.add('active-canvas');
+  console.log('changed canvas');
+  currentCanvas = n;
 }
 
 
@@ -101,14 +199,16 @@ function loop() {
 }
 
 function main() {
-  hangLightPaintings();
-  console.log("canvas working")
+  hangThumbnails();
+  videoStart();
 	setInterval(loop, 1000/60);
 }
 
-mainCanvas.onmousedown = mouseDown;
-mainCanvas.onmouseup = mouseUp;
-mainCanvas.onmousemove = mouseMove;
+function cursorCanvas(canvas) {
+  canvas.onmousedown = mouseDown;
+  canvas.onmouseup = mouseUp;
+  canvas.onmousemove = mouseMove;
+}
 
 main();
-console.log(lightPaintings.length);
+console.log(thumbnails.length);
