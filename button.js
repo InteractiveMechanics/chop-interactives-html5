@@ -1,34 +1,32 @@
-function Button(name, color, file, x, y, r) {
+function Button(file, x, y) {
 
-	this.x = x;
-	this.y = y;
-  this.r = r;
+		this.x = x;
+		this.y = y;
 
-	this.arrayIndex = 0;
+		this.arrayIndex = 0;
 
-	this.width = r*2;
-	this.height = this.width;
+	  var pixels = [];
 
-	this.canvas = uiCanvas;
-	this.context = uiCanvas.getContext('2d');
+		this.canvas = uiCanvas;
+		this.context = uiCanvas.getContext('2d');
 
-  this.name = name;
-  this.file = file;
-  this.colorRGBA = color;
+	  var tcanvas = document.createElement('canvas'), /// create temp canvas
+	  tctx = tcanvas.getContext('2d'); /// temp context
 
-	this.sprite = new Sprite(name, new ImagePainter(file));
+	  this.img = new Image();
+
+	  this.img.onload = function () {
+	  }
+	  this.img.crossOrigin = "Anonymous";
+	  this.img.src = file;
+
+		this.draw = function() {
+	    this.context.save();
+	    //console.log(this.img);
+	    this.context.drawImage(this.img, this.x, this.y);
+	    this.context.restore();
+		}
 
 
-
-	this.draw = function() {
-		this.context.save();
-    this.sprite.width = this.width;
-    this.sprite.height = this.height;
-    this.sprite.left = this.x - (this.width/2);
-    this.sprite.top = this.y - (this.height/2);
-    this.sprite.paint(this.context);
-    this.context.restore();
+		return this;
 	}
-
-	return this;
-}

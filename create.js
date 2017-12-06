@@ -1,92 +1,46 @@
 
 var paletteColors = [];
+var pages = [];
 var regions = [];
 
-var linesCanvas = document.getElementById('lines-canvas'); /// create temp canvas
-var linesContext = linesCanvas.getContext('2d'); /// temp context
-
-var uiCanvas = document.getElementById('ui-canvas');
-var uiContext = uiCanvas.getContext("2d");
-
-uiCanvas.width = window.innerWidth;
-uiCanvas.height = window.innerHeight;
-
-var linesImg = new Image();
-linesImg.onload = function() {
-  linesCanvas.width = linesImg.naturalWidth;
-  linesCanvas.height = linesImg.naturalHeight;
-  linesContext.drawImage(linesImg,0,0);
-}
-linesImg.src = './images/lines-dogs.png';
-
-
-
-var paletteWidth = uiCanvas.width;
-var paletteHeight = 200;
-var palettePosX = 50;
-var palettePosY = uiCanvas.height - (paletteHeight/2);
-var paletteSpacing = paletteWidth/16;
-var paletteRadius = 40;
-var currentColor = [];
-var currentPage = 0;
-//var numberOfColors = 12;
-
-var isMouseDown = false;
-var mousePos = {
-      x: -1,
-      y: -1
-};
-
-//var paletteNames = ['blue-lt', 'blue', 'purple', 'pink', 'red', 'orange', 'yellow', 'green-lt', 'green', 'black', 'white', 'brown'];
-var colorData = [
-  ['blue-lt', 20, 178, 218, 1.00],
-  ['blue', 53, 53, 168, 1.00],
-  ['purple', 148, 40, 138, 1.00],
-  ['pink', 238, 26, 119, 1.00],
-  ['red', 255, 0, 26, 1.00],
-  ['orange', 247, 146, 60, 1.00],
-  ['yellow', 254, 254, 86, 1.00],
-  ['green-lt', 139, 198, 87, 1.00],
-  ['green', 0, 104, 34, 1.00],
-  ['black', 0, 0, 0, 1.00],
-  ['white', 255, 255, 255, 1.00],
-  ['brown', 89, 49, 22, 1.00]
+var pageData = [
+['dogs',
+[
+['dogs-1', 12, 466],
+['dogs-2', 99, 800],
+['dogs-3', 177, 627],
+['dogs-4', 293, 494],
+['dogs-5', 229, 894],
+['dogs-6', 1240, 18],
+['dogs-7', 22, 28],
+['dogs-8', 43, 86],
+['dogs-9', 163, 302],
+['dogs-10', 9, 826],
+['dogs-11', 511, 997],
+['dogs-12', 482, 760],
+['dogs-13', 417, 355],
+['dogs-14', 232, 40],
+['dogs-15', 776, 378],
+['dogs-16', 856, 182],
+['dogs-17', 721, 24],
+['dogs-18', 1134, 599],
+['dogs-19', 1202, 574],
+['dogs-20', 846, 392],
+['dogs-21', 1234, 856],
+['dogs-22', 1545, 39],
+['dogs-23', 1742, 170],
+['dogs-24', 1171, 345],
+['dogs-25', 1473, 316],
+['dogs-26', 1498, 538],
+['dogs-27', 1458, 798],
+['dogs-28', 1637, 866],
+['dogs-29', 1443, 316],
+['dogs-30', 1558, 875],
+['dogs-31', 367, 17]
 ]
-
-var pages = [
+],
+['dogs2',
   [
-  ['dogs-1', 12, 466],
-  ['dogs-2', 99, 800],
-  ['dogs-3', 177, 627],
-  ['dogs-4', 293, 494],
-  ['dogs-5', 229, 894],
-  ['dogs-6', 1240, 18],
-  ['dogs-7', 22, 28],
-  ['dogs-8', 43, 86],
-  ['dogs-9', 163, 302],
-  ['dogs-10', 9, 826],
-  ['dogs-11', 511, 997],
-  ['dogs-12', 482, 760],
-  ['dogs-13', 417, 355],
-  ['dogs-14', 232, 40],
-  ['dogs-15', 776, 378],
-  ['dogs-16', 856, 182],
-  ['dogs-17', 721, 24],
-  ['dogs-18', 1134, 599],
-  ['dogs-19', 1202, 574],
-  ['dogs-20', 846, 392],
-  ['dogs-21', 1234, 856],
-  ['dogs-22', 1545, 39],
-  ['dogs-23', 1742, 170],
-  ['dogs-24', 1171, 345],
-  ['dogs-25', 1473, 316],
-  ['dogs-26', 1498, 538],
-  ['dogs-27', 1458, 798],
-  ['dogs-28', 1637, 866],
-  ['dogs-29', 1443, 316],
-  ['dogs-30', 1558, 875],
-  ['dogs-31', 367, 17]
-],[
   ['dogs-1', 12, 466],
   ['dogs-2', 99, 800],
   ['dogs-3', 177, 627],
@@ -118,8 +72,62 @@ var pages = [
   ['dogs-29', 1443, 316],
   ['dogs-30', 1558, 875],
   ['dogs-31', 367, 17]
+  ]
 ]
+];
+
+var linesCanvas = document.getElementById('lines-canvas'); /// create temp canvas
+var linesContext = linesCanvas.getContext('2d'); /// temp context
+
+var uiCanvas = document.getElementById('ui-canvas');
+var uiContext = uiCanvas.getContext("2d");
+
+uiCanvas.width = window.innerWidth;
+uiCanvas.height = window.innerHeight;
+
+var linesImg = new Image();
+linesImg.onload = function() {
+  linesCanvas.width = linesImg.naturalWidth;
+  linesCanvas.height = linesImg.naturalHeight;
+  linesContext.drawImage(linesImg,0,0);
+}
+linesImg.src = './images/lines-dogs.png';
+
+
+
+var paletteWidth = uiCanvas.width;
+var paletteHeight = 200;
+var palettePosX = 403;
+var palettePosY = 1022;
+var paletteSpacing = 100;
+var paletteRadius = 35;
+var pageAreaY = 956;
+var currentColor = [];
+var currentPage = 0;
+//var numberOfColors = 12;
+
+var isMouseDown = false;
+var mousePos = {
+      x: -1,
+      y: -1
+};
+
+//var paletteNames = ['blue-lt', 'blue', 'purple', 'pink', 'red', 'orange', 'yellow', 'green-lt', 'green', 'black', 'white', 'brown'];
+var colorData = [
+  ['blue-lt', 20, 178, 218, 1.00],
+  ['blue', 53, 53, 168, 1.00],
+  ['purple', 148, 40, 138, 1.00],
+  ['pink', 238, 26, 119, 1.00],
+  ['red', 255, 0, 26, 1.00],
+  ['orange', 247, 146, 60, 1.00],
+  ['yellow', 254, 254, 86, 1.00],
+  ['green-lt', 139, 198, 87, 1.00],
+  ['green', 0, 104, 34, 1.00],
+  ['black', 0, 0, 0, 1.00],
+  ['white', 255, 255, 255, 1.00],
+  ['brown', 89, 49, 22, 1.00]
 ]
+
 
 
 
@@ -136,23 +144,37 @@ function createPalette() {
   }
 }
 
-function createPager() {
-
+function createUiRegion() {
+  uiRegion = new Region('ui-bar', 0, 956, uiCanvas);
 }
 
-function createPage() {
-  page = pages[currentPage];
-  for(var i = 0; i < page.length; i++){
-    regions.push(new Region(page[i][0] ,page[i][1], page[i][2], uiCanvas));
+function createPager() {
+  pageLeft = new Button('./images/icon-arrow-left.png', 35, 970);
+  pageRight = new Button('./images/icon-arrow-right.png', 104, 972);
+}
+
+function createClear() {
+  pageClear = new Button('./images/icon-clear.png', 1810, 979);
+}
+
+function createPages() {
+  for(var i = 0; i < pageData.length; i++) {
+    pages.push(new Page(pageData[i][0],pageData[i][1]));
   }
+    // for(var j = 0; j < pages[i].length; j++){
+    //   pages[i].push(new Region(page[i][j][0] ,page[i][j][1], page[i][j][2], uiCanvas));
+    // }
+
 }
 
 function changePageLeft() {
-  currentPage --;
+  currentPage = 0;
+  regions = pages[currentPage].regions;
 }
 
 function changePageRight() {
-  currentPage ++;
+  currentPage = 1;
+  regions = pages[currentPage].regions;
 }
 
 function mouseDown(e) {
@@ -179,6 +201,8 @@ function mouseMove(e) {
 function draw() {
   uiContext.clearRect(0, 0, uiCanvas.width, uiCanvas.height);
 
+  // should be like page = pages[currentPage]; page.regions.forEach
+
   regions.forEach(function(region){
 
     if (region.imgData){
@@ -193,9 +217,15 @@ function draw() {
       region.draw();
     }
   });
+
+  uiRegion.draw();
   paletteColors.forEach(function(color){
 		color.draw();
 	});
+
+  pageRight.draw();
+  pageLeft.draw();
+  pageClear.draw();
 }
 
 function update() {
@@ -210,9 +240,11 @@ function update() {
           // alert('clicked outside paletteColor');
       }
   }
+
+
   for(var i = 0; i < regions.length; i++) {
 		var region = regions[i];
-    if (region.img.width){  //if width, img is loaded
+    if (region.img.width && (mouseY < pageAreaY)){  //if width, img is loaded ---- not great
       var rX = mouseX - region.x;
       var rY = mouseY - region.y;
       hover = getPixelAlpha(region.img, rX, rY);
@@ -224,17 +256,41 @@ function update() {
       }
     }
   }
+
   if (pageRight){
     var rX = mouseX - pageRight.x;
     var rY = mouseY - pageRight.y;
     hover = getPixelAlpha(pageRight.img, rX, rY);
     if ((hover > 0) && isMouseDown){
-      curentPage ++;
+      changePageRight();
       console.log(currentPage);
     } else {
       //console.log(region.color);
     }
   }
+
+  if (pageLeft){
+    var rX = mouseX - pageLeft.x;
+    var rY = mouseY - pageLeft.y;
+    hover = getPixelAlpha(pageLeft.img, rX, rY);
+    if ((hover > 0) && isMouseDown){
+      changePageLeft();
+      console.log(currentPage);
+    } else {
+      //console.log(region.color);
+    }
+  }
+
+  if (pageClear){
+    var rX = mouseX - pageClear.x;
+    var rY = mouseY - pageClear.y;
+    hover = getPixelAlpha(pageClear.img, rX, rY);
+    if ((hover > 0) && isMouseDown){
+      for(var i = 0; i < regions.length; i++) {
+        regions[i].imgData = null;
+        }
+      }
+    }
 
 
 }
@@ -314,7 +370,11 @@ function loop() {
 
 function main() {
   createPalette();
-  createPage();
+  createUiRegion();
+  createPager();
+  createClear();
+  createPages();
+  regions = pages[currentPage].regions;
   //console.log(isOverRegion(100,100,regions[0]));
   //console.log(regions[0].width)
 	setInterval(loop, 1000/60);
@@ -325,4 +385,4 @@ uiCanvas.onmouseup = mouseUp;
 uiCanvas.onmousemove = mouseMove;
 
 main();
-console.log(regions.length);
+console.log(pages[0].regions.length);
