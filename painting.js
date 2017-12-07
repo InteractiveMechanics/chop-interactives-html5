@@ -5,13 +5,13 @@ function Painting(canvas, x, y, w, h, border) {
 
   this.lines = [];
 
-  this.context.lineWidth = 5;
+  this.context.lineWidth = 20;
 	this.context.lineJoin = 'round';
   this.context.lineCap = 'round';
 	this.context.strokeStyle = 'blue';
 
-  var timer1 = 3*60;
-  var timer2 = 10*60;
+  var timer1 = 1*60;
+  var timer2 = 3*60;
   this.op = 0;
   //var counting = false;
 
@@ -37,11 +37,10 @@ function Painting(canvas, x, y, w, h, border) {
         this.imgData = this.context.getImageData(0,0,w,h);
       }
       this.context.clearRect(0,0,w,h);
-      console.log(this.imgData);
       switchCanvas(paintCanvas,mainCanvas);
       videoStart();
-      timer1 = 3*60;
-      timer2 = 10*60;
+      timer1 = 1*60;
+      timer2 = 3*60;
     }
 
    }

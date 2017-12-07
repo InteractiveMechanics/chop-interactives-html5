@@ -15,10 +15,10 @@ var currentCanvas = mainCanvas;
 var painting = new Painting(paintCanvas, 0, 0, paintCanvas.width, paintCanvas.height, 20);
 
 var thumbnails = [];
-var numPaintings = 1;
-var paintingWidth = 300;
-var paintingHeight = 300;
-var paintingBorder = [20,20,50,20];
+var numPaintings = 5;
+var thumbnailWidth = 300;
+var thumbnailHeight = 300;
+var thumbnailBorder = [20,20,50,20];
 var marginX = 50;
 var marginY = 50;
 var paintingSpacing = (mainCanvas.width-(marginX*2))/5;
@@ -31,6 +31,18 @@ var mousePos = {
 var mouseX = mousePos.x;
 var mouseY = mousePos.y;
 var lastMouseX, lastMouseY;
+
+
+//test image data
+tempcanvas = document.createElement('canvas'); /// create temp canvas
+tempcanvas.width = 1000;
+tempcanvas.height = 1000;
+tempctx = tempcanvas.getContext('2d'); /// temp context
+
+tempctx.fillStyle = '#555555';
+tempctx.rect(0, 0, tempcanvas.width, tempcanvas.height);
+tempctx.fill();
+testImgData = tempctx.getImageData(0,0,tempcanvas.width, tempcanvas.height);
 
 var startButton = new Button('start', './images/btn-play.png', 1500, 638, 185);
 
@@ -63,46 +75,31 @@ function hangThumbnails() {
   for(var i = 0; i < numPaintings; i++) {
     x = (i*paintingSpacing) + marginX;
     y = marginY;
-    thumbnails.push(new Thumbnail(mainCanvas, x, y, paintingWidth, paintingHeight, paintingBorder, 1));
+    thumbnails.push(new Thumbnail(mainCanvas, x, y, thumbnailWidth, thumbnailHeight, thumbnailBorder, 1, testImgData));
   }
 }
 
-function drawThumbnails() {
-  thumbnails.forEach(function(thumbnail){
-    if (thumbnail.imgData){
-      thumbnail.draw();
-      var tcanvas = document.createElement('canvas'); /// create temp canvas
-      tctx = tcanvas.getContext('2d');
-      tcanvas.width = thumbnail.imgData.width;
-      tcanvas.height = thumbnail.imgData.width;
-      tctx.putImageData(thumbnail.imgData, 0, 0);
-      mainContext.drawImage(tcanvas,thumbnail.x,thumbnail.y, thumbnail.width, thumbnail.height);
-      //ctx.drawImage(image, dx, dy, dWidth, dHeight);
-    }
-    else{
-      thumbnail.draw();
-    }
-	});
-}
-
 function paint() {
-  if (painting && (currentCanvas == paintCanvas)){
+  if ( painting && (currentCanvas == paintCanvas)){
     painting.draw(lastMouseX, lastMouseY, mouseX, mouseY);
   }
 }
 
 
 function draw() {
-  mainContext.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
-  startButton.draw();
-
-  drawThumbnails();
-
-  drawVideo();
-  paint();
-
-
-
+  if (currentCanvas == paintCanvas){
+    paint();
+  }
+  else{
+    mainContext.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+    for(var i = 0; i < numPaintings; i++) {
+    x = (i*paintingSpacing) + marginX;
+    y = marginY;
+    thumbnails[i].draw(x,y,1);
+    };
+    drawVideo();
+    startButton.draw();
+  }
 }
 
 function update() {
@@ -114,9 +111,9 @@ function update() {
   painting.update();
 
   if (painting.imgData) {
-    console.log(painting.imgData);
-    paintingToThumbnail(painting);
+    paintingToThumbnail();
   }
+  painting.imgData = null;
   checkStart();
   videoLoop();
 }
@@ -128,13 +125,12 @@ function checkStart(){
   }
 }
 
-function paintingToThumbnail(painting){
-  x = marginX;
-  y = marginY;
-  thumbnail = new Thumbnail(mainCanvas, x, y, paintingWidth, paintingHeight, paintingBorder, 1)
-  thumbnails.push(thumbnail);
-  thumbnail.imgData = painting.imgData;
-  painting.imgData = null;
+// function cropPainting(painting) {
+//
+// }
+
+function paintingToThumbnail(){
+  thumbnails.unshift(new Thumbnail(mainCanvas, 0, 0, thumbnailWidth, thumbnailHeight, thumbnailBorder, 1, painting.imgData));
 }
 
 function drawVideo() {

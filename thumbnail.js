@@ -1,10 +1,8 @@
-function Thumbnail(canvas, x, y, w, h, border, radians) {
-
-	this.x = x;
-	this.y = y;
+function Thumbnail(canvas, x, y, w, h, border, radians, imgData) {
   this.radians = radians;
 
 	this.arrayIndex = 0;
+	this.imgData = imgData;
 
 	this.width = w;
 	this.height = h;
@@ -20,25 +18,26 @@ function Thumbnail(canvas, x, y, w, h, border, radians) {
 
 
 
-	tcanvas = document.createElement('canvas'); /// create temp canvas
-	tcanvas.width = this.intWidth;
-	tcanvas.height = this.intHeight;
-	tctx = tcanvas.getContext('2d'); /// temp context
-
-	tctx.fillStyle = '#555555';
-	tctx.rect(0, 0, tcanvas.width, tcanvas.height);
-	tctx.fill();
-
-	this.imgData = tctx.getImageData(0,0,tcanvas.width, tcanvas.height);
 
 
+  this.draw = function(dX,dY,dR) {
+    // this.context.save();
+		// this.context.fillStyle = '#ffffff';
+		// this.context.rect(this.x, this.y, this.width, this.height);
+		// this.context.fill();
+    // this.context.restore();
 
-  this.draw = function() {
-    this.context.save();
-		this.context.fillStyle = '#ffffff';
-		this.context.rect(this.x, this.y, this.width, this.height);
-		this.context.fill();
-    this.context.restore();
+		if (this.imgData){
+			mainContext.putImageData(this.imgData,(dX+thumbnailBorder[3]),(dY+thumbnailBorder[0]), 0, 0,  this.intWidth, this.intHeight)
+      // var tcanvas = document.createElement('canvas'); /// create temp canvas
+      // tctx = tcanvas.getContext('2d');
+      // tcanvas.width = this.imgData.width;
+      // tcanvas.height = this.imgData.height;
+      // tctx.putImageData(this.imgData, 0, 0);
+			// this.context.drawImage(tcanvas,this.x,this.y, );
+      //woah
+      //this.context.drawImage(tcanvas,(this.x+thumbnailBorder[3]),(this.y+thumbnailBorder[0]), this.intWidth, this.intHeight);
+    }
 	}
 
 	return this;
