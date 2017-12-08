@@ -2,6 +2,7 @@
 var paletteColors = [];
 var pages = [];
 var regions = [];
+var lines = [];
 
 var pageData = [
 ['dogs',
@@ -39,39 +40,28 @@ var pageData = [
 ['dogs-31', 367, 17]
 ]
 ],
-['dogs2',
+['carousel',
   [
-  ['dogs-1', 12, 466],
-  ['dogs-2', 99, 800],
-  ['dogs-3', 177, 627],
-  ['dogs-4', 293, 494],
-  ['dogs-5', 229, 25],
-  ['dogs-6', 1240, 18],
-  ['dogs-7', 22, 28],
-  ['dogs-8', 43, 86],
-  ['dogs-9', 55, 302],
-  ['dogs-10', 9, 826],
-  ['dogs-11', 511, 997],
-  ['dogs-12', 482, 760],
-  ['dogs-13', 43, 355],
-  ['dogs-14', 232, 40],
-  ['dogs-15', 776, 378],
-  ['dogs-16', 856, 182],
-  ['dogs-17', 721, 24],
-  ['dogs-18', 1134, 599],
-  ['dogs-19', 1202, 574],
-  ['dogs-20', 846, 392],
-  ['dogs-21', 1234, 856],
-  ['dogs-22', 1545, 39],
-  ['dogs-23', 1742, 170],
-  ['dogs-24', 1171, 345],
-  ['dogs-25', 1473, 316],
-  ['dogs-26', 1498, 538],
-  ['dogs-27', 1458, 798],
-  ['dogs-28', 1637, 866],
-  ['dogs-29', 1443, 316],
-  ['dogs-30', 1558, 875],
-  ['dogs-31', 367, 17]
+  ['carousel-1', 323, 619],
+  ['carousel-2', 651, 154],
+  ['carousel-3', 454, 481],
+  ['carousel-4', 733, 540],
+  ['carousel-5', 496, 407],
+  ['carousel-6', 506, 435],
+  ['carousel-7', 535, 461],
+  ['carousel-8', 614, 281],
+  ['carousel-9', 1591, 42],
+  ['carousel-10', 776, 584],
+  ['carousel-11', 879, 511],
+  ['carousel-12', 1022, 656],
+  ['carousel-13', 1127,516],
+  ['carousel-14', 1063, 667],
+  ['carousel-15', 71, 13],
+  ['carousel-16', 944, 34],
+  ['carousel-17', 1658, 54],
+  ['carousel-18', 205, 891],
+  ['carousel-19',11,154],
+  ['carousel-20',815,597]
   ]
 ]
 ];
@@ -85,14 +75,27 @@ var uiContext = uiCanvas.getContext("2d");
 uiCanvas.width = window.innerWidth;
 uiCanvas.height = window.innerHeight;
 
-var linesImg = new Image();
-linesImg.onload = function() {
-  linesCanvas.width = linesImg.naturalWidth;
-  linesCanvas.height = linesImg.naturalHeight;
-  linesContext.drawImage(linesImg,0,0);
-}
-linesImg.src = './images/lines-dogs.png';
 
+function createLines() {
+
+  // for(var i = 0; i < regions.length; i++){
+  //   this.regions.push(new Region(regions[i][0] ,regions[i][1], regions[i][2], uiCanvas));
+  // }
+  for(var i = 0; i < pageData.length; i++) {
+    lines.push(new Image());
+    lines[i].onload = function() {
+      linesCanvas.width = 1920 //lines[i].naturalWidth;
+      linesCanvas.height =1080 //lines[i].naturalHeight;
+    }
+    lines[i].src = './images/lines-'+pageData[i][0]+'.png';
+  }
+}
+
+
+function drawLines(lines){
+  linesContext.clearRect(0, 0, linesCanvas.width, linesCanvas.height);
+  linesContext.drawImage(lines,0,0);
+}
 
 
 var paletteWidth = uiCanvas.width;
@@ -199,6 +202,7 @@ function mouseMove(e) {
 }
 
 function draw() {
+  drawLines(lines[currentPage]);
   uiContext.clearRect(0, 0, uiCanvas.width, uiCanvas.height);
 
   // should be like page = pages[currentPage]; page.regions.forEach
@@ -374,6 +378,7 @@ function main() {
   createPager();
   createClear();
   createPages();
+  createLines();
   regions = pages[currentPage].regions;
   //console.log(isOverRegion(100,100,regions[0]));
   //console.log(regions[0].width)
