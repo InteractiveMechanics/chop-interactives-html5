@@ -1,4 +1,4 @@
-function Button(name, file, x, y, r) {
+function Button(name, file, x, y, r, canvas) {
 
 	this.x = x;
 	this.y = y;
@@ -9,8 +9,8 @@ function Button(name, file, x, y, r) {
 	this.width = r*2;
 	this.height = this.width;
 
-	this.canvas = mainCanvas;
-	this.context = mainCanvas.getContext('2d');
+	this.canvas = canvas;
+	this.context = canvas.getContext('2d');
 
   this.file = file;
 

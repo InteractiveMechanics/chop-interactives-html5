@@ -1,8 +1,16 @@
 var mainCanvas = document.getElementById('main-canvas');
 var mainContext = mainCanvas.getContext("2d");
 
+
 mainCanvas.width = window.innerWidth;
 mainCanvas.height = window.innerHeight;
+
+var bkgdCanvas = document.getElementById('bkgd-canvas');
+var bkgdContext = bkgdCanvas.getContext("2d");
+
+
+bkgdCanvas.width = window.innerWidth;
+bkgdCanvas.height = window.innerHeight;
 
 var paintCanvas = document.getElementById('paint-canvas');
 var paintContext = paintCanvas.getContext("2d");
@@ -16,12 +24,12 @@ var painting = new Painting(paintCanvas, 0, 0, paintCanvas.width, paintCanvas.he
 
 var thumbnails = [];
 var numPaintings = 5;
-var thumbnailWidth = 300;
-var thumbnailHeight = 300;
-var thumbnailBorder = [20,20,50,20];
-var marginX = 50;
-var marginY = 50;
-var paintingSpacing = (mainCanvas.width-(marginX*2))/5;
+var thumbnailWidth = 200;
+var thumbnailHeight = 225;
+var thumbnailBorder = [8,8,50,8];
+var marginX = 30;
+var marginY = 65;
+var paintingSpacing = 410;
 
 var isMouseDown = false;
 var mousePos = {
@@ -39,12 +47,13 @@ tempcanvas.width = 1000;
 tempcanvas.height = 1000;
 tempctx = tempcanvas.getContext('2d'); /// temp context
 
-tempctx.fillStyle = '#555555';
+tempctx.fillStyle = 'rgba(0,0,0,0)';
 tempctx.rect(0, 0, tempcanvas.width, tempcanvas.height);
 tempctx.fill();
 testImgData = tempctx.getImageData(0,0,tempcanvas.width, tempcanvas.height);
 
-var startButton = new Button('start', './images/btn-play.png', 1500, 638, 185);
+var startButton = new Button('start', './images/btn-play.png', 1500, 638, 185, mainCanvas);
+mainContext.fillStyle = '#ffffff';
 
 function isOverButton(mX, mY, circle) {
   return Math.sqrt((mX-circle.x)*(mX-circle.x) + (mY-circle.y)*(mY-circle.y)) < circle.r;
@@ -57,6 +66,40 @@ function mouseDown(e) {
 function mouseUp(e) {
 	isMouseDown = false;
 }
+
+mainCanvas.addEventListener('click', function(){
+  var x = event.pageX,
+  y = event.pageY;
+
+  // Collision detection between clicked offset and element.
+      for(var i = 0; i < numPaintings; i++) {
+        thumbnail = thumbnails[i];
+        if (y > thumbnail.trashPosY - thumbnail.trashRadius && y < thumbnail.trashPosY + thumbnail.trashRadius && x > thumbnail.trashPosX - thumbnail.trashRadius && x < thumbnail.trashPosX + thumbnail.trashRadius) {
+            trashThumbnail(i);
+        }
+      }
+
+      if (y > startButton.y - startButton.r && y < startButton.y + startButton.r && x > startButton.x - startButton.r && x < startButton.x + startButton.r){
+        switchCanvas(mainCanvas, paintCanvas);
+        if (video){
+          videoStop();
+        }
+
+      }
+
+  }, false);
+
+  paintCanvas.addEventListener('click', function(){
+    var x = event.pageX,
+    y = event.pageY;
+    if (y > painting.clearButton.y - painting.clearButton.r
+      && y < painting.clearButton.y + painting.clearButton.r
+      && x > painting.clearButton.x - painting.clearButton.r
+      && x < painting.clearButton.x + painting.clearButton.r){
+      paintContext.clearRect(0,0,paintCanvas.width,paintCanvas.height);
+      painting.painted = false;
+    }
+  }, false);
 
 function getMousePos(canvas, evt) {
     var rect = mainCanvas.getBoundingClientRect();
@@ -75,7 +118,7 @@ function hangThumbnails() {
   for(var i = 0; i < numPaintings; i++) {
     x = (i*paintingSpacing) + marginX;
     y = marginY;
-    thumbnails.push(new Thumbnail(mainCanvas, x, y, thumbnailWidth, thumbnailHeight, thumbnailBorder, 1, testImgData));
+    thumbnails.push(new Thumbnail(mainCanvas, x, y, thumbnailWidth, thumbnailHeight, thumbnailBorder, getRandomArbitrary(0,30), testImgData));
   }
 }
 
@@ -86,20 +129,28 @@ function paint() {
 }
 
 
+
 function draw() {
   if (currentCanvas == paintCanvas){
     paint();
   }
   else{
     mainContext.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+
     for(var i = 0; i < numPaintings; i++) {
-    x = (i*paintingSpacing) + marginX;
-    y = marginY;
-    thumbnails[i].draw(x,y,1);
+      x = (i*paintingSpacing) + marginX;
+      y = marginY;
+      if(thumbnails[i]){
+      thumbnails[i].draw(x,y,1);
+    }
     };
     drawVideo();
     startButton.draw();
   }
+}
+
+function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
 }
 
 function update() {
@@ -113,16 +164,29 @@ function update() {
   if (painting.imgData) {
     paintingToThumbnail();
   }
+  // if (currentCanvas == mainCanvas){
+  //   for(var i = 0; i < numPaintings; i++) {
+  //     if(thumbnails[i] && isOverButton(mouseX, mouseY, thumbnails[i].trash) && isMouseDown){
+  //       trashThumbnail(i);
+  //     }
+  //   };
+  // }
   painting.imgData = null;
-  checkStart();
   videoLoop();
 }
 
-function checkStart(){
-  if  (isOverButton(mouseX, mouseY, startButton) && isMouseDown && (currentCanvas == mainCanvas)) {
-      videoStop();
-      switchCanvas(mainCanvas, paintCanvas);
-  }
+// function checkStart(){
+//   if  (isOverButton(mouseX, mouseY, startButton) && isMouseDown && (currentCanvas == mainCanvas)) {
+//     //switch before video stop solves lag in paint start
+//     switchCanvas(mainCanvas, paintCanvas);
+//     videoStop();
+//
+//   }
+// }
+
+function trashThumbnail(index){
+  thumbnails.splice(index,1);
+  //thumbnails[i].imgData = null;
 }
 
 // function cropPainting(painting) {
@@ -130,8 +194,77 @@ function checkStart(){
 // }
 
 function paintingToThumbnail(){
-  thumbnails.unshift(new Thumbnail(mainCanvas, 0, 0, thumbnailWidth, thumbnailHeight, thumbnailBorder, 1, painting.imgData));
+  //var cropImageData = cropToPixels(painting.imgData);
+
+  thumbnails.unshift(new Thumbnail(mainCanvas, 0, 0, thumbnailWidth, thumbnailHeight, thumbnailBorder, getRandomArbitrary(0,100), painting.imgData));
 }
+
+
+
+// function cropToPixels(imgData){
+//   //find pixel bounds
+//   var cX, cY, cW, cH;
+//   var width = imgData.width;
+//   var height = imgData.height;
+//   var data = imageData.data;
+//
+//
+//
+//
+//   for (var y = 0; y < height; y++) {
+//     for (var x = 0; x < width; x++) {
+//       var pos = y * width + x;
+//       ctx.fillStyle = 'rgba(' + data[pos*4+0]
+//                         + ',' + data[pos*4+1]
+//                         + ',' + data[pos*4+2]
+//                         + ',' + (data[pos*4+3]/255) + ')';
+//       ctx.fillRect(x + dx, y + dy, 1, 1);
+//     }
+//   }
+//   // for (var i = 0; i < data.length; i += 4) {
+//   //   if (data[i + 3] > 0){
+//   //   data[i]     = newColor[0];     // red
+//   //   data[i + 1] = newColor[1]; // green
+//   //   data[i + 2] = newColor[2]; // blue
+//   // }
+//   // }
+//
+//   console.log(cropData);
+//   return cropData;
+//
+// }
+
+//from https://stackoverflow.com/questions/11796554/automatically-crop-html5-canvas-to-contents
+function cropImageFromCanvas(ctx, canvas) {
+
+var w = window.innerWidth,
+h = window.innerHeight,
+pix = {x:[], y:[]},
+imageData = ctx.getImageData(0,0,window.innerWidth,window.innerHeight),
+x, y, index;
+
+for (y = 0; y < h; y++) {
+    for (x = 0; x < w; x++) {
+        index = (y * w + x) * 4;
+        if (imageData.data[index+3] > 0) {
+
+            pix.x.push(x);
+            pix.y.push(y);
+
+        }
+    }
+}
+pix.x.sort(function(a,b){return a-b});
+pix.y.sort(function(a,b){return a-b});
+var n = pix.x.length-1;
+
+w = pix.x[n] - pix.x[0];
+h = pix.y[n] - pix.y[0];
+var cut = ctx.getImageData(pix.x[0], pix.y[0], w, h);
+
+return cut;
+}
+
 
 function drawVideo() {
   if (video && !video.paused && !video.ended) {
