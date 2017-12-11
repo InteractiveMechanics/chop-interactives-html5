@@ -17,7 +17,7 @@
       {
           init: function () {
               this._canvas = document.getElementById('kinectCanvas');
-              this._instructionsCanvas = document.getElementById('instructionsCanvas');
+              //this._instructionsCanvas = document.getElementById('instructionsCanvas');
 
               this._context = this._canvas.getContext('2d');
               this._instructionsContext = this._instructionsCanvas.getContext('2d');
