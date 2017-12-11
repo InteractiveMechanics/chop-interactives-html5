@@ -42,26 +42,40 @@ var pageData = [
 ],
 ['carousel',
   [
-  ['carousel-1', 323, 619],
-  ['carousel-2', 651, 154],
-  ['carousel-3', 454, 481],
-  ['carousel-4', 733, 540],
-  ['carousel-5', 496, 407],
-  ['carousel-6', 506, 435],
-  ['carousel-7', 535, 461],
-  ['carousel-8', 614, 281],
-  ['carousel-9', 1591, 42],
-  ['carousel-10', 776, 584],
-  ['carousel-11', 879, 511],
-  ['carousel-12', 1022, 656],
-  ['carousel-13', 1127,516],
-  ['carousel-14', 1063, 667],
-  ['carousel-15', 71, 13],
-  ['carousel-16', 944, 34],
-  ['carousel-17', 1658, 54],
-  ['carousel-18', 205, 891],
-  ['carousel-19',11,154],
-  ['carousel-20',815,597]
+  ['carousel-1', 241, 369],
+  ['carousel-2', 1717, 491],
+  ['carousel-3', 496, 407],
+  ['carousel-4', 614, 281],
+  ['carousel-5', 1639, 847],
+  ['carousel-6', 71, 13],
+  ['carousel-7', 944, 34],
+  ['carousel-8', 1658, 54],
+  ['carousel-9', 205, 891],
+  ['carousel-10', 11,154],
+  ['carousel-11', 517, 637],
+  ['carousel-12', 554, 649],
+  ['carousel-13', 611, 514],
+  ['carousel-14', 775, 583],
+  ['carousel-15', 815, 596],
+  ['carousel-16', 879, 516],
+  ['carousel-17', 1021, 655],
+  ['carousel-18', 1062, 666],
+  ['carousel-19', 1127, 516],
+  ['carousel-20', 1263, 577],
+  ['carousel-21', 1303, 589],
+  ['carousel-22', 1355, 516],
+  ['carousel-23', 734, 540],
+  ['carousel-24', 454, 516],
+  ['carousel-25', 1461, 272],
+  ['carousel-26', 572, 6],
+  ['carousel-27', 558, 261],
+  ['carousel-28', 352, 545],
+  ['carousel-29', 1191, 245],
+  ['carousel-30', 1511, 649],
+  ['carousel-31', 107, 42],
+  ['carousel-32', 18, 77],
+  ['carousel-33', 506, 453],
+  ['carousel-34', 535, 462]
   ]
 ]
 ];
@@ -106,7 +120,7 @@ var paletteSpacing = 100;
 var paletteRadius = 35;
 var pageAreaY = 956;
 var currentColor = [];
-var currentPage = 0;
+var currentPage = 1;
 //var numberOfColors = 12;
 
 var isMouseDown = false;
