@@ -1,17 +1,16 @@
-function Body(I) {
-	I = I || {};
+function Body(canvas) {
+	var I = I || {};
+
+    I.canvas = canvas;
+	I.context = canvas.getContext('2d');
 
 	I.x = 0;
-	I.y = 0;
-	I.width = 439;
-	I.height = 652;
-
-	I.isActive = false;
-	I.timeoutSet = false;
-	I.paused = true;
+	I.y = 420;
+	I.height = 439;
+	I.width = 652;
 
 	I.lastAdvance = 0;
-	I.frames = 0;
+	I.frame = 0;
 	I.totalFrames = 10;
 
 	I.cells = [
@@ -25,28 +24,24 @@ function Body(I) {
 		{left: 4564, top: 0, width: 652, height: 439},
 		{left: 5216, top: 0, width: 652, height: 439},
 		{left: 5868, top: 0, width: 652, height: 439},
-
 	];
-
-	I.spritesheet = new Image();
 
 	I.sprite = new Sprite('body', new SpriteSheetPainter('./images/body.png', I.cells));
 
-	I.draw = function(context) {
-		var that = this;
-
+	I.draw = function() {
+        this.context.save();
 		this.sprite.width = this.width;
 		this.sprite.height = this.height;
 		this.sprite.left = this.x;
-		this.sprite.top = 500;
+		this.sprite.top = this.y;
+		this.sprite.paint(this.context);
+		this.context.restore();
+	}
 
-		context.save();
+	I.update = function() {
 
-		this.sprite.paint(context);
-		context.restore();
 	}
 
 	return I;
-
 
 }

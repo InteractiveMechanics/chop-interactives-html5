@@ -2,101 +2,14 @@ body {
 	margin: 0;
     padding: 0;
     overflow: hidden;
-    width: 1920px;
-    height: 1080px;
     background-color: #6b81b7;
 }
 
-#left_curtain, #center_curtain, #right_curtain {
-	position: absolute;
-	width: 660px; /* 660px */
-	height: 1030px; /* 1080px */
-    z-index: 2;
-}
-#background_stage {
+#stage {
 	position: absolute;
 	z-index: 0;
-    width: 1920px;
-    height: 1080px;
 }
-
-
-
-/*
-    These are designed for 1920 x 1080 screens only,
-    so I'd suggest just using pixel values so we can
-    more accurately align everything to the final
-    screen size.
-*/
-
-#left_curtain {
-    left: -10px; /*40px*/
-}
-
-#center_curtain {
-	left: 620px; /*665px*/
-}
-
-#right_curtain {
-	left: 1260px; /*1290px*/
-}
-
-#left_spotlight, #center_spotlight, #right_spotlight {
+#hero1, #hero2, #hero3 {
     position: absolute;
-    z-index: 1;
-    border: 1px solid red;
-    /*top: 50px;*/
-    top: -71px;
+	z-index: 1;
 }
-
-#left_spotlight {
-    left: 141px;
-}
-
-#center_spotlight {
-    left: 775px;
-    border-color: green;
-}
-
-#right_spotlight{
-    left: 1416px;
-    border-color: blue;
-}
-
-#left_hero, #center_hero, #right_hero {
-    position: absolute;
-    z-index: 3;
-    border: 1px solid red;
-    /*top: 50px;*/
-}
-
-#left_hero {
-    left: 0px; /*149px*/
-}
-
-#center_hero {
-    left: 640px; /*773px*/
-    border-color: green;
-}
-
-#right_hero {
-    left: 1280px; /*1409px*/
-    border-color: blue;
-}
-
-#arrowL1 {
-    z-index: 4;
-    position: absolute;
-    border: 1px solid purple;
-    top: 645px; 
-    left: 59px;
-}
-
-#left_feet {
-    position: absolute;
-    bottom: 50px;
-    border: 1px solid white;
-    width: 652px;
-    height: 263px;
-}
-

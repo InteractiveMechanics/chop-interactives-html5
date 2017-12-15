@@ -1,15 +1,16 @@
-function Face(I) {
-	I = I || {};
+function Face(canvas) {
+	var I = I || {};
+
+    I.canvas = canvas;
+	I.context = canvas.getContext('2d');
 
 	I.x = 0;
-	I.y = 0;
-
-	I.isActive = false;
-	I.timeoutSet = false;
-	I.paused = true;
+	I.y = 230;
+	I.height = 431;
+	I.width = 652;
 
 	I.lastAdvance = 0;
-	I.frames = 0;
+	I.frame = 0;
 	I.totalFrames = 14;
 
 	I.cells = [
@@ -29,26 +30,22 @@ function Face(I) {
 		{left: 8476, top: 0, width: 652, height: 431},
 	];
 
-	I.spritesheet = new Image();
+	I.sprite = new Sprite('face', new SpriteSheetPainter('./images/face.png', I.cells));
 
-	I.sprite = new Sprite('body', new SpriteSheetPainter('./images/face.png', I.cells));
-
-	I.draw = function(context) {
-		var that = this;
-
+	I.draw = function() {
+        this.context.save();
 		this.sprite.width = this.width;
 		this.sprite.height = this.height;
 		this.sprite.left = this.x;
-		this.sprite.top = 400;
-		console.log(this.sprite.top);
+		this.sprite.top = this.y;
+		this.sprite.paint(this.context);
+		this.context.restore();
+	}
 
-		context.save();
+	I.update = function() {
 
-		this.sprite.paint(context);
-		context.restore();
 	}
 
 	return I;
-
 
 }

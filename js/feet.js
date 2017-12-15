@@ -1,22 +1,13 @@
-function Feet(I) {
-	I = I || {};
+function Feet(canvas) {
+	var I = I || {};
+
+    I.canvas = canvas;
+	I.context = canvas.getContext('2d');
 
 	I.x = 0;
-	I.y = 0;
-
+	I.y = 750;
 	I.height = 253;
 	I.width = 652;
-
-	I.isActive = false;
-	I.timeoutSet = false;
-	I.paused = true;
-
-	function getRandomInt(min, max) {
-  		min = Math.ceil(min);
-  		max = Math.floor(max);
-  		return Math.floor(Math.random() * (max - min)) + min; 
-	}
-
 
 	I.lastAdvance = 0;
 	I.frame = 0;
@@ -37,24 +28,19 @@ function Feet(I) {
 
 	I.sprite = new Sprite('feet', new SpriteSheetPainter('./images/feet.png', I.cells));
 
-	I.draw = function(context) {
-		var that = this;
-
+	I.draw = function() {
+        this.context.save();
 		this.sprite.width = this.width;
 		this.sprite.height = this.height;
 		this.sprite.left = this.x;
 		this.sprite.top = this.y;
-
-		context.save();
-		this.sprite.paint(context);
-		context.restore();
+		this.sprite.paint(this.context);
+		this.context.restore();
 	}
 
-	I.update = function(context) {
-		this.draw(context);
+	I.update = function() {
+
 	}
-
-
 
 	return I;
 
