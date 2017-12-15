@@ -10,8 +10,11 @@ function Feet(canvas) {
 	I.width = 652;
 
 	I.lastAdvance = 0;
-	I.frame = 0;
-	I.totalFrames = 10;
+    I.totalFrames = 10;
+    I.randomStart = function() {
+        return Math.floor(Math.random() * (this.totalFrames - 1) + 0);
+    }
+	I.frame = I.randomStart();
 
 	I.cells = [
 		{left: 0, top: 0, width: 652, height: 253},
@@ -39,8 +42,24 @@ function Feet(canvas) {
 	}
 
 	I.update = function() {
-
+        this.sprite.painter.cellIndex = this.frame;
 	}
+
+    I.change = function(direction) {
+        if (direction == 'left') {
+            if (this.frame == 0) {
+                this.frame = this.totalFrames - 1;
+            } else {
+                this.frame--;
+            }
+        } else if (direction == 'right') {
+            if (this.frame == this.totalFrames - 1) {
+                this.frame = 0;
+            } else {
+                this.frame++;
+            }
+        }
+    }
 
 	return I;
 

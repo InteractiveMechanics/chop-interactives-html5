@@ -50,13 +50,18 @@ function Hero(canvas) {
         this.curtains.top = 0;
         this.curtains.paint(this.context);
 
-        this.arrows.forEach(function(item, index) {
-            item.draw();
-        });
+        if (this.isActive){
+            this.arrows.forEach(function(item, index) {
+                item.draw();
+            });
+        }
 	}
 
 	I.update = function() {
-
+        this.feet.update();
+        this.body.update();
+        this.face.update();
+        this.hat.update();
 	}
 
 	I.reset = function() {

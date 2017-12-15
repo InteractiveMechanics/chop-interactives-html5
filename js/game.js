@@ -10,6 +10,7 @@ var hero2Canvas = document.getElementById('hero2');
 var hero3;
 var hero3Canvas = document.getElementById('hero3');
 
+var isMouseDown = false;
 var mousePos = {
       x: -1,
       y: -1
@@ -23,7 +24,10 @@ function init() {
     hero2 = new Hero(hero2Canvas);
     hero3 = new Hero(hero3Canvas);
 
+    hero1.isActive = false;
+    hero3.isActive = false;
 }
+
 function draw() {
     clear(hero1Canvas);
     clear(hero2Canvas);
@@ -34,15 +38,29 @@ function draw() {
     hero2.draw();
     hero3.draw();
 }
+
 function update() {
+    hero2.arrows.forEach(function(item, index) {
+        if (mousePos.x > item.x && mousePos.x < (item.x + item.width) && mousePos.y > item.y && mousePos.y < (item.y + item.height)) {
+            item.isHover = true;
+            if (isMouseDown) {
+                item.changePart();
+            }
+        } else {
+            item.isHover = false;
+        }
+    });
+
     hero1.update();
     hero2.update();
     hero3.update();
 }
+
 function loop() {
     draw();
 	update();
 }
+
 function main() {
     setInterval(loop, 1000/60);
 }
@@ -51,6 +69,7 @@ function clear(canvas) {
     var context = canvas.getContext('2d');
     context.clearRect(0, 0, 1920, 1080);
 }
+
 function getMousePos(_canvas, evt) {
     var rect = _canvas.getBoundingClientRect();
     return {
@@ -58,11 +77,22 @@ function getMousePos(_canvas, evt) {
         y: evt.clientY - rect.top
     };
 }
-hero2Canvas.addEventListener('mousemove', function(evt) {
-    mousePos = getMousePos(hero1Canvas, evt);
-    console.log(mousePos);
-}, false);
 
+hero2Canvas.onmousedown = mouseDown;
+hero2Canvas.onmouseup = mouseUp;
+hero2Canvas.onmousemove = mouseMove;
+
+function mouseMove(e) {
+	mousePos = getMousePos(hero2Canvas, e);
+}
+
+function mouseDown(e) {
+	isMouseDown = true;
+}
+
+function mouseUp(e) {
+	isMouseDown = false;
+}
 
 init();
 main();
