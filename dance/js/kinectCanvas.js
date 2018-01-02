@@ -17,7 +17,7 @@
       {
           init: function () {
               this._canvas = document.getElementById('kinectCanvas');
-              //this._instructionsCanvas = document.getElementById('instructionsCanvas');
+              this._instructionsCanvas = document.getElementById('instructionsCanvas');
 
               this._context = this._canvas.getContext('2d');
               this._instructionsContext = this._instructionsCanvas.getContext('2d');
@@ -33,7 +33,7 @@
               var that = this;
               setInterval(function () {
                   if (that._activePlayers.length == 0) {
-                      that._climbCanvas.attractLoop();
+                      //that._climbCanvas.attractLoop();
                   }
               }, 7000);
 
@@ -107,8 +107,8 @@
 
                   if (players[aP]) {
                       that.drawHands(aP, players[aP], that._lastPlayers[aP]);
-                      that._climbCanvas.checkLiteBrites(aP, players[aP]['right'], that._lastPlayers[aP]['right'], 'right');
-                      that._climbCanvas.checkLiteBrites(aP, players[aP]['left'], that._lastPlayers[aP]['left'], 'left');
+                      that._climbCanvas.checkHand(aP, players[aP]['right'], that._lastPlayers[aP]['right'], 'right');
+                      that._climbCanvas.checkHand(aP, players[aP]['left'], that._lastPlayers[aP]['left'], 'left');
                   }
               });
 

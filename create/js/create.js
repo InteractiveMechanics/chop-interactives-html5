@@ -219,8 +219,6 @@ function draw() {
   drawLines(lines[currentPage]);
   uiContext.clearRect(0, 0, uiCanvas.width, uiCanvas.height);
 
-  // should be like page = pages[currentPage]; page.regions.forEach
-
   regions.forEach(function(region){
 
     if (region.imgData){
@@ -323,19 +321,19 @@ function isOverPaletteColor(mX, mY, circle) {
   return Math.sqrt((mX-circle.x)*(mX-circle.x) + (mY-circle.y)*(mY-circle.y)) < circle.r;
 }
 
-function getPixelAlpha(img,mX,mY){
-  var width = img.width;
-  var height = img.height;
-  var tcanvas = document.createElement('canvas'), /// create temp canvas
-  tctx = tcanvas.getContext('2d');
-  tcanvas.width = img.naturalWidth; /// set width = region width
-  tcanvas.height = img.naturalHeight;
-  tctx.drawImage(img, 0, 0);
-  var pixel = tctx.getImageData(mX, mY, 1, 1);
-  var data = pixel.data;
-  var rgba = 'rgba(' + data[0] + ', ' + data[1] +
-             ', ' + data[2] + ', ' + (data[3] / 255) + ')';
-  return(data[3] / 255);
+function getPixelAlpha(img, mX, mY) {
+    var width = img.width;
+    var height = img.height;
+    var tcanvas = document.createElement('canvas'), /// create temp canvas
+    tctx = tcanvas.getContext('2d');
+    tcanvas.width = img.naturalWidth; /// set width = region width
+    tcanvas.height = img.naturalHeight;
+    tctx.drawImage(img, 0, 0);
+    var pixel = tctx.getImageData(mX, mY, 1, 1);
+    var data = pixel.data;
+    var rgba = 'rgba(' + data[0] + ', ' + data[1] +
+               ', ' + data[2] + ', ' + (data[3] / 255) + ')';
+    return (data[3] / 255);
 }
 
 function getPixels(img){

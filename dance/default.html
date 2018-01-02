@@ -14,22 +14,25 @@
 
     <script src="/js/Sprite.js"></script>
     <script src="/js/Iterable.js"></script>
-    <script src="/js/jquery.min.js"></script>
   	<script src="/js/sprite.js"></script>
   	<script src="/js/button.js"></script>
   	<script src="/js/thumbnail.js"></script>
   	<script src="/js/painting.js"></script>
+    <script src="/js/Instructions.js"></script>
 
 
     <script src="/js/kinectController.js"></script>
     <script src="/js/kinectCanvas.js"></script>
+    <script src="/js/climbCanvas.js"></script>
     <script src="/js/default.js"></script>
 </head>
 <body>
+    <canvas id="instructionsCanvas" width="1920" height="1080"></canvas>
     <canvas id="kinectCanvas" width="1920" height="1080"></canvas>
 
-    <canvas width="1920" height="1080" id='main-canvas' class="active-canvas" style="z-index:1; position:absolute; left:0px; top:0px;"></canvas>
+    <canvas width="1920" height="1080" id='main-canvas' class="active-canvas" style="; position:absolute; left:0px; top:0px;"></canvas>
   	<canvas width="1920" height="1080" id='bkgd-canvas' class="inactive-canvas" style="z-index:2; position:absolute; left:0px; top:0px;"></canvas>
-  	<canvas width="1920" height="1080" id='paint-canvas' class="inactive-canvas" style="z-index:3; position:absolute; left:0px; top:0px;"></canvas>
+  	<canvas width="1920" height="1080" id='paint-canvas' class="inactive-canvas" style="; position:absolute; left:0px; top:0px;"></canvas>
+    <canvas width="1920" height="1080" id='veil-canvas' class="inactive-canvas" style="z-index:4; position:absolute; left:0px; top:0px;"></canvas>
 </body>
 </html>

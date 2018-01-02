@@ -1,92 +1,77 @@
-function Thumbnail(canvas, x, y, w, h, border, radians, imgData) {
-  this.radians = radians;
+function Thumbnail(canvas, x, y, w, h, border, angle, imgData) {
+
+  this.x = x;
+  this.y = y;
 
 	this.arrayIndex = 0;
 	this.imgData = imgData;
 
 	this.width = w;
 	this.height = h;
-	var borderTop = border[0];
-	var borderRight = border[1];
-	var borderBottom = border[2];
-	var borderLeft = border[3];
-	this.intWidth = w - borderRight - borderLeft;
-	this.intHeight = h - borderTop - borderBottom;
+	this.borderTop = border[0];
+	this.borderRight = border[1];
+	this.borderBottom = border[2];
+	this.borderLeft = border[3];
+	this.intWidth = w - this.borderRight - this.borderLeft;
+	this.intHeight = h - this.borderTop - this.borderBottom;
 
 	this.canvas = canvas;
 	this.context = canvas.getContext('2d');
 
-	this.angle = radians;
+  //scale imageData from painting
+  this.tcanvas = document.createElement('canvas');
+  this.tcanvas.width = this.imgData.width;
+  this.tcanvas.height = this.imgData.height;
+  this.tctx = this.tcanvas.getContext('2d');
+  this.tctx.putImageData(this.imgData,0,0);
+  this.hRatio = this.intWidth / this.tcanvas.width;
+  this.vRatio = this.intHeight / this.tcanvas.height;
+  this.ratio = Math.min(this.hRatio, this.vRatio);
+  this.centerShift_x = (this.intWidth - this.tcanvas.width * this.ratio) / 2;
+  this.centerShift_y = (this.intHeight - this.tcanvas.height * this.ratio) / 2;
 
 
 
+  this.angle = Math.max(Math.min(Math.PI/2,angle),0);
 
-  this.draw = function(dX,dY,dR) {
-		// mainContext.save();
-		// mainContext.translate(0,this.width);
-		// mainContext.rotate(.5);
+  this.trashRadius = 40
+
+  this.trashPosX = this.x + this.width;
+  this.trashPosY = this.y;
+
+  this.trash = new Button('clear', './images/icon-trash.png', this.width, 0, this.trashRadius, this.canvas);
+  
+  //console.log(this.trashPosX,this.trashPosY);
+
+  this.update = function() {
+    this.trashPosX = this.x + this.width;
+    this.trashPosY = this.y;
+  }
 
 
-    // mainContext.save();
-    // mainContext.translate(dX,dY*Math.sin(this.angle)+1+(dY*2));
-    // mainContext.rotate(-this.angle);
+  this.draw = function(mainContext) {
+		mainContext.save();
+		mainContext.translate(this.x+this.width,this.y);
+    mainContext.rotate(-this.angle);
+    mainContext.translate(-this.width,0);
 
-
-		this.trashRadius = 40
-		this.trashPosX = dX + this.width;
-		this.trashPosY = dY;
-		this.trash = new Button('clear', './images/icon-trash.png', this.trashPosX, this.trashPosY, this.trashRadius, mainCanvas);
 
 		mainContext.fillStyle = "white";
-		mainContext.fillRect(dX, dY, thumbnailWidth, thumbnailHeight);
+		mainContext.fillRect(0, 0, this.width, this.height);
 		mainContext.fillStyle = "black";
-		mainContext.fillRect((dX+thumbnailBorder[3]),(dY+thumbnailBorder[0]), this.intWidth, this.intHeight);
-
-		//scale imageData from painting
-		tcanvas = document.createElement('canvas');
-		tcanvas.width = this.imgData.width;
-		tcanvas.height = this.imgData.height;
-		tctx = tcanvas.getContext('2d');
-		tctx.putImageData(this.imgData,0,0);
-  		var hRatio = this.intWidth / tcanvas.width;
-  		var vRatio = this.intHeight / tcanvas.height;
-  		var ratio = Math.min(hRatio, vRatio);
-  		var centerShift_x = (this.intWidth - tcanvas.width * ratio) / 2;
-  		var centerShift_y = (this.intHeight - tcanvas.height * ratio) / 2;
-  		mainContext.drawImage(tcanvas, 0,0, tcanvas.width, tcanvas.height, (dX+centerShift_x+(thumbnailBorder[3])), (dY+centerShift_y+(thumbnailBorder[0])), tcanvas.width * ratio, tcanvas.height * ratio);
-
-			this.trash.draw();
+		mainContext.fillRect((0+this.borderLeft),(0+this.borderTop), this.intWidth, this.intHeight);
+    mainContext.fillStyle = "blue";
+    // mainContext.arc(0,0,50,0,2*Math.PI)
+    // mainContext.fill();
 
 
-		//mainContext.drawImage(tcanvas,(dX+thumbnailBorder[3]),(dY+thumbnailBorder[0]), this.intWidth, this.intHeight);
-		// mainContext.restore();
+  	mainContext.drawImage(this.tcanvas, 0,0, this.tcanvas.width, this.tcanvas.height, (0+this.centerShift_x+this.borderLeft), (0+this.centerShift_y+this.borderTop), this.tcanvas.width * this.ratio, this.tcanvas.height * this.ratio);
+    this.trash.draw();
+
+    mainContext.restore();
+
 	}
+
 
 	return this;
 }
-
-// this.tcanvas = tcanvas;
-//
-// this.tcanvas = document.createElement(); /// create temp canvas
-// tcanvas.width = this.width - borderRight - borderLeft;
-// tcanvas.height = this.height - borderTop - borderBottom;
-// tctx = tcanvas.getContext('2d'); /// temp context
-//
-// //will become painting region
-// //painting position in frame
-// this.tPosX = this.x + borderLeft;
-// this.tPosY = this.y + borderTop;
-// tctx.fillStyle = '#555555';
-// tctx.rect(0, 0, tcanvas.width, tcanvas.height);
-// tctx.fill();
-
-
-//console.log(this.x, this.y);
-
-
-
-
-// this.canvas.width = this.width - border[1] - border[3];
-// this.canvas.height = this.height - border[0] - border[2];
-// this.canvas.x = border[3];
-// this.canvas.y = border[0];

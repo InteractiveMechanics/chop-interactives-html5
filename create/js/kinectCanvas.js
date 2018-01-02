@@ -2,7 +2,7 @@
     "use strict";
 
     var constants = {
-        maxPlayers: 3,
+        maxPlayers: 1,
         handHeight: 76,
         handWidth: 60,
         instructionsDuration: 8000,
@@ -17,7 +17,7 @@
       {
           init: function () {
               this._canvas = document.getElementById('kinectCanvas');
-              //this._instructionsCanvas = document.getElementById('instructionsCanvas');
+              this._instructionsCanvas = document.getElementById('instructionsCanvas');
 
               this._context = this._canvas.getContext('2d');
               this._instructionsContext = this._instructionsCanvas.getContext('2d');
@@ -33,11 +33,11 @@
               var that = this;
               setInterval(function () {
                   if (that._activePlayers.length == 0) {
-                      that._climbCanvas.attractLoop();
+                      that._climbCanvas.init();
                   }
               }, 7000);
 
-              // console.log('Kinect canvases initialized.');
+               console.log('Kinect canvases initialized.');
           },
           clearScreen: function (context) {
               var context = context;
@@ -49,7 +49,6 @@
               var pendingPlayers = this._pendingPlayers;
               var lastPlayers = this._lastPlayers;
               var lastConfidentPlayers = this._lastConfidentPlayers;
-
               this._climbCanvas.draw();
               this.clearScreen(this._context);
               this._totalBodies = 0;
@@ -107,8 +106,8 @@
 
                   if (players[aP]) {
                       that.drawHands(aP, players[aP], that._lastPlayers[aP]);
-                      that._climbCanvas.checkLiteBrites(aP, players[aP]['right'], that._lastPlayers[aP]['right'], 'right');
-                      that._climbCanvas.checkLiteBrites(aP, players[aP]['left'], that._lastPlayers[aP]['left'], 'left');
+                      that._climbCanvas.checkRegions(aP, players[aP]['right'], that._lastPlayers[aP]['right'], 'right');
+                      that._climbCanvas.checkRegions(aP, players[aP]['left'], that._lastPlayers[aP]['left'], 'left');
                   }
               });
 

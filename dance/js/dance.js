@@ -18,9 +18,30 @@ var paintContext = paintCanvas.getContext("2d");
 paintCanvas.width = window.innerWidth;
 paintCanvas.height = window.innerHeight;
 
+var veilCanvas = document.getElementById('veil-canvas');
+var veilContext = veilCanvas.getContext("2d");
+
+veilCanvas.width = window.innerWidth;
+veilCanvas.height = window.innerHeight;
+
+var tracerCanvas = document.getElementById('tracer-canvas');
+var tracerContext = tracerCanvas.getContext("2d");
+
+tracerCanvas.width = window.innerWidth;
+tracerCanvas.height = window.innerHeight;
+
 var currentCanvas = mainCanvas;
 
-var painting = new Painting(paintCanvas, 0, 0, paintCanvas.width, paintCanvas.height, 20);
+var numUsers = 1;
+
+var paintings = [];
+
+function createPaintings(){
+  for(var i = 0; i < numUsers; i++) {
+    paintings[i] = new Painting(paintCanvas, 0, 0, paintCanvas.width, paintCanvas.height, 20);
+  }
+}
+
 
 var thumbnails = [];
 var numPaintings = 5;
@@ -30,6 +51,12 @@ var thumbnailBorder = [8,8,50,8];
 var marginX = 30;
 var marginY = 65;
 var paintingSpacing = 410;
+var videoX = 50;
+var videoY = 490;
+var videoWidth = 960;
+var videoHeight = 540;
+var newThumbnail = true;
+var video = null;
 
 var isMouseDown = false;
 var mousePos = {
@@ -53,6 +80,7 @@ tempctx.fill();
 testImgData = tempctx.getImageData(0,0,tempcanvas.width, tempcanvas.height);
 
 var startButton = new Button('start', './images/btn-play.png', 1500, 638, 185, mainCanvas);
+var clearButton = new Button('clear', './images/btn-undo.png', 1834, 86, 86, veilCanvas);
 mainContext.fillStyle = '#ffffff';
 
 function isOverButton(mX, mY, circle) {
@@ -67,12 +95,12 @@ function mouseUp(e) {
 	isMouseDown = false;
 }
 
-mainCanvas.addEventListener('click', function(){
+  mainCanvas.addEventListener('click', function(){
   var x = event.pageX,
   y = event.pageY;
 
   // Collision detection between clicked offset and element.
-      for(var i = 0; i < numPaintings; i++) {
+      for(var i = 0; i < thumbnails.length; i++) {
         thumbnail = thumbnails[i];
         if (y > thumbnail.trashPosY - thumbnail.trashRadius && y < thumbnail.trashPosY + thumbnail.trashRadius && x > thumbnail.trashPosX - thumbnail.trashRadius && x < thumbnail.trashPosX + thumbnail.trashRadius) {
             trashThumbnail(i);
@@ -92,12 +120,12 @@ mainCanvas.addEventListener('click', function(){
   paintCanvas.addEventListener('click', function(){
     var x = event.pageX,
     y = event.pageY;
-    if (y > painting.clearButton.y - painting.clearButton.r
-      && y < painting.clearButton.y + painting.clearButton.r
-      && x > painting.clearButton.x - painting.clearButton.r
-      && x < painting.clearButton.x + painting.clearButton.r){
+    if (y > clearButton.y - clearButton.r
+      && y < clearButton.y + clearButton.r
+      && x > clearButton.x - clearButton.r
+      && x < clearButton.x + clearButton.r){
       paintContext.clearRect(0,0,paintCanvas.width,paintCanvas.height);
-      painting.painted = false;
+      paintings[0].painted = false;
     }
   }, false);
 
@@ -115,16 +143,84 @@ function mouseMove(e) {
 }
 
 function hangThumbnails() {
+  string = new Image();
+  string.src = './images/attrack-sc_string.png';
+
   for(var i = 0; i < numPaintings; i++) {
     x = (i*paintingSpacing) + marginX;
     y = marginY;
-    thumbnails.push(new Thumbnail(mainCanvas, x, y, thumbnailWidth, thumbnailHeight, thumbnailBorder, getRandomArbitrary(0,30), testImgData));
+    thumbnails.push(new Thumbnail(mainCanvas, x, y, thumbnailWidth, thumbnailHeight, thumbnailBorder, Math.random(0,1), testImgData));
   }
 }
 
+//variables from painting
+var seconds = 10;
+var timer1 = 60;
+var timer2 = seconds*60;
+var timer3 = 3*60;
+
+timer = [];
+
+for(var i = 0; i < seconds+1; i++) {
+  timer[i] = new Image();
+  timer[i].src = './images/timer' + i +'.png';
+}
+
+var veilOpacity = 90;
+
 function paint() {
-  if ( painting && (currentCanvas == paintCanvas)){
-    painting.draw(lastMouseX, lastMouseY, mouseX, mouseY);
+  //painting.draw(lastMouseX, lastMouseY, mouseX, mouseY);
+  if ( paintings[0] && (currentCanvas == paintCanvas)){
+    veilContext.clearRect(0,0,1920,1080);
+    veilContext.globalAlpha= veilOpacity/100;
+    veilContext.fillstyle = 'rgba(0,0,0,1)';
+    veilContext.fillRect(0,0,1920,1080);
+    veilContext.drawImage(timer[seconds], 0, 0);
+    if(paintings[0].op < 60) {
+      paintings[0].op ++;
+      bkgdContext.fillStyle = 'rgba(0,0,0,'+(paintings[0].op/60)+')';
+      bkgdContext.fillRect(0,0,1920,1080);
+    }
+    if(timer1 > 0){
+      paintings[0].imgData = null;
+    }
+    else if(timer2 > 0){
+      clearButton.draw();
+      paintings[0].draw();
+      if (timer2%60 === 0){
+        seconds --;
+
+      }
+
+
+    }
+    else if(veilOpacity > 0){
+      veilOpacity --;
+    }
+    else if(timer3 > 0){
+      timer3 --;
+    }
+    else if(currentCanvas == paintCanvas){
+      if(paintings[0].painted == true) {
+        paintings[0].imgData = cropImageFromCanvas(paintContext, paintCanvas);
+      }
+      bkgdContext.clearRect(0,0,1920,1080);
+      veilOpacity = 0;
+      paintContext.clearRect(0,0,1920,1080);
+      switchCanvas(paintCanvas,mainCanvas);
+      videoStart();
+      seconds = 10;
+      timer1 = 60;
+      timer2 = seconds*60;
+      paintings[0].painted = false;
+      paintings[0].op = 0;
+    }
+    if(timer1>0){
+      timer1--;
+    }
+    else if(timer2>0){
+      timer2--;
+    }
   }
 }
 
@@ -135,15 +231,14 @@ function draw() {
     paint();
   }
   else{
-    mainContext.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+    if (newThumbnail == true){
+      mainContext.clearRect(0, 0, mainCanvas.width, mainCanvas.height);
+      }
+    mainContext.drawImage(string, 0, 60);
 
-    for(var i = 0; i < numPaintings; i++) {
-      x = (i*paintingSpacing) + marginX;
-      y = marginY;
-      if(thumbnails[i]){
-      thumbnails[i].draw(x,y,1);
-    }
-    };
+    thumbnails.forEach(function(thumbnail) {
+      thumbnail.draw();
+    });
     drawVideo();
     startButton.draw();
   }
@@ -159,80 +254,37 @@ function update() {
   lastMouseY = mouseY;
 	mouseX = mousePos.x;
 	mouseY = mousePos.y;
-  painting.update();
+  //paintings[0].update();
 
-  if (painting.imgData) {
+  if (paintings[0].imgData) {
     paintingToThumbnail();
+    newThumbnail = true;
   }
-  // if (currentCanvas == mainCanvas){
-  //   for(var i = 0; i < numPaintings; i++) {
-  //     if(thumbnails[i] && isOverButton(mouseX, mouseY, thumbnails[i].trash) && isMouseDown){
-  //       trashThumbnail(i);
-  //     }
-  //   };
-  // }
-  painting.imgData = null;
+  paintings[0].imgData = null;
   videoLoop();
 }
 
-// function checkStart(){
-//   if  (isOverButton(mouseX, mouseY, startButton) && isMouseDown && (currentCanvas == mainCanvas)) {
-//     //switch before video stop solves lag in paint start
-//     switchCanvas(mainCanvas, paintCanvas);
-//     videoStop();
-//
-//   }
-// }
 
 function trashThumbnail(index){
   thumbnails.splice(index,1);
-  //thumbnails[i].imgData = null;
 }
 
-// function cropPainting(painting) {
-//
-// }
+
 
 function paintingToThumbnail(){
-  //var cropImageData = cropToPixels(painting.imgData);
+  //shift thumbnails
 
-  thumbnails.unshift(new Thumbnail(mainCanvas, 0, 0, thumbnailWidth, thumbnailHeight, thumbnailBorder, getRandomArbitrary(0,100), painting.imgData));
+  for(var i = 0; i < thumbnails.length; i++) {
+    thumbnails[i].x=thumbnails[i].x+paintingSpacing;
+    thumbnails[i].update();
+    console.log(thumbnails[i].trashPosX);
+  }
+  thumbnails.unshift(new Thumbnail(mainCanvas, marginX, marginY, thumbnailWidth, thumbnailHeight, thumbnailBorder, Math.random(0,1), paintings[0].imgData));
+  //delete last thumbnail
+  thumbnails.splice(5,1);
+  newThumbnail = false;
 }
 
-
-
-// function cropToPixels(imgData){
-//   //find pixel bounds
-//   var cX, cY, cW, cH;
-//   var width = imgData.width;
-//   var height = imgData.height;
-//   var data = imageData.data;
-//
-//
-//
-//
-//   for (var y = 0; y < height; y++) {
-//     for (var x = 0; x < width; x++) {
-//       var pos = y * width + x;
-//       ctx.fillStyle = 'rgba(' + data[pos*4+0]
-//                         + ',' + data[pos*4+1]
-//                         + ',' + data[pos*4+2]
-//                         + ',' + (data[pos*4+3]/255) + ')';
-//       ctx.fillRect(x + dx, y + dy, 1, 1);
-//     }
-//   }
-//   // for (var i = 0; i < data.length; i += 4) {
-//   //   if (data[i + 3] > 0){
-//   //   data[i]     = newColor[0];     // red
-//   //   data[i + 1] = newColor[1]; // green
-//   //   data[i + 2] = newColor[2]; // blue
-//   // }
-//   // }
-//
-//   console.log(cropData);
-//   return cropData;
-//
-// }
 
 //from https://stackoverflow.com/questions/11796554/automatically-crop-html5-canvas-to-contents
 function cropImageFromCanvas(ctx, canvas) {
@@ -268,7 +320,9 @@ return cut;
 
 function drawVideo() {
   if (video && !video.paused && !video.ended) {
-      mainContext.drawImage(video, 50, 490, 960, 540);
+    //mainContext.clearRect(videoX, videoY, videoWidth, videoHeight);
+      mainContext.drawImage(video, videoX, videoY, videoWidth, videoHeight);
+
       //setTimeout(videoLoop, 1000 / 30);
   }
 }
@@ -276,8 +330,7 @@ function drawVideo() {
 function videoStop() {
     if (video) {
         video.pause();
-        video = null;
-        mainContext.clearRect(50, 490, 960, 540);
+        mainContext.clearRect(videoX, videoY, videoWidth, videoHeight);
     }
 }
 
@@ -289,13 +342,20 @@ function videoLoop() {
 }
 
 function videoStart() {
-      video = document.createElement("video");
-      video.src = "./video/2017-03-20_Dance_demo-screen-ani_v01.mp4";
-      video.addEventListener('loadeddata', function() {
-          console.log("loadeddata");
-          video.play();
-          //setTimeout(videoLoop, 1000 / 30);
-      });
+  if(!video){
+    video = document.createElement("video");
+    video.src = "./video/2017-03-20_Dance_demo-screen-ani_v01.mp4";
+    video.addEventListener('loadeddata', function() {
+        console.log("loadeddata");
+        video.play();
+    });
+
+  }
+  else if( video.paused){
+    video.load();
+    video.play();
+  }
+
 }
 
 
@@ -328,6 +388,8 @@ function loop() {
 }
 
 function main() {
+  createPaintings();
+  console.log(paintings[0]);
   hangThumbnails();
   videoStart();
 	setInterval(loop, 1000/60);

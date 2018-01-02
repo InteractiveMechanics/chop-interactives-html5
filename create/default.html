@@ -9,24 +9,29 @@
     <script src="//Microsoft.WinJS.2.0/js/base.js"></script>
     <script src="//Microsoft.WinJS.2.0/js/ui.js"></script>
 
-    <!-- ClimbInteractive references -->
+    <!-- CreateInteractive references -->
     <link href="/css/default.css" rel="stylesheet" />
 
     <script src="/js/Sprite.js"></script>
     <script src="/js/Iterable.js"></script>
-    <script src="/js/jquery.min.js"></script>
+    
   	<script src="/js/sprite.js"></script>
   	<script src="/js/paletteColor.js"></script>
   	<script src="/js/region.js"></script>
   	<script src="/js/button.js"></script>
   	<script src="/js/page.js"></script>
+    <script src="/js/Instructions.js"></script>
 
     <script src="/js/kinectController.js"></script>
     <script src="/js/kinectCanvas.js"></script>
+    <script src="/js/climbCanvas.js"></script>
     <script src="/js/default.js"></script>
+    
 </head>
 <body>
+    <canvas id="instructionsCanvas" width="1920" height="1080"></canvas>
     <canvas id="kinectCanvas" width="1920" height="1080"></canvas>
+
 
     <canvas width="1920" height="1080" id='cursor-canvas' style="z-index:2; position:absolute; left:0px; top:0px;"></canvas>
   	<canvas width="1920" height="1080" id='paint-canvas' style="z-index:1; position:absolute; left:0px; top:0px;"></canvas>

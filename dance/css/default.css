@@ -16,8 +16,10 @@ body {
   background-color:rgb(0,0,0)
 }
 .inactive-canvas {
+    z-index: 1;
   pointer-events: none;
 }
 .active-canvas {
+    z-index:3;
   pointer-events: auto;
 }

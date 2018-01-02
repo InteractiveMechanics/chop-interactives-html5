@@ -4,7 +4,7 @@
  *
  * License:
  *
- * Permission is hereby granted, free of charge, to any person 
+ * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation files
  * (the "Software"), to deal in the Software without restriction,
  * including without limitation the rights to use, copy, modify, merge,
@@ -94,7 +94,7 @@ SpriteSheetPainter.prototype = {
 // Sprite Animators...........................................................
 
 // Sprite animators have an array of painters that they succesively apply
-// to a sprite over a period of time. Animators can be started with 
+// to a sprite over a period of time. Animators can be started with
 // start(sprite, durationInMillis, restoreSprite)
 
 var SpriteAnimator = function (painters, elapsedCallback) {
@@ -183,5 +183,23 @@ Sprite.prototype = {
         for (var i = this.behaviors.length; i > 0; --i) {
             this.behaviors[i - 1].execute(this, context, time);
         }
+    },
+
+    overlap: function(r) {
+      return (this.left<r.left+r.width && this.left+this.width>r.left && this.top<r.top+r.height && this.top+this.height>r.top);
+    },
+
+    intersect: function(r) {
+      if(this.overlap(r))
+      {
+          var x,y,w,h;
+          x = Math.max(this.left,r.left);
+          y = Math.max(this.top,r.top);
+          w = Math.min(this.left+this.width,r.width+r.height)-x;
+          h = Math.min(this.top+this.height,r.top+r.height)-y;
+          return [x,y,w,h];
+      }
+      else return [0,0,0,0];
+
     }
 };

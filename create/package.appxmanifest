@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest">
-  <Identity Name="CHOPPlayInteractive" Version="1.0.1.19" Publisher="CN=InteractiveMechanics" />
+  <Identity Name="CHOPCreateInteractive" Version="1.0.1.19" Publisher="CN=InteractiveMechanics" />
   <Properties>
-    <DisplayName>PlayInteractive</DisplayName>
+    <DisplayName>CreateInteractive</DisplayName>
     <PublisherDisplayName>InteractiveMechanics</PublisherDisplayName>
     <Logo>images\storelogo.png</Logo>
   </Properties>
@@ -15,7 +15,7 @@
   </Resources>
   <Applications>
     <Application Id="App" StartPage="default.html">
-      <m2:VisualElements DisplayName="PlayInteractive" Description="The &quot;play&quot; interactive for the Children's Hospital of Philadelphia." ForegroundText="light" BackgroundColor="#51B6C8" Square150x150Logo="images\Logo.png" Square30x30Logo="images\SmallLogo.png">
+      <m2:VisualElements DisplayName="CreateInteractive" Description="The &quot;Create&quot; interactive for the Children's Hospital of Philadelphia." ForegroundText="light" BackgroundColor="#51B6C8" Square150x150Logo="images\Logo.png" Square30x30Logo="images\SmallLogo.png">
         <m2:SplashScreen Image="images\splashscreen.png" />
       </m2:VisualElements>
     </Application>

@@ -1,4 +1,4 @@
-function Button(file, x, y) {
+function Button(file, x, y, canvas) {
 
 		this.x = x;
 		this.y = y;
@@ -7,8 +7,8 @@ function Button(file, x, y) {
 
 	  var pixels = [];
 
-		this.canvas = uiCanvas;
-		this.context = uiCanvas.getContext('2d');
+		this.canvas = canvas;
+		this.context = canvas.getContext('2d');
 
 	  var tcanvas = document.createElement('canvas'), /// create temp canvas
 	  tctx = tcanvas.getContext('2d'); /// temp context

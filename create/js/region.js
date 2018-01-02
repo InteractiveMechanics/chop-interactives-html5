@@ -12,8 +12,8 @@ function Region(name, x, y, canvas) {
 
   this.name = name;
 
-	this.canvas = canvas;
-	this.context = canvas.getContext('2d');
+  this.canvas = canvas;
+  this.context = canvas.getContext('2d');
   this.color = 'black';
 
   var tcanvas = document.createElement('canvas'), /// create temp canvas
