@@ -1,5 +1,5 @@
 ﻿(function () {
-    //"use strict";
+    "use strict";
 
     var constants = {};
 
@@ -8,6 +8,10 @@
       },
       {
           init: function () {
+              this.ispainting = false;
+              this.paintCanvas = [];
+              this.paintContext = [];
+
               this.mainCanvas = document.getElementById('main-canvas');
               this.mainContext = this.mainCanvas.getContext("2d");
 
@@ -22,11 +26,23 @@
               this.bkgdCanvas.width = 1920;
               this.bkgdCanvas.height = 1080;
 
-              this.paintCanvas = document.getElementById('paint-canvas');
-              this.paintContext = this.paintCanvas.getContext("2d");
+              this.paintCanvas[0] = document.getElementById('paint-canvas-1');
+              this.paintContext[0] = this.paintCanvas[0].getContext("2d");
 
-              this.paintCanvas.width = 1920;
-              this.paintCanvas.height = 1080;
+              this.paintCanvas[0].width = 1920;
+              this.paintCanvas[0].height = 1080;
+
+              this.paintCanvas[1] = document.getElementById('paint-canvas-2');
+              this.paintContext[1] = this.paintCanvas[1].getContext("2d");
+
+              this.paintCanvas[1].width = 1920;
+              this.paintCanvas[1].height = 1080;
+
+              this.paintCanvas[2] = document.getElementById('paint-canvas-3');
+              this.paintContext[2] = this.paintCanvas[2].getContext("2d");
+
+              this.paintCanvas[2].width = 1920;
+              this.paintCanvas[2].height = 1080;
 
               this._instructionsCanvas = document.getElementById('instructionsCanvas');
               this._instructionsContext = this._instructionsCanvas.getContext('2d');
@@ -38,7 +54,6 @@
               this.veilCanvas.height = 1080;
               this.veilOpacity = 90;
               this.wasNotClosed = false;
-              this.currentCanvas = this.mainCanvas
 
               this.mainContext.fillStyle = '#ffffff';
 
@@ -52,10 +67,11 @@
               this.lastMouseX;
               this.lastMouseY;
 
-              this.numUsers = 1;
+              this.numUsers = 3;
 
               this.paintings = [];
               this.newThumbnail = true;
+              this.createPaintings();
 
               this.timer = [];
               this.seconds = 10;
@@ -68,37 +84,38 @@
               
               this.startButton = new Button('start', './images/btn-play.png', 1500, 638, 185, this.mainCanvas);
               this.clearButton = new Button('clear', './images/btn-undo.png', 1834, 86, 86, this.veilCanvas);
-              this.createPaintings();
               this.hangThumbnails();
               this.veilOpacity = 90;
               this.seconds = 10;
               this.timer1 = 60;
               this.timer2 = this.seconds * 60;
-              this.paintings[0].painted = false;
-              this.paintings[0].op = 0;
               this.videoStart();
           },
 
           createPaintings: function() {
                   for (var i = 0; i < this.numUsers; i++) {
-                      this.paintings[i] = new Painting(this.paintCanvas, 0, 0, this.paintCanvas.width, this.paintCanvas.height, 20);
+                      this.paintings[i] = new Painting(this.paintCanvas[i], 0, 0, this.paintCanvas[i].width, this.paintCanvas[i].height, 20);
+                      console.log('painting created');
                   }
           },
 
-          paint: function (player,hand) {
+          paint: function (player, hand, index) {
+              var painting = this.paintings[index];
+              console.log(index)
+
 
               if (hand == 'right' && player['status'] == 'closed' && player['confidence'] == 1) {
-                  console.log(this.wasNotClosed);
-                  this.paintContext.beginPath();
-                  this.paintContext.moveTo(this.lastMouseX, this.lastMouseY);
-                  this.paintContext.lineTo(this.mouseX, this.mouseY);
-                  this.paintContext.closePath();
-                  this.paintContext.stroke();
-                  this.paintings[0].painted = true;
-                  this.wasNotClosed = true;
+                  //console.log(this.wasNotClosed);
+                  painting.context.beginPath();
+                  painting.context.moveTo(this.lastMouseX, this.lastMouseY);
+                  painting.context.lineTo(this.mouseX, this.mouseY);
+                  painting.context.closePath();
+                  painting.context.stroke();
+                  painting.painted = true;
+                  //this.wasNotClosed = true;
               }
               else if (hand == 'right') {
-                  this.wasNotClosed = false;
+                  //this.wasNotClosed = false;
               }
 
               
@@ -107,15 +124,15 @@
 
           makeDefaultImageData: function(){
               //test image data
-              tempcanvas = document.createElement('canvas'); /// create temp canvas
+              var tempcanvas = document.createElement('canvas'); /// create temp canvas
               tempcanvas.width = 1000;
               tempcanvas.height = 1000;
-              tempctx = tempcanvas.getContext('2d'); /// temp context
+              var tempctx = tempcanvas.getContext('2d'); /// temp context
 
               tempctx.fillStyle = 'rgba(0,0,0,0)';
               tempctx.rect(0, 0, tempcanvas.width, tempcanvas.height);
               tempctx.fill();
-              testImgData = tempctx.getImageData(0,0,tempcanvas.width, tempcanvas.height);
+              var testImgData = tempctx.getImageData(0,0,tempcanvas.width, tempcanvas.height);
               return testImgData;
 
               
@@ -160,8 +177,8 @@
     
       
       for(var i = 0; i < this.numPaintings; i++) {
-          x = (i*this.paintingSpacing) + this.marginX;
-          y = this.marginY;
+          var x = (i*this.paintingSpacing) + this.marginX;
+          var y = this.marginY;
           this.thumbnails.push(new Thumbnail(this.mainCanvas, x, y, this.thumbnailWidth, this.thumbnailHeight, this.thumbnailBorder, Math.random(0, 1), this.makeDefaultImageData()));
       }
   },
@@ -169,7 +186,7 @@
 
 
   draw: function () {
-      if (this.currentCanvas == this.paintCanvas) {
+      if (this.ispainting == true) {
           //paint();
       }
       else {
@@ -194,12 +211,16 @@
 
 
     update: function () {
-        if (this.paintings[0] && (this.currentCanvas == this.paintCanvas)) {
 
+        for(var i = 0; i < this.paintings.length; i++) {
+            if (this.paintings[i].painted == true) {
+                console.log('painting '+ i +'painted');
+            }    
+        };
+
+        if (this.ispainting == true) {
             
-
-
-            this.veilContext.clearRect(0,0,1920,1080);
+            this.veilContext.clearRect(0, 0, 1920, 1080);
             this.veilContext.globalAlpha= this.veilOpacity/100;
             this.veilContext.fillstyle = 'rgba(0,0,0,1)';
             this.veilContext.fillRect(0, 0, 1920, 1080);
@@ -207,15 +228,14 @@
             this.clearButton.draw();
             
             if (this.timer1 > 0) {
-                this.paintings[0].op++;
-                this.bkgdContext.fillStyle = 'rgba(0,0,0,' + (this.paintings[0].op / 60) + ')';
-                this.bkgdContext.fillRect(0, 0, 1920, 1080);
-                this.paintings[0].imgData = null;
+                //this.paintings[0].op++;
+                //this.bkgdContext.fillStyle = 'rgba(0,0,0,1)';
+                //this.bkgdContext.fillRect(0, 0, 1920, 1080);
                 this.timer1--;
             }
             else if (this.timer2 > 0) {
-
-                if (this.timer2 % 60 === 0) {
+                console.log(this.timer2);
+                if (this.timer2 % 20 === 0) {
                     this.seconds--;
                 }
                 this.timer2--;
@@ -223,33 +243,12 @@
             else if (this.veilOpacity > 0) {
                 this.veilOpacity--;
             }
-            else if (this.currentCanvas == this.paintCanvas) {
-                this.switchCanvas(this.paintCanvas, this.mainCanvas);
-                this.videoStart();
-                if (this.paintings[0].painted == true) {
-                    this.paintings[0].imgData = this.cropImageFromCanvas(this.paintContext, this.paintCanvas);
-                }
-                //clear all canvases
-                this.bkgdContext.clearRect(0, 0, 1920, 1080);
-                this.veilContext.clearRect(0, 0, 1920, 1080);
-                this.paintContext.clearRect(0, 0, 1920, 1080);
-
-                //reset painting variables
-                this.veilOpacity = 90;
-                this.seconds = 10;
-                this.timer1 = 60;
-                this.timer2 = this.seconds * 60;
-                this.paintings[0].painted = false;
-                this.paintings[0].op = 0;
+            else {
+                this.stopPainting();
             }
         }
 
-        if (this.paintings[0].imgData) {
-            this.paintingToThumbnail();
-            this.newThumbnail = true;
-        }
-        this.paintings[0].imgData = null;
-        this.videoLoop();
+        
 
     },
 
@@ -266,53 +265,112 @@
             this.mouseY = mouseY;
         }
 
-        if (this.isOverHelpIcon(mouseX, mouseY)) {
-            this._instructions.paused = false;
-        }
-
-        if (this.paintings[0] && (this.currentCanvas == this.paintCanvas)) {
-            this.paint(player, hand);
-        }
-
-        for(var i = 0; i < this.thumbnails.length; i++) {
-                    var thumbnail = this.thumbnails[i];
-                    if (mouseY > this.thumbnails[i].trashPosY - this.thumbnails[i].trashRadius && mouseY < this.thumbnails[i].trashPosY + this.thumbnails[i].trashRadius && mouseX > this.thumbnails[i].trashPosX - this.thumbnails[i].trashRadius && mouseX < this.thumbnails[i].trashPosX + this.thumbnails[i].trashRadius && player['status'] == 'closed' && player['confidence'] == 1) {
-                        this.trashThumbnail(i);
-                    }
-                }
-
-        if (this.currentCanvas == this.mainCanvas && mouseY > this.startButton.y - this.startButton.r && mouseY < this.startButton.y + this.startButton.r && mouseX > this.startButton.x - this.startButton.r && mouseX < this.startButton.x + this.startButton.r && player['status'] == 'closed' && player['confidence'] == 1 && hand == 'right') {
-                    this.switchCanvas(this.mainCanvas, this.paintCanvas);
-                    if (this.video){
-                        this.videoStop();
-                    }
-
-                }
-        //clear button detect
-        if (mouseY > this.clearButton.y - this.clearButton.r
-                  && mouseY < this.clearButton.y + this.clearButton.r
-                  && mouseX > this.clearButton.x - this.clearButton.r
-                  && mouseX < this.clearButton.x + this.clearButton.r
-                   && player['status'] == 'closed' && player['confidence'] == 1) {
-                    this.paintContext.clearRect(0,0,this.paintCanvas.width,this.paintCanvas.height);
-                    this.paintings[0].painted = false;
-        }
-
         
 
+        if (this.ispainting == true) {
+            this.paint(player, hand, index);
+        }
+        else {
+            
+            for(var i = 0; i < this.thumbnails.length; i++) {
+                var thumbnail = this.thumbnails[i];
+                if (mouseY > this.thumbnails[i].trashPosY - this.thumbnails[i].trashRadius
+                    && mouseY < this.thumbnails[i].trashPosY + this.thumbnails[i].trashRadius
+                    && mouseX > this.thumbnails[i].trashPosX - this.thumbnails[i].trashRadius
+                    && mouseX < this.thumbnails[i].trashPosX + this.thumbnails[i].trashRadius
+                    && player['status'] == 'closed'
+                    && player['confidence'] == 1) {
+                    this.trashThumbnail(i);
+                }
+            }
 
-      //this.cursorCanvas(this.currentCanvas);
-      
-      //this.painting[0].update();
+            if (this.isOverHelpIcon(mouseX, mouseY)) {
+                this._instructions.paused = false;
+            }
+
+            if (mouseY > this.startButton.y - this.startButton.r
+                && mouseY < this.startButton.y + this.startButton.r
+                && mouseX > this.startButton.x - this.startButton.r
+                && mouseX < this.startButton.x + this.startButton.r
+                && player['status'] == 'closed'
+                && player['confidence'] == 1
+                && hand == 'right') {
+                this.startPainting();
+                this.ispainting = true;
+                if (this.video){
+                    this.videoStop();
+                }
+
+            }
+        }
+        
+        //clear button detect
+        if (mouseY > this.clearButton.y - this.clearButton.r
+            && mouseY < this.clearButton.y + this.clearButton.r
+            && mouseX > this.clearButton.x - this.clearButton.r
+            && mouseX < this.clearButton.x + this.clearButton.r
+            && player['status'] == 'closed'
+            && player['confidence'] == 1) {
+            this.paintings[index].clear();
+        }
 
       
-  },
+    },
+
+    startPainting: function (){
+        
+        this.lowerVeil();
+        },
+
+    stopPainting: function () {
+        this.ispainting = false;
+        //record painting data to thumbnail
+        that = this;
+
+        this.paintings.forEach(function (painting) {
+            if (painting.painted == true) {
+            painting.imgData = that.cropImageFromCanvas(painting.context);
+        }
+        });
+        
+        if (this.paintings[0].imgData || this.paintings[1].imgData || this.paintings[2].imgData) {
+            console.log('painting to thumbnail');
+            this.paintingsToThumbnail();
+            this.newThumbnail = true;
+        }
+        //clear all canvases
+        
+        this.paintings.forEach(function (painting) {
+            painting.clear();
+        });
+        this.bkgdContext.clearRect(0, 0, 1920, 1080);
+        this.veilContext.clearRect(0, 0, 1920, 1080);
+
+        //reset painting variables
+        this.veilOpacity = 90;
+        this.seconds = 10;
+        this.timer1 = 60;
+        this.timer2 = this.seconds * 20;
+        
+        //start video
+        console.log('video Started');
+        this.videoStart();
+        this.videoLoop();
+        
+    },
+
+    raiseVeil: function(){
+
+    },
+    lowerVeil: function () {
+
+    },
 
     trashThumbnail: function (index){
         this.thumbnails.splice(index,1);
   },
 
-    paintingToThumbnail: function () {
+    paintingsToThumbnail: function () {
         //shift thumbnails
 
         for (var i = 0; i < this.thumbnails.length; i++) {
@@ -325,7 +383,7 @@
         this.newThumbnail = false;
   },
 
-    cropImageFromCanvas: function (ctx, canvas) {
+    cropImageFromCanvas: function (ctx) {
 
         var w = 1920;
         var h = 1080;
@@ -380,7 +438,7 @@
   },
 
  videoStart: function () {
-     self = this;
+     var self = this;
       this.video = document.createElement("video");
       this.video.addEventListener('loadeddata', function() {
           self.video.play();
@@ -412,7 +470,7 @@
       return pixels;
   },
 
-          currentCanvas: this.mainCanvas,
+          //currentCanvas: this.mainCanvas,
 
           thumbnails: [],
           numPaintings: 5,

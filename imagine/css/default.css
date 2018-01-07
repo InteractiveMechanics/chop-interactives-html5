@@ -1,0 +1,25 @@
+﻿#instructionsCanvas {
+    position: absolute;
+    z-index: 50;
+}
+
+#kinectCanvas {
+    position: absolute;
+    z-index: 40;
+}
+
+body {
+	margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #6b81b7;
+}
+
+#stage {
+	position: absolute;
+	z-index: 0;
+}
+#hero1, #hero2, #hero3 {
+    position: absolute;
+	z-index: 1;
+}
