@@ -28,8 +28,11 @@
               this.createClear();
               this.createPages();
               this.createLines();
+              this.pages[0].heatMap = this.createHeatmap(this.pages[0]);
+              this.pages[1].heatMap = this.createHeatmap(this.pages[1]);
               this.regions = this.pages[this.currentPage].regions;
-              console.log(this.page, this.uiRegion);
+              //console.log(this.pages);
+              
           },
           showInstructions: function () {
               this._instructions.x = 1715;
@@ -52,60 +55,94 @@
           },
     
           createPalette: function () {
-            for(var i = 0; i < this.colorData.length; i++) {
-            var colorName = this.colorData[i][0];
-            var colorRGBA = [this.colorData[i][1], this.colorData[i][2], this.colorData[i][3], this.colorData[i][4]];
-            var colorFile = 'images/btn-' + colorName + '.png';
-            var posX = this.palettePosX + (this.paletteSpacing*i);
-            var posY = this.palettePosY;
-            this.paletteColors.push(new PaletteColor(colorName, colorRGBA, colorFile, posX, posY, this.paletteRadius, this.uiCanvas));
-            }
+              for(var i = 0; i < this.colorData.length; i++) {
+                  var colorName = this.colorData[i][0];
+                  var colorRGBA = [this.colorData[i][1], this.colorData[i][2], this.colorData[i][3], this.colorData[i][4]];
+                  var colorFile = 'images/btn-' + colorName + '.png';
+                  var posX = this.palettePosX + (this.paletteSpacing*i);
+                  var posY = this.palettePosY;
+                  this.paletteColors.push(new PaletteColor(colorName, colorRGBA, colorFile, posX, posY, this.paletteRadius, this.uiCanvas));
+              }
           },
 
           createUiRegion: function() {
-            this.uiRegion = new Region('ui-bar', 0, 956, this.uiCanvas);
-            },
+              this.uiRegion = new Region('ui-bar', 0, 956, this.uiCanvas);
+          },
 
-        createPager: function () {
-            this.pageLeft = new Button('./images/icon-arrow-left.png', 35, 970, this.uiCanvas);
-            this.pageRight = new Button('./images/icon-arrow-right.png', 104, 972, this.uiCanvas);
-            console.log(this.pageLeft);
-         },
+          createPager: function () {
+              this.pageLeft = new Button('./images/icon-arrow-left.png', 35, 970, this.uiCanvas);
+              this.pageRight = new Button('./images/icon-arrow-right.png', 104, 972, this.uiCanvas);
+              //console.log(this.pageLeft);
+          },
 
           createClear: function () {
-            this.pageClear = new Button('./images/icon-clear.png', 1810, 979, this.uiCanvas);
-         },
+              this.pageClear = new Button('./images/icon-clear.png', 1810, 979, this.uiCanvas);
+          },
 
           createPages: function createPages() {
-            for(var i = 0; i < this.pageData.length; i++) {
-            this.pages.push(new Page(this.pageData[i][0],this.pageData[i][1], this.uiCanvas));
-           }
+              for(var i = 0; i < this.pageData.length; i++) {
+                  this.pages.push(new Page(this.pageData[i][0], this.pageData[i][1], this.uiCanvas));
+                  //console.log(this.pageData.length);
+  
+              }
 
           },
 
           createLines: function () {
 
-            for(var i = 0; i < this.pageData.length; i++) {
-                this.lines[i] = new Image();
-            //    this.lines[i].onload = function() {
-            //    this.linesCanvas.width = 1920 //lines[i].naturalWidth;
-            //    this.linesCanvas.height =1080 //lines[i].naturalHeight;
-            //}
-            this.lines[i].src = './images/lines-'+this.pageData[i][0]+'.png';
-            }
-         },
+              for(var i = 0; i < this.pageData.length; i++) {
+                  this.lines[i] = new Image();
+                  //    this.lines[i].onload = function() {
+                  //    this.linesCanvas.width = 1920 //lines[i].naturalWidth;
+                  //    this.linesCanvas.height =1080 //lines[i].naturalHeight;
+                  //}
+                  this.lines[i].src = './images/lines-'+this.pageData[i][0]+'.png';
+              }
+          },
           clearScreen: function (context) {
               var context = context;
               context.clearRect(0, 0, 1920, 1080);
           },
 
           isOverPaletteColor: function (mX, mY, circle) {
-            return Math.sqrt((mX-circle.x)*(mX-circle.x) + (mY-circle.y)*(mY-circle.y)) < circle.r;
+              return Math.sqrt((mX-circle.x)*(mX-circle.x) + (mY-circle.y)*(mY-circle.y)) < circle.r;
           },
 
           isOverHelpIcon: function (mX, mY) {
               return (mX >= this._instructions.x && mX < this._instructions.x + 200 && mY >= this._instructions.y && mY < this._instructions.y + 200);
           },
+
+          createHeatmap: function (page){
+              //make heatmap of pixeldata
+              var regionMap = [];
+              var tcanvas = document.createElement('canvas'); /// create temp canvas
+              var tctx = tcanvas.getContext('2d');
+              tcanvas.width = 1920;
+              tcanvas.height = 1080;
+              var arrayLength = 1920 * 1080;
+              for (var i = 0; i < arrayLength; i++) {
+                  regionMap.push(-1);
+              };
+              //provide default valuse of -1
+              for (var i = 0; i < page.regions.length; i++) {
+              //console.log('generating regiondata');
+              var region = page.regions[i];
+
+              tctx.drawImage(region.img, region.x, region.y);
+              var pixels = tctx.getImageData(0, 0, tcanvas.width, tcanvas.height);
+              var data = pixels.data;
+              for (var j = 0; j < data.length; j += 4) {
+                  if (data[j + 3] > 0) {
+                      var alphaIndex = (j / 4);
+                    regionMap[alphaIndex] = i;
+                }
+              };
+              tctx.clearRect(0, 0, tcanvas.width, tcanvas.height);
+              
+              };
+              console.log(regionMap);
+              return regionMap;
+},
 
          getPixelAlpha: function (img, mX, mY) {
             var width = img.width;
@@ -160,8 +197,9 @@
             }
         }
         imageData.data = data;
+        var image = this.imagedata_to_image(imageData);
         // console.log(imageData);
-        return imageData;
+        return image;
     },
 
           sleep: function() {
@@ -170,44 +208,51 @@
           },
 
     checkRegions: function (index, player, lastPlayer, hand) {
-        var mouseX = player['pos']['x'];
-        var mouseY = player['pos']['y'];
-
-        if (this.isOverHelpIcon(mouseX, mouseY)) {
-            this._instructions.paused = false;
+        var mouseX = Math.floor(player['pos']['x']);
+        var mouseY = Math.floor(player['pos']['y']);
+        //if (this.isOverHelpIcon(mouseX, mouseY)) {
+        //    this._instructions.paused = false;
+        //}
+        
+        var heatMap = this.pages[this.currentPage].heatMap
+        var mapIndex = mouseX + (mouseY * 1920);
+        var regionIndex = heatMap[mapIndex];
+        console.log(regionIndex);
+        
+        if (regionIndex > 0 && hand == 'right' && (mouseY < this.pageAreaY) && player['confidence'] == 1 && player['status'] == 'closed') {
+            if (this.rightHandArray[index] == null) {
+                this.rightHandArray[index] = [this.colorData[10][1], this.colorData[10][2], this.colorData[10][3], this.colorData[10][4]];
+            };
+            var newImage = this.changeColor(this.regions[regionIndex].img, this.rightHandArray[index]);
+            this.regions[regionIndex].img = newImage;
+            console.log(regionIndex +' region , color '+ this.leftHandArray[index]);
+        }
+        if (regionIndex > 0 && hand == 'left' && (mouseY < this.pageAreaY) && player['confidence'] == 1 && player['status'] == 'closed') {
+            if (this.leftHandArray[index] == null) {
+                this.leftHandArray[index] = [this.colorData[10][1], this.colorData[10][2], this.colorData[10][3], this.colorData[10][4]];
+            };
+            var newImage = this.changeColor(this.regions[regionIndex].img, this.leftHandArray[index]);
+            this.regions[regionIndex].img = newImage;
+            console.log(regionIndex +' region , color '+ this.leftHandArray[index]);
         }
 
         for(var i = 0; i < this.paletteColors.length; i++) {
             var paletteColor = this.paletteColors[i];
             if (this.isOverPaletteColor(mouseX, mouseY, paletteColor) && player['status'] == 'closed' && player['confidence'] == 1) {
-                this.currentColor = paletteColor.colorRGBA;
                 if (hand == 'right') {
-                    this.rightHandArray[index] = this.currentColor;
+                    //console.log(paletteColor.RGBA);
+                    this.rightHandArray[index] = paletteColor.colorRGBA;
                 }
 
                 if (hand == 'left') {
-                    this.leftHandArray[index] = this.currentColor;
+                    //console.log(paletteColor.RGBA);
+                    this.leftHandArray[index] = paletteColor.colorRGBA;
                 }
             }else{
                 // alert('clicked outside paletteColor');
             }
         }
-
-
-        for(var i = 0; i < this.regions.length; i++) {
-            var region = this.regions[i];
-            if (region.img.width && (mouseY < this.pageAreaY) && player['confidence'] == 1){  //if width, img is loaded ---- not great
-                var rX = mouseX - region.x;
-                var rY = mouseY - region.y;
-                this.hover = this.getPixelAlpha(region.img, rX, rY);
-                if ((this.hover > 0) && player['status'] == 'closed'){
-                    var newImage = this.changeColor(region.img, this.currentColor);
-                    this.regions[i].imgData = newImage;
-                } else {
-                    //console.log(region.color);
-                }
-            }
-        }
+        
 
         if (this.pageRight){
             var rX = mouseX - this.pageRight.x;
@@ -215,7 +260,7 @@
             this.hover = this.getPixelAlpha(this.pageRight.img, rX, rY);
             if ((this.hover > 0) && player['status'] == 'closed' && player['confidence'] == 1){
                 this.changePageRight();
-                console.log(this.currentPage);
+                //console.log(this.currentPage);
             } else {
                 //console.log(region.color);
             }
@@ -227,7 +272,7 @@
             this.hover = this.getPixelAlpha(this.pageLeft.img, rX, rY);
             if ((this.hover > 0) && player['status'] == 'closed' && player['confidence'] == 1) {
                 this.changePageLeft();
-                console.log(this.currentPage);
+                //console.log(this.currentPage);
             } else {
                 //console.log(region.color);
             }
@@ -245,6 +290,18 @@
         }
 
 
+    },
+
+    imagedata_to_image: function(imagedata) {
+    var canvas = document.createElement('canvas');
+        var ctx = canvas.getContext('2d');
+        canvas.width = imagedata.width;
+        canvas.height = imagedata.height;
+        ctx.putImageData(imagedata, 0, 0);
+
+        var image = new Image();
+        image.src = canvas.toDataURL();
+        return image;
     },
 
     changePageLeft: function () {
@@ -277,22 +334,18 @@
                   
                   
 
-                  this.regions.forEach(function(region){
+                  this.regions.forEach(function (region) {
+                      region.draw();
 
-                      if (region.imgData){
-                          tcanvas = document.createElement('canvas'), /// create temp canvas
-                          tctx = tcanvas.getContext('2d');
-                          tcanvas.width = region.img.width;
-                          tcanvas.height = region.img.height;
-                          tctx.putImageData(region.imgData, 0, 0);
-                          self.uiContext.drawImage(tcanvas,region.x,region.y);
-                      }
-                      else{
-                          region.draw();
-                      }
+                      //if (region.imgData){
+                      //    self.uiContext.drawImage(region.regionContext, region.x, region.y);
+                      //}
+                      //else{
+                      //    region.draw();
+                      //}
                   });
 
-                  //this.uiRegion.draw();
+                  this.uiRegion.draw();
                   this.paletteColors.forEach(function(color){
                       color.draw();
                   });

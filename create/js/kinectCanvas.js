@@ -2,7 +2,7 @@
     "use strict";
 
     var constants = {
-        maxPlayers: 1,
+        maxPlayers: 2,
         handHeight: 76,
         handWidth: 60,
         instructionsDuration: 8000,

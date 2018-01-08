@@ -53,7 +53,7 @@
     <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
     <AppxPackageDir>D:\Games\CHOP-Berger\New1\PlayInteractive</AppxPackageDir>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
-    <PackageCertificateThumbprint>B46519F07F3BA0E1CE4C929AD444491E88D052A6</PackageCertificateThumbprint>
+    <PackageCertificateThumbprint>201EF82208675F3F2FE8AC13D59ED854DE22BC88</PackageCertificateThumbprint>
   </PropertyGroup>
   <ItemGroup>
     <AppxManifest Include="package.appxmanifest">
