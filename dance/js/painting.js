@@ -1,4 +1,4 @@
-function Painting(canvas, x, y, w, h, border) {
+function Painting(canvas, x, y, w, h, border, color) {
 
   this.canvas = canvas;
     this.context = canvas.getContext('2d');
@@ -8,7 +8,8 @@ function Painting(canvas, x, y, w, h, border) {
   this.context.lineWidth = 20;
 	this.context.lineJoin = 'round';
   this.context.lineCap = 'round';
-  this.context.strokeStyle = 'hsl(189, 41%, 65%)';
+    //this.context.strokeStyle = 'hsl(189, 41%, 65%)';
+    this.context.strokeStyle = color;
   this.op = 0;
   this.painted = false;
   this.imgData = null;

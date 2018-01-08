@@ -8,6 +8,14 @@
       },
       {
           init: function () {
+              this.rightHandArray[0] = [0, 0, 0, 0, false, 'rgba(255,255,255,1)'];
+              this.rightHandArray[1] = [0, 0, 0, 0, false, 'rgba(220,220,220,1)'];
+              this.rightHandArray[2] = [0, 0, 0, 0, false, 'rgba(200,200,200,1)'];
+              this.rightHandArray[3] = [0, 0, 0, 0, false, 'rgba(180,180,180,1)'];
+              this.rightHandArray[4] = [0, 0, 0, 0, false, 'rgba(160,160,160,1)'];
+              this.rightHandArray[5] = [0, 0, 0, 0, false, 'rgba(140,140,140,1)'];
+
+
               this.ispainting = false;
               this.paintCanvas = [];
               this.paintContext = [];
@@ -44,6 +52,25 @@
               this.paintCanvas[2].width = 1920;
               this.paintCanvas[2].height = 1080;
 
+              this.paintCanvas[3] = document.getElementById('paint-canvas-4');
+              this.paintContext[3] = this.paintCanvas[3].getContext("2d");
+
+              this.paintCanvas[3].width = 1920;
+              this.paintCanvas[3].height = 1080;
+
+              this.paintCanvas[4] = document.getElementById('paint-canvas-5');
+              this.paintContext[4] = this.paintCanvas[4].getContext("2d");
+
+              this.paintCanvas[4].width = 1920;
+              this.paintCanvas[4].height = 1080;
+
+              this.paintCanvas[5] = document.getElementById('paint-canvas-6');
+              this.paintContext[5] = this.paintCanvas[5].getContext("2d");
+
+              this.paintCanvas[5].width = 1920;
+              this.paintCanvas[5].height = 1080;
+              
+
               this._instructionsCanvas = document.getElementById('instructionsCanvas');
               this._instructionsContext = this._instructionsCanvas.getContext('2d');
 
@@ -53,7 +80,6 @@
               this.veilCanvas.width = 1920;
               this.veilCanvas.height = 1080;
               this.veilOpacity = 90;
-              this.wasNotClosed = false;
 
               this.mainContext.fillStyle = '#ffffff';
 
@@ -67,7 +93,7 @@
               this.lastMouseX;
               this.lastMouseY;
 
-              this.numUsers = 3;
+              this.numUsers = 6;
 
               this.paintings = [];
               this.newThumbnail = true;
@@ -94,7 +120,7 @@
 
           createPaintings: function() {
                   for (var i = 0; i < this.numUsers; i++) {
-                      this.paintings[i] = new Painting(this.paintCanvas[i], 0, 0, this.paintCanvas[i].width, this.paintCanvas[i].height, 20);
+                      this.paintings[i] = new Painting(this.paintCanvas[i], 0, 0, this.paintCanvas[i].width, this.paintCanvas[i].height, 20, this.rightHandArray[i][5]);
                       console.log('painting created');
                   }
           },
@@ -105,17 +131,17 @@
 
 
               if (hand == 'right' && player['status'] == 'closed' && player['confidence'] == 1) {
-                  //console.log(this.wasNotClosed);
+                  console.log(this.rightHandArray[index][4]);
                   painting.context.beginPath();
-                  painting.context.moveTo(this.lastMouseX, this.lastMouseY);
-                  painting.context.lineTo(this.mouseX, this.mouseY);
+                  painting.context.moveTo(this.rightHandArray[index][0], this.rightHandArray[index][1]);
+                  painting.context.lineTo(this.rightHandArray[index][2], this.rightHandArray[index][3]);
                   painting.context.closePath();
                   painting.context.stroke();
                   painting.painted = true;
-                  //this.wasNotClosed = true;
+                  this.rightHandArray[index][4] = true;
               }
               else if (hand == 'right') {
-                  //this.wasNotClosed = false;
+                  this.rightHandArray[index][4] = false;
               }
 
               
@@ -234,10 +260,11 @@
                 this.timer1--;
             }
             else if (this.timer2 > 0) {
-                console.log(this.timer2);
-                if (this.timer2 % 20 === 0) {
-                    this.seconds--;
-                }
+                //console.log(this.timer2);
+                //if (this.timer2 % 20 === 0) {
+                //    this.seconds--;
+                //    console.log(this.seconds);
+                //}
                 this.timer2--;
             }
             else if (this.veilOpacity > 0) {
@@ -259,10 +286,10 @@
         
 
         if(player['confidence'] == 1 && hand == 'right') {
-            this.lastMouseX = this.mouseX;
-            this.lastMouseY = this.mouseY;
-            this.mouseX = mouseX;
-            this.mouseY = mouseY;
+            this.rightHandArray[index][0] = this.rightHandArray[index][2];
+            this.rightHandArray[index][1] = this.rightHandArray[index][3];
+            this.rightHandArray[index][2] = mouseX;
+            this.rightHandArray[index][3] = mouseY;
         }
 
         
@@ -325,17 +352,25 @@
     stopPainting: function () {
         this.ispainting = false;
         //record painting data to thumbnail
-        that = this;
+        var that = this;
+
+        var tcanvas = document.createElement('canvas'), /// create temp canvas
+        tctx = tcanvas.getContext('2d');
+        tcanvas.width = 1920; /// set width = region width
+        tcanvas.height = 1080;
 
         this.paintings.forEach(function (painting) {
             if (painting.painted == true) {
-            painting.imgData = that.cropImageFromCanvas(painting.context);
+            tctx.drawImage(painting.canvas, 0, 0);
+            
         }
         });
         
-        if (this.paintings[0].imgData || this.paintings[1].imgData || this.paintings[2].imgData) {
+        var thumbImgData = this.cropImageFromCanvas(tctx);
+
+        if (thumbImgData) {
             console.log('painting to thumbnail');
-            this.paintingsToThumbnail();
+            this.paintingToThumbnail(thumbImgData);
             this.newThumbnail = true;
         }
         //clear all canvases
@@ -370,14 +405,14 @@
         this.thumbnails.splice(index,1);
   },
 
-    paintingsToThumbnail: function () {
+    paintingToThumbnail: function (imgData) {
         //shift thumbnails
 
         for (var i = 0; i < this.thumbnails.length; i++) {
             this.thumbnails[i].x = this.thumbnails[i].x + this.paintingSpacing;
             this.thumbnails[i].update();
         }
-        this.thumbnails.unshift(new Thumbnail(this.mainCanvas, this.marginX, this.marginY, this.thumbnailWidth, this.thumbnailHeight, this.thumbnailBorder, Math.random(0, 1), this.paintings[0].imgData));
+        this.thumbnails.unshift(new Thumbnail(this.mainCanvas, this.marginX, this.marginY, this.thumbnailWidth, this.thumbnailHeight, this.thumbnailBorder, Math.random(0, 1), imgData));
         //delete last thumbnail
         this.thumbnails.splice(5, 1);
         this.newThumbnail = false;
@@ -471,7 +506,8 @@
   },
 
           //currentCanvas: this.mainCanvas,
-
+          rightHandArray: [],
+          leftHandArray: [],
           thumbnails: [],
           numPaintings: 5,
           thumbnailWidth: 200,
@@ -480,9 +516,7 @@
           marginX: 30,
           marginY: 65,
           paintingSpacing: 410,
-          
-          rightHandArray: [],
-          leftHandArray: [],
+         
 
           _instructionscanvas: null,
           _instructionscontext: null,
