@@ -9,16 +9,18 @@
       {
           init: function () {
 
+              //this.hero = [];
+
               this.stage;
               this.stageCanvas = document.getElementById('stage');
 
-              this.hero1;
+              this._hero1;
               this.hero1Canvas = document.getElementById('hero1');
 
-              this.hero2;
+              this._hero2;
               this.hero2Canvas = document.getElementById('hero2');
 
-              this.hero3;
+              this._hero3;
               this.hero3Canvas = document.getElementById('hero3');
 
               this.isMouseDown = false;
@@ -31,16 +33,16 @@
 
               this.stage = new Stage(this.stageCanvas);
 
-              this.hero1 = new Hero(this.hero1Canvas);
-              this.hero2 = new Hero(this.hero2Canvas);
-              this.hero3 = new Hero(this.hero3Canvas);
+              this._hero1 = new Hero(this.hero1Canvas);
+              this._hero2 = new Hero(this.hero2Canvas);
+              this._hero3 = new Hero(this.hero3Canvas);
 
-              this.hero1.isActive = false;
-              this.hero3.isActive = false;
+              //this.hero[0].isActive = false;
+              //this.hero[2].isActive = false;
 
-              this.hero2Canvas.onmousedown = this.mouseDown;
-              this.hero2Canvas.onmouseup = this.mouseUp;
-              this.hero2Canvas.onmousemove = this.mouseMove;
+              //this.hero2Canvas.onmousedown = this.mouseDown;
+              //this.hero2Canvas.onmouseup = this.mouseUp;
+              //this.hero2Canvas.onmousemove = this.mouseMove;
           },
 
           setup: function () {
@@ -49,31 +51,57 @@
 
               
 
-          checkHands: function (index, player) {
-              var mouseX = player['pos']['x'];
-              var mouseY = player['pos']['y'];
-              console.log(mouseX + ',' + mouseY);
+          //checkHands: function (index, player) {
+          //    console.log(index + "," + mouseX + ',' + mouseY);
+          //    var mouseX = player['pos']['x'] - this.hero[index].offset;
+          //    var mouseY = player['pos']['y'];
+              
 
-              this.hero2.arrows.forEach(function (item, index) {
-                  if (mouseX > item.x && mouseX < (item.x + item.width) && mouseY > item.y && mouseY < (item.y + item.height)) {
-                      console.log('hover');
-                      item.isHover = true;
-                      if (player['confidence'] == 1 && player['status'] == 'closed') {
+          //    this.hero[index].arrows.forEach(function (item, index) {
+          //        console.log(index + "," + item.x + "," + item.y);
+          //        if (mouseX > item.x && mouseX < (item.x + item.width) && mouseY > item.y && mouseY < (item.y + item.height)) {
+          //            console.log('hover');
+          //            item.isHover = true;
+          //            if (player['confidence'] == 1 && player['status'] == 'closed') {
                           
-                          item.changePart();
-                      }
-                  } else {
-                      item.isHover = false;
-                  }
-              });
+          //                item.changePart();
+          //            }
+          //        } else {
+          //            item.isHover = false;
+          //        }
+          //    });
 
               
+          //},
+
+          detectActivated: function (player, Hero, index) {
+              var that = this;
+              var mX = player['pos']['x'] - ((640 * index)-10);
+              var mY = player['pos']['y'];
+              if (Hero) {
+                  if (Hero.isActive == false) {
+                      Hero.isActive = true;
+                  }
+                  Hero.arrows.forEach(function (item, index) {
+                      //console.log(index + "," + item.x + "," + item.y);
+                      if (mX > item.x && mX < (item.x + item.width) && mY > item.y && mY < (item.y + item.height)) {
+                          console.log('hover');
+                          item.isHover = true;
+                          if (player['confidence'] == 1 && player['status'] == 'closed') {
+
+                              item.changePart();
+                          }
+                      } else {
+                          item.isHover = false;
+                      }
+                  });
+              }
           },
 
           update: function() {
-              this.hero1.update();
-              this.hero2.update();
-              this.hero3.update();
+              this._hero1.update();
+              this._hero2.update();
+              this._hero3.update();
           },
 
           draw: function () {
@@ -82,15 +110,17 @@
               this.clear(this.hero3Canvas);
 
               this.stage.draw();
-              this.hero1.draw();
-              this.hero2.draw();
-              this.hero3.draw();
+              this._hero1.draw();
+              this._hero2.draw();
+              this._hero3.draw();
           },
 
           clear: function (canvas) {
             var context = canvas.getContext('2d');
             context.clearRect(0, 0, 1920, 1080);
           },
+
+          
 
           newPlayerAdded: function() {
               this.playerAdded = true;

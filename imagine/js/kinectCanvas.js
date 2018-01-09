@@ -2,7 +2,7 @@
     "use strict";
 
     var constants = {
-        maxPlayers: 1,
+        maxPlayers: 3,
         handHeight: 76,
         handWidth: 60,
         instructionsDuration: 8000,
@@ -56,29 +56,78 @@
               this._climbCanvas._activePlayerCount = activePlayers.length;
               this._climbCanvas.update();
 
-              // New loop for adding a player
+              var Hero1 = this._climbCanvas._hero1;
+              var Hero2 = this._climbCanvas._hero2;
+              var Hero3 = this._climbCanvas._hero3;
+
+              //loop for adding and assigning players to heroes
               if (activePlayers.length < constants.maxPlayers) {
                   for (var p in players) {
                       var index = activePlayers.indexOf(p);
                       if (index === -1) {
+                          if (!that._hero2Player) {
+                              that._hero2Player = p;
+                              //CenterPanel.pegs.forEach(function (peg) {
+                              //    peg.playerHasEntered(p);
+                              //    peg.player_assigned = true;
+                              //});
 
-                          // console.log('Player ' + p + ' assigned to Center Panel.');
-                          activePlayers.push(p);
-                          lastConfidentPlayers[p] = players[p];
-                          lastPlayers[p] = players[p];
+                              console.log('Player ' + p + ' assigned to Hero2.');
+                              activePlayers.push(p);
+                              lastConfidentPlayers[p] = players[p];
+                              lastPlayers[p] = players[p];
 
-                          that._activeAlert = true;
-                          that._instructions.paused = false;
-                          that._climbCanvas.newPlayerAdded();
-                          // console.log('Show instructions for Player ' + p);
+                              that._activeAlert = true;
+                              //that._instructions.paused = false;
+                              // console.log('Show instructions for Player ' + p);
 
-                          setTimeout(function () {
-                              that._activeAlert = false;
-                              that._instructions.paused = true;
-                              that.clearScreen(that._instructionsContext);
-                              // console.log('Clear instructions for Player ' + p);
-                          }, 6000);
+                              that._climbCanvas.newPlayerAdded();
 
+                          } else if (!that._hero1Player) {
+                              that._hero1Player = p;
+                              //LeftPanel.pegs.forEach(function (peg) {
+                              //    peg.playerHasEntered(p);
+                              //    peg.player_assigned = true;
+                              //});
+
+                              console.log('Player ' + p + ' assigned to Hero1');
+                              activePlayers.push(p);
+                              lastConfidentPlayers[p] = players[p];
+                              lastPlayers[p] = players[p];
+
+                              that._activeAlert = true;
+                              that._instructions.paused = false;
+                              // console.log('Show instructions for Player ' + p);
+
+                              setTimeout(function () {
+                                  that._activeAlert = false;
+                                  that._instructions.paused = true;
+                                  that.clearScreen(that._instructionsContext);
+                                  // console.log('Clear instructions for Player ' + p);
+                              }, 6000);
+                          } else if (!that._hero3Player) {
+                              that._hero3Player = p;
+                              //RightPanel.pegs.forEach(function (peg) {
+                              //    peg.playerHasEntered(p);
+                              //    peg.player_assigned = true;
+                              //});
+
+                              console.log('Player ' + p + ' assigned to Hero3');
+                              activePlayers.push(p);
+                              lastConfidentPlayers[p] = players[p];
+                              lastPlayers[p] = players[p];
+
+                              that._activeAlert = true;
+                              that._instructions.paused = false;
+                              // console.log('Show instructions for Player ' + p);
+
+                              /*setTimeout(function () {
+                                  that._activeAlert = false;
+                                  that._instructions.paused = true;
+                                  that.clearScreen(that._instructionsContext);
+                                  // console.log('Clear instructions for Player ' + p);
+                              }, 6000);*/
+                          }
                       }
                   }
               }
@@ -95,6 +144,25 @@
 
                       if (index > -1) {
                           activePlayers.splice(index, 1);
+                          if (that._hero2Player == l) {
+                              that._hero2Player = null;
+                              //CenterPanel.pegs.forEach(function (peg) {
+                              //    peg.player_assigned = false;
+                              //});
+                          }
+                          if (that._hero1Player == l) {
+                              that._hero1Player = null;
+                              //LeftPanel.pegs.forEach(function (peg) {
+                              //    peg.player_assigned = false;
+                              //});
+                          }
+                          if (that._hero3Player == l) {
+                              that._hero3Player = null;
+                              //RightPanel.pegs.forEach(function (peg) {
+                              //    peg.player_assigned = false;
+                              //});
+                          }
+                          // console.log("Player " + l + " left the game.");
                       }
                   }
               }
@@ -105,9 +173,25 @@
                   that._activeReset = false;
 
                   if (players[aP]) {
-                      that.drawHands(aP, players[aP], that._lastPlayers[aP]);
-                      that._climbCanvas.checkHands(aP, players[aP]['right']);
-                      //that._climbCanvas.checkHands(aP, players[aP]['left']);
+                      if (that._hero1Player === aP) {
+                          var offset = 0;
+                          var hero = Hero1;
+                      }
+                      if (that._hero2Player === aP) {
+                          var offset = 1;
+                          var hero = Hero2;
+                      }
+                      if (that._hero3Player3 === aP) {
+                          console.log(players[aP]);
+                          var offset = 2;
+                          var hero = Hero3;
+                      }
+
+                      
+
+                      that.drawHands(aP, players[aP], that._lastPlayers[aP], offset);
+                      that._climbCanvas.detectActivated(players[aP]['right'], hero, offset);
+                      that._climbCanvas.detectActivated(players[aP]['left'], hero, offset);
                   }
               });
 
@@ -120,6 +204,9 @@
                       pendingPlayers = [];
                       lastPlayers = {};
                       lastConfidentPlayers = {};
+                      that._hero1Player = null;
+                      that._hero2Player = null;
+                      that._hero3Player = null;
                       that._activeReset = false;
                   }, constants.resetTimeoutDuration);
               }

@@ -2,22 +2,24 @@ function Hero(canvas) {
 	var I = I || {};
 
     I.canvas = canvas;
-	I.context = canvas.getContext('2d');
+    I.context = canvas.getContext('2d');
     
 	I.x = 0;
 	I.y = 0;
 	I.width = 650;
 	I.height = 1080;
 
-	I.isActive = true;
+	I.isActive = false;
 
-    I.curtains = new Sprite('curtains', new ImagePainter('./images/curtains.png'));
-    I.spotlight = new Sprite('spotlight', new ImagePainter('./images/spotlight.png'));
+	I.curtains = new Sprite('curtains', new ImagePainter('./images/curtains.png'));
+	I.spotlight = new Sprite('spotlight', new ImagePainter('./images/spotlight.png'));
+
 
 	I.feet = new Feet(canvas);
     I.body = new Body(canvas);
     I.face = new Face(canvas);
     I.hat = new Hat(canvas);
+    I.mainCurtain = new MainCurtain(canvas);
 
     I.arrows = [
         new Arrow(canvas, I.hat, 20, 200, 'left'),
@@ -42,8 +44,9 @@ function Hero(canvas) {
             this.body.draw();
             this.face.draw();
             this.hat.draw();
+            
 		}
-
+		this.mainCurtain.draw();
         this.curtains.width = 660;
         this.curtains.height = 1060;
         this.curtains.left = 0;
@@ -54,6 +57,9 @@ function Hero(canvas) {
             this.arrows.forEach(function(item, index) {
                 item.draw();
             });
+            this.mainCurtain.change("up");
+        } else {
+            this.mainCurtain.change("down");
         }
 	}
 
@@ -62,6 +68,8 @@ function Hero(canvas) {
         this.body.update();
         this.face.update();
         this.hat.update();
+        this.mainCurtain.update();
+        this.isActive = false;
 	}
 
 	I.reset = function() {

@@ -2,6 +2,7 @@
     "use strict";
 
     var nsKinect = WindowsPreview.Kinect;
+    var nsKinectFace = Microsoft.Kinect.Face;
     var constants = {
         bodyCount: 6
     };
@@ -48,6 +49,11 @@
               this._boundHandler = this._onFrameArrived.bind(this);
               this._reader = this._sensor.bodyFrameSource.openReader();
               this._reader.addEventListener('framearrived', this._boundHandler);
+
+              //attempted face frame reader
+              //this._faceSource = new faceFrameSource(_sensor);
+              //this._faceReader = this._faceSource.openReader();
+              //this._faceReader.FrameArrived += FaceReader_FrameArrived;
 
               var isActive = this._sensor.bodyFrameSource.isActive;
               if (!isActive) {
@@ -118,6 +124,7 @@
               var leftshoulder = this._getJointPositions(body, 4);
               var rightshoulder = this._getJointPositions(body, 8);
               var neck = this._getJointPositions(body, 3);
+              //var face = this._getFace(i);
 
               var zValue = spine[0].z;
               if (zValue < this.zIndexValue) {
@@ -277,7 +284,7 @@
                   y: colourPoint.y,
                   z: cameraSpacePoint.z
               };
-          },
+          }, 
           _boundHandler: null,
           _clearCanvas: null,
           _bodyDrawerFactory: null,
