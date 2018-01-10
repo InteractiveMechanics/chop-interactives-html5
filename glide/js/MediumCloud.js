@@ -1,15 +1,15 @@
 function MediumCloud(direction, canvas) {
-	var I = I || {};
+    var I = I || {};
 
-	I.x = -100;
-	I.y = Math.random(250, 900);
+    I.x = Math.floor(Math.random() * (-300 - -1000 + 1)) + -1000;
+    I.y = Math.floor(Math.random() * (500 - 0 + 1)) + 0;
 
 	I.direction = direction;
 
 	I.arrayIndex = 0;
 
-	I.width = 82.75;
-	I.height = 42.75;
+	I.width = 265.6;
+	I.height = 163.75;
 
 	I.outofbounds = false;
 
@@ -22,7 +22,7 @@ function MediumCloud(direction, canvas) {
 	I.update = function() {
 		this.x += 2 * this.direction;
 
-		if(this.x > 3500) {
+		if(this.x > 2000) {
 			this.outofbounds = true;
 		}
 	}
@@ -36,7 +36,7 @@ function MediumCloud(direction, canvas) {
         this.sprite.paint(this.context);
         this.context.restore();
 	}
-	
+
 
 	return I;
 }

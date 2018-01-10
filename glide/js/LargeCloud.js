@@ -1,8 +1,8 @@
 function LargeCloud(direction, canvas) {
 	var I = I || {};
 
-	I.x = -100;
-	I.y = Math.random(250, 900);;
+    I.x = Math.floor(Math.random() * (-440 - -1000 + 1)) + -1000;
+	I.y = Math.floor(Math.random() * (500 - 0 + 1)) + 0;
 
 	I.direction = direction;
 
@@ -24,7 +24,7 @@ function LargeCloud(direction, canvas) {
 	I.update = function() {
 		this.x += 1.50 * this.direction;
 
-		if(this.x > 3500) {
+		if(this.x > 2000) {
 			this.outofbounds = true;
 		}
 	}
@@ -38,7 +38,6 @@ function LargeCloud(direction, canvas) {
         this.sprite.paint(this.context);
         this.context.restore();
 	}
-	
 	
 
 	return I;

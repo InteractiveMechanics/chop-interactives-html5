@@ -2,7 +2,7 @@
     "use strict";
 
     var constants = {
-        maxPlayers: 2,
+        maxPlayers: 3,
         handHeight: 154,
         handWidth: 154,
         instructionsDuration: 11000,
@@ -31,6 +31,7 @@
               this._lastConfidentPlayers = {};
               this._climbCanvas.setup();
 
+
               // console.log('Kinect canvases initialized.');
           },
           clearScreen: function (context) {
@@ -47,25 +48,83 @@
               this.clearScreen(this._context);
               this._totalBodies = 0;
 
+              var Balloon1 = this._climbCanvas._balloon1;
+              var Balloon2 = this._climbCanvas._balloon2;
+              var Balloon3 = this._climbCanvas._balloon3;
+
               this._climbCanvas.draw();
               this._climbCanvas.update();
 
-              // New loop for adding a player
+              
+
+              //loop for adding and assigning players to heroes
               if (activePlayers.length < constants.maxPlayers) {
                   for (var p in players) {
                       var index = activePlayers.indexOf(p);
                       if (index === -1) {
-                          activePlayers.push(p);
-                          lastConfidentPlayers[p] = players[p];
-                          lastPlayers[p] = players[p];
+                          if (!that._balloon2Player) {
+                              that._balloon2Player = p;
+                              //CenterPanel.pegs.forEach(function (peg) {
+                              //    peg.playerHasEntered(p);
+                              //    peg.player_assigned = true;
+                              //});
 
-                          that._activeAlert = true;
-                          that._instructions.paused = false;
-                          that._climbCanvas.newPlayerAdded();
+                              console.log('Player ' + p + ' assigned to Hero2.');
+                              activePlayers.push(p);
+                              lastConfidentPlayers[p] = players[p];
+                              lastPlayers[p] = players[p];
 
-                          // console.log('Show instructions for Player ' + p);
+                              that._activeAlert = true;
+                              //that._instructions.paused = false;
+                              // console.log('Show instructions for Player ' + p);
 
-                          that._climbCanvas.createAirBallon(p);
+                              that._climbCanvas.newPlayerAdded();
+
+                          } else if (!that._balloon1Player) {
+                              that._balloon1Player = p;
+                              //LeftPanel.pegs.forEach(function (peg) {
+                              //    peg.playerHasEntered(p);
+                              //    peg.player_assigned = true;
+                              //});
+
+                              console.log('Player ' + p + ' assigned to Hero1');
+                              activePlayers.push(p);
+                              lastConfidentPlayers[p] = players[p];
+                              lastPlayers[p] = players[p];
+
+                              that._activeAlert = true;
+                              that._instructions.paused = false;
+                              // console.log('Show instructions for Player ' + p);
+
+                              setTimeout(function () {
+                                  that._activeAlert = false;
+                                  that._instructions.paused = true;
+                                  that.clearScreen(that._instructionsContext);
+                                  // console.log('Clear instructions for Player ' + p);
+                              }, 6000);
+                          } else if (!that._balloon3Player) {
+                              that._balloon3Player = p;
+                              //RightPanel.pegs.forEach(function (peg) {
+                              //    peg.playerHasEntered(p);
+                              //    peg.player_assigned = true;
+                              //});
+
+                              console.log('Player ' + p + ' assigned to Hero3');
+                              activePlayers.push(p);
+                              lastConfidentPlayers[p] = players[p];
+                              lastPlayers[p] = players[p];
+
+                              that._activeAlert = true;
+                              that._instructions.paused = false;
+                              // console.log('Show instructions for Player ' + p);
+
+                              /*setTimeout(function () {
+                                  that._activeAlert = false;
+                                  that._instructions.paused = true;
+                                  that.clearScreen(that._instructionsContext);
+                                  // console.log('Clear instructions for Player ' + p);
+                              }, 6000);*/
+                          }
                       }
                   }
               }
@@ -82,7 +141,24 @@
 
                       if (index > -1) {
                           activePlayers.splice(index, 1);
-                          //that._climbCanvas.removeBoat(l);
+                          if (that._balloon2Player == l) {
+                              that._balloon2Player = null;
+                              //CenterPanel.pegs.forEach(function (peg) {
+                              //    peg.player_assigned = false;
+                              //});
+                          }
+                          if (that._balloon1Player == l) {
+                              that._balloon1Player = null;
+                              //LeftPanel.pegs.forEach(function (peg) {
+                              //    peg.player_assigned = false;
+                              //});
+                          }
+                          if (that._balloon3Player == l) {
+                              that._balloon3Player = null;
+                              //RightPanel.pegs.forEach(function (peg) {
+                              //    peg.player_assigned = false;
+                              //});
+                          }
                           // console.log("Player " + l + " left the game.");
                       }
                   }
@@ -94,8 +170,18 @@
                   that._activeReset = false;
 
                   if (players[aP]) {
-                      // that.drawHands(aP, players[aP], that._lastPlayers[aP]);
-                      that._climbCanvas.moveBallon(aP, players[aP]);
+                      if (that._balloon1Player === aP) {
+                          var balloon = Balloon1;
+                      }
+                      if (that._balloon2Player === aP) {
+                          var balloon = Balloon2;
+                      }
+                      if (that._balloon3Player === aP) {
+                          var balloon = Balloon3;
+                      }
+
+                      that._climbCanvas.moveBallon(aP, players[aP], balloon);
+
                   }
               });
 
@@ -108,6 +194,9 @@
                       pendingPlayers = [];
                       lastPlayers = {};
                       lastConfidentPlayers = {};
+                      that._balloon1Player = null;
+                      that._balloon2Player = null;
+                      that._balloon3Player = null;
                       that._activeReset = false;
                       //that._climbCanvas._boats = [];
                       // console.log("No players present, reseting the game.");

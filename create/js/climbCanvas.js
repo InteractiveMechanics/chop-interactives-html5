@@ -28,10 +28,16 @@
               this.createClear();
               this.createPages();
               this.createLines();
+              for (var i = 0; i < this.colorData.length; i++) {
+                  this.droplets[i] = new Image();
+                  this.droplets[i].src = './images/color-drop-' + i + '.png';
+              };
               this.pages[0].heatMap = this.createHeatmap(this.pages[0]);
               this.pages[1].heatMap = this.createHeatmap(this.pages[1]);
               this.regions = this.pages[this.currentPage].regions;
               //console.log(this.pages);
+
+              
               
           },
           showInstructions: function () {
@@ -62,7 +68,9 @@
                   var posX = this.palettePosX + (this.paletteSpacing*i);
                   var posY = this.palettePosY;
                   this.paletteColors.push(new PaletteColor(colorName, colorRGBA, colorFile, posX, posY, this.paletteRadius, this.uiCanvas));
+
               }
+
           },
 
           createUiRegion: function() {
@@ -171,7 +179,7 @@
         return pixels;
     },
 
-    changeColor: function (img, color){
+    changeColor: function (img, colorIndex){
         var newImage;
         var width = img.width;
         var height = img.height;
@@ -182,7 +190,8 @@
         tctx.drawImage(img, 0, 0);
         var imageData = tctx.getImageData(0, 0, width, height);
         var data = imageData.data;
-        var newColor = color;
+        var colorRGBA = [this.colorData[colorIndex][1], this.colorData[colorIndex][2], this.colorData[colorIndex][3], this.colorData[colorIndex][4]];
+        var newColor = colorRGBA;
         for (var i = 0; i < data.length; i += 4) {
             if (data[i + 3] > 0){
                 data[i]     = newColor[0];     // red
@@ -210,81 +219,95 @@
     checkRegions: function (index, player, lastPlayer, hand) {
         var mouseX = Math.floor(player['pos']['x']);
         var mouseY = Math.floor(player['pos']['y']);
+        //draw droplets for each hand
+        //assign white if nothing picked
+        if (hand == "right") {
+            if (this.rightHandArray[index] == null) {
+                this.rightHandArray[index] = 10;
+            };
+            this.uiContext.drawImage(this.droplets[this.rightHandArray[index]], mouseX +50, mouseY);
+        }
+        if (hand == "left") {
+            if (this.leftHandArray[index] == null) {
+                this.leftHandArray[index] = 10;
+            }
+            this.uiContext.drawImage(this.droplets[this.leftHandArray[index]], mouseX - 50, mouseY);
+        }
         //if (this.isOverHelpIcon(mouseX, mouseY)) {
         //    this._instructions.paused = false;
         //}
-        
-        var heatMap = this.pages[this.currentPage].heatMap
-        var mapIndex = mouseX + (mouseY * 1920);
-        var regionIndex = heatMap[mapIndex];
-        console.log(regionIndex);
-        
-        if (regionIndex > 0 && hand == 'right' && (mouseY < this.pageAreaY) && player['confidence'] == 1 && player['status'] == 'closed') {
-            if (this.rightHandArray[index] == null) {
-                this.rightHandArray[index] = [this.colorData[10][1], this.colorData[10][2], this.colorData[10][3], this.colorData[10][4]];
-            };
-            var newImage = this.changeColor(this.regions[regionIndex].img, this.rightHandArray[index]);
-            this.regions[regionIndex].img = newImage;
-            console.log(regionIndex +' region , color '+ this.leftHandArray[index]);
-        }
-        if (regionIndex > 0 && hand == 'left' && (mouseY < this.pageAreaY) && player['confidence'] == 1 && player['status'] == 'closed') {
-            if (this.leftHandArray[index] == null) {
-                this.leftHandArray[index] = [this.colorData[10][1], this.colorData[10][2], this.colorData[10][3], this.colorData[10][4]];
-            };
-            var newImage = this.changeColor(this.regions[regionIndex].img, this.leftHandArray[index]);
-            this.regions[regionIndex].img = newImage;
-            console.log(regionIndex +' region , color '+ this.leftHandArray[index]);
-        }
+        if (mouseY < this.uiRegion.y) {
+            var heatMap = this.pages[this.currentPage].heatMap
+            var mapIndex = mouseX + (mouseY * 1920);
+            var regionIndex = heatMap[mapIndex];
+            console.log(regionIndex);
 
-        for(var i = 0; i < this.paletteColors.length; i++) {
-            var paletteColor = this.paletteColors[i];
-            if (this.isOverPaletteColor(mouseX, mouseY, paletteColor) && player['status'] == 'closed' && player['confidence'] == 1) {
-                if (hand == 'right') {
-                    //console.log(paletteColor.RGBA);
-                    this.rightHandArray[index] = paletteColor.colorRGBA;
+            if (regionIndex > 0 && hand == 'right' && (mouseY < this.pageAreaY) && player['confidence'] == 1 && player['status'] == 'closed') {
+
+                var newImage = this.changeColor(this.regions[regionIndex].img, this.rightHandArray[index]);
+                this.regions[regionIndex].img = newImage;
+                console.log(regionIndex + ' region , color ' + this.leftHandArray[index]);
+            }
+            if (regionIndex > 0 && hand == 'left' && (mouseY < this.pageAreaY) && player['confidence'] == 1 && player['status'] == 'closed') {
+                if (this.leftHandArray[index] == null) {
+                    this.leftHandArray[index] = [this.colorData[10][1], this.colorData[10][2], this.colorData[10][3], this.colorData[10][4]];
+                };
+                var newImage = this.changeColor(this.regions[regionIndex].img, this.leftHandArray[index]);
+                this.regions[regionIndex].img = newImage;
+                console.log(regionIndex + ' region , color ' + this.leftHandArray[index]);
+            }
+        };
+        if (mouseY > this.uiRegion.y) {
+            for (var i = 0; i < this.paletteColors.length; i++) {
+                var paletteColor = this.paletteColors[i];
+                if (this.isOverPaletteColor(mouseX, mouseY, paletteColor) && player['status'] == 'closed' && player['confidence'] == 1) {
+                    if (hand == 'right') {
+                        //console.log(paletteColor.RGBA);
+                        this.rightHandArray[index] = [i];
+                    }
+
+                    if (hand == 'left') {
+                        //console.log(paletteColor.RGBA);
+                        this.leftHandArray[index] = [i];
+                    }
+                } else {
+                    // alert('clicked outside paletteColor');
                 }
+            }
 
-                if (hand == 'left') {
-                    //console.log(paletteColor.RGBA);
-                    this.leftHandArray[index] = paletteColor.colorRGBA;
+
+            if (this.pageRight) {
+                var rX = mouseX - this.pageRight.x;
+                var rY = mouseY - this.pageRight.y;
+                this.hover = this.getPixelAlpha(this.pageRight.img, rX, rY);
+                if ((this.hover > 0) && player['status'] == 'closed' && player['confidence'] == 1) {
+                    this.changePageRight();
+                    //console.log(this.currentPage);
+                } else {
+                    //console.log(region.color);
                 }
-            }else{
-                // alert('clicked outside paletteColor');
             }
-        }
-        
 
-        if (this.pageRight){
-            var rX = mouseX - this.pageRight.x;
-            var rY = mouseY - this.pageRight.y;
-            this.hover = this.getPixelAlpha(this.pageRight.img, rX, rY);
-            if ((this.hover > 0) && player['status'] == 'closed' && player['confidence'] == 1){
-                this.changePageRight();
-                //console.log(this.currentPage);
-            } else {
-                //console.log(region.color);
+            if (this.pageLeft) {
+                var rX = mouseX - this.pageLeft.x;
+                var rY = mouseY - this.pageLeft.y;
+                this.hover = this.getPixelAlpha(this.pageLeft.img, rX, rY);
+                if ((this.hover > 0) && player['status'] == 'closed' && player['confidence'] == 1) {
+                    this.changePageLeft();
+                    //console.log(this.currentPage);
+                } else {
+                    //console.log(region.color);
+                }
             }
-        }
 
-        if (this.pageLeft) {
-            var rX = mouseX - this.pageLeft.x;
-            var rY = mouseY - this.pageLeft.y;
-            this.hover = this.getPixelAlpha(this.pageLeft.img, rX, rY);
-            if ((this.hover > 0) && player['status'] == 'closed' && player['confidence'] == 1) {
-                this.changePageLeft();
-                //console.log(this.currentPage);
-            } else {
-                //console.log(region.color);
-            }
-        }
-
-        if (this.pageClear){
-            var rX = mouseX - this.pageClear.x;
-            var rY = mouseY - this.pageClear.y;
-            this.hover = this.getPixelAlpha(this.pageClear.img, rX, rY);
-            if ((this.hover > 0) && player['status'] == 'closed' && player['confidence'] == 1){
-                for(var i = 0; i < this.regions.length; i++) {
-                    this.regions[i].imgData = null;
+            if (this.pageClear) {
+                var rX = mouseX - this.pageClear.x;
+                var rY = mouseY - this.pageClear.y;
+                this.hover = this.getPixelAlpha(this.pageClear.img, rX, rY);
+                if ((this.hover > 0) && player['status'] == 'closed' && player['confidence'] == 1) {
+                    for (var i = 0; i < this.regions.length; i++) {
+                        this.regions[i].imgData = null;
+                    }
                 }
             }
         }
@@ -307,10 +330,12 @@
     changePageLeft: function () {
         this.currentPage = 0;
         this.regions = this.pages[this.currentPage].regions;
+        
     },
 
     changePageRight: function () {
         this.currentPage = 1;
+
         this.regions = this.pages[this.currentPage].regions;
     },
           
@@ -360,14 +385,15 @@
               return Math.floor(Math.random() * (max - min + 1)) + min;
           },
 
-      paletteColors: [],
+          paletteColors: [],
+          droplets: [],
       pages: [],
       regions: [],
       lines: [],
       palettePosX: 403,
       palettePosY: 1022,
       paletteSpacing: 100,
-      paletteRadius: 35,
+      paletteRadius: 45,
       pageAreaY: 956,
       currentColor: [],
       currentPage: 1,

@@ -1,10 +1,11 @@
-function AirBallon(x, y, balllon_index, canvas) {
+function AirBallon(x, y, balllon_index, canvas, Color) {
 	var I = I || {};
 
 	I.x = x;
 	I.y = y;
 	I.letter = 'D';
 	I.speed = 1;
+	I.isActive = false;
 
 	I.arrayIndex = 0;
 
@@ -14,9 +15,9 @@ function AirBallon(x, y, balllon_index, canvas) {
 	I.canvas = canvas;
 	I.context = canvas.getContext('2d');
 
-	I.sprite = new Sprite('ballon', new ImagePainter('./resources/balloon-red.png'));
+	I.sprite = new Sprite('ballon', new ImagePainter('./resources/balloon-' + Color + '.png'));
 	I.basket = new Sprite('basket', new ImagePainter('./resources/basket-01.png'));
-	I.fire = new Sprite('fire', new ImagePainter('./resources/fire.png'));
+	I.fire = new Fire(canvas, x, y);
 	
 	I.hasSpeedBoost = false;
 	//Color Sprites
@@ -37,7 +38,10 @@ function AirBallon(x, y, balllon_index, canvas) {
 
 
 	I.update = function() {
-		
+	    this.isActive = false;
+	    if (this.hasSpeedBoost) {
+	        this.fire.update(this.x,this.y);
+	    }
 	}
 
 	I.draw = function() {
@@ -55,13 +59,9 @@ function AirBallon(x, y, balllon_index, canvas) {
 			ribbon.draw(that.context, that.x, that.y);	
 		});
 
-		if( this.hasSpeedBoost ) {
-			this.fire.width = this.width;
-	        this.fire.height = this.height;
-	        this.fire.left = this.x;
-	        this.fire.top = this.y;
-	        this.fire.paint(this.context);
-		}
+        if (this.hasSpeedBoost) {
+            this.fire.draw();
+        }
 
 		//basket
 		this.basket.width = this.width;
@@ -91,11 +91,13 @@ function AirBallon(x, y, balllon_index, canvas) {
 	}
 
 	I.setSpeedBoost = function() {
-		//this.hasSpeedBoost = true;
+		this.hasSpeedBoost = true;
 		this.speed = 2.5;
 		var that = this;
+		console.log('speedboost');
 		
-		setTimeout(function(){
+		setTimeout(function () {
+		    that.hasSpeedBoost = false;
 			that.speed = 1;
 		}, 3000);
 	}

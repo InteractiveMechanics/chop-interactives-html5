@@ -65,6 +65,7 @@
     <Content Include="images\arrow-right-hover.png" />
     <Content Include="images\arrow-right.png" />
     <Content Include="images\bkgr.png" />
+    <Content Include="images\blankFace.png" />
     <Content Include="images\body.png" />
     <Content Include="images\curtains.png" />
     <Content Include="images\face.png" />

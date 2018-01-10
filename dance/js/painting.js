@@ -9,7 +9,7 @@ function Painting(canvas, x, y, w, h, border, color) {
 	this.context.lineJoin = 'round';
   this.context.lineCap = 'round';
     //this.context.strokeStyle = 'hsl(189, 41%, 65%)';
-    this.context.strokeStyle = color;
+  this.context.strokeStyle = color;
   this.op = 0;
   this.painted = false;
   this.imgData = null;

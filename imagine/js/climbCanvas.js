@@ -84,12 +84,15 @@
                   }
                   Hero.arrows.forEach(function (item, index) {
                       //console.log(index + "," + item.x + "," + item.y);
-                      if (mX > item.x && mX < (item.x + item.width) && mY > item.y && mY < (item.y + item.height)) {
+                      if (mX > item.x && mX < (item.x + item.width) && mY > item.y && mY < (item.y + item.height) && item.changed == false) {
                           console.log('hover');
                           item.isHover = true;
                           if (player['confidence'] == 1 && player['status'] == 'closed') {
-
+                              item.changed = true;
                               item.changePart();
+                              setTimeout ( function() {
+                                  item.changed = false;
+                              }, 500);
                           }
                       } else {
                           item.isHover = false;
@@ -97,6 +100,8 @@
                   });
               }
           },
+
+
 
           update: function() {
               this._hero1.update();

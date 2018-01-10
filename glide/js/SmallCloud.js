@@ -2,15 +2,15 @@ function SmallCloud(direction, canvas) {
 	var I = I || {};
 
 
-	I.x = -100;
-	I.y = Math.random(0,800);
+	I.x = Math.floor(Math.random() * (-170 - -500 + 1)) + -500;
+	I.y = Math.floor(Math.random() * (500 - 0 + 1)) + 0;
 
 	I.direction = direction;
 
 	I.arrayIndex = 0;
 
-	I.width = 82.75;
-	I.height = 42.75;
+	I.width = 165.5;
+	I.height = 85.5;
 	I.outofbounds = false;
 
 	I.canvas = canvas;
@@ -25,7 +25,7 @@ function SmallCloud(direction, canvas) {
 	I.update = function() {
 		this.x += 2.75 * this.direction;
 
-		if(this.x > 3500) {
+		if(this.x > 2000) {
 			this.outofbounds = true;
 		}
 	}

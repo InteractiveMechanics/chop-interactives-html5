@@ -13,6 +13,7 @@ function Arrow(canvas, part, x, y, direction) {
     I.direction = direction;
 
     I.isHover = false;
+    I.changed = false;
 
 	I.sprite = new Sprite('arrow', new ImagePainter('./images/arrow-' + direction + '.png'));
     I.spriteHover = new Sprite('arrowHover', new ImagePainter('./images/arrow-' + direction + '-hover.png'));

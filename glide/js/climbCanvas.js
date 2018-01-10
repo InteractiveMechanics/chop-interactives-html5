@@ -25,6 +25,10 @@
               this._instructionsCanvas = document.getElementById('instructionsCanvas');
               this._instructionsContext = this._instructionsCanvas.getContext('2d');
 
+              this._balloon1 = new AirBallon(5, 5, 1, this.airBallonCanvas, 'blue');
+              this._balloon2 = new AirBallon(5, 5, 1, this.airBallonCanvas, 'orange');
+              this._balloon3 = new AirBallon(5, 5, 1, this.airBallonCanvas, 'pink');
+
               this.showInstructions();
           },
 
@@ -94,6 +98,7 @@
 
 
               if (randomNumber == 2) {
+                  console.log('newmedcloud');
                   return new MediumCloud(1, that.cloudCanvas);
               }
 
@@ -107,6 +112,7 @@
 
 
               if (randomNumber == 6) {
+                  console.log('newmedcloud');
                   return new MediumCloud(1, that.cloudCanvas);
               }
 
@@ -119,6 +125,7 @@
               }
 
               if (randomNumber == 10) {
+                  console.log('newmedcloud');s
                   return new MediumCloud(1, that.cloudCanvas);
               }
 
@@ -162,12 +169,12 @@
               return Math.floor(Math.random() * (max - min + 1)) + min;
           },
 
-          createAirBallon: function (p) {
-              if (!this.ballon[p]) {
-                  this.ballon[p] = new AirBallon(5, 5, 1, this.airBallonCanvas);
-              }
-              //this._boats[p].playerHasEntered(p);
-          },
+          //createAirBallon: function (p) {
+          //    if (!this.ballon[p]) {
+          //        this.ballon[p] = new AirBallon(5, 5, 1, this.airBallonCanvas);
+          //    }
+          //    //this._boats[p].playerHasEntered(p);
+          //},
 
           collides: function(a, b) {
               return a.x < b.x + (b.width) &&
@@ -226,19 +233,23 @@
               var that = this;
           },
 
-          moveBallon: function (p, playerData) {
+          moveBallon: function (p, playerData, balloon) {
               var properX = playerData['right']['pos']['x'];
               var properY = playerData['right']['pos']['y'];
-              if (playerData && this.ballon[p]) {
-                  var xDistance = properX - this.ballon[p].x;
-                  var yDistance = properY - this.ballon[p].y;
-                  var distance = Math.sqrt(xDistance * xDistance + yDistance * yDistance);
-
-                  if (distance > 1) {
-                      this.ballon[p].x += xDistance * this.ballon[p].getSpeed();
-                      this.ballon[p].y += yDistance * this.ballon[p].getSpeed();
+              if (balloon) {
+                  if (balloon.isActive == false) {
+                      balloon.isActive = true;
                   }
+                      var xDistance = properX - balloon.x;
+                      var yDistance = properY - balloon.y;
+                      var distance = Math.sqrt(xDistance * xDistance + yDistance * yDistance);
+
+                      if (distance > 1) {
+                          balloon.x += xDistance * balloon.getSpeed();
+                          balloon.y += yDistance * balloon.getSpeed();
+                      }
               }
+              
           },
 
           update: function () {
@@ -265,6 +276,10 @@
                       this.sandBags[i].update();
                   }
               }
+
+              this._balloon1.update();
+              this._balloon2.update();
+              this._balloon3.update();
           },
 
           draw: function () {
@@ -292,30 +307,100 @@
                   sb.draw();
               });
 
-              that.ballon.forEach(function (ballon, index) {
-                  if (ballon != undefined) {
-                      ballon.draw();
-                  }
-                  that.sandBags.forEach(function(sb){
-                      if(that.collides(sb, ballon)) {
+              if (this._balloon1.isActive == true) {
+                  this._balloon1.draw();
+                  that.sandBags.forEach(function (sb) {
+                      if (that.collides(sb, that._balloon1)) {
 
                           sb.outofbounds = true;
-                          switch(sb.powerUpType) {
+                          switch (sb.powerUpType) {
                               case "fire":
-                                  ballon.setSpeedBoost();
+                                  that._balloon1.setSpeedBoost();
                                   break;
                               case "basket":
-                                  ballon.changeBaskets();
+                                  that._balloon1.changeBaskets();
                                   break;
                               case "ribbon":
-                                  ballon.addRibbon();
+                                  that._balloon1.addRibbon();
                                   break;
                           }
-			
-			
+
+
                       }
                   });
-              });
+              };
+              if (this._balloon2.isActive == true) {
+                  this._balloon2.draw();
+                  that.sandBags.forEach(function (sb) {
+                      if (that.collides(sb, that._balloon2)) {
+
+                          sb.outofbounds = true;
+                          switch (sb.powerUpType) {
+                              case "fire":
+                                  that._balloon2.setSpeedBoost();
+                                  break;
+                              case "basket":
+                                  that._balloon2.changeBaskets();
+                                  break;
+                              case "ribbon":
+                                  that._balloon2.addRibbon();
+                                  break;
+                          }
+
+
+                      }
+                  });
+              }
+
+              if (this._balloon3.isActive == true) {
+                  this._balloon3.draw();
+                  that.sandBags.forEach(function (sb) {
+                      if (that.collides(sb, that._balloon3)) {
+
+                          sb.outofbounds = true;
+                          switch (sb.powerUpType) {
+                              case "fire":
+                                  that._balloon3.setSpeedBoost();
+                                  break;
+                              case "basket":
+                                  that._balloon3.changeBaskets();
+                                  break;
+                              case "ribbon":
+                                  that._balloon3.addRibbon();
+                                  break;
+                          }
+
+
+                      }
+                  });
+              }
+              
+              
+
+              //that.ballon.forEach(function (ballon, index) {
+              //    if (ballon != undefined) {
+              //        ballon.draw();
+              //    }
+              //    that.sandBags.forEach(function(sb){
+              //        if(that.collides(sb, ballon)) {
+
+              //            sb.outofbounds = true;
+              //            switch(sb.powerUpType) {
+              //                case "fire":
+              //                    ballon.setSpeedBoost();
+              //                    break;
+              //                case "basket":
+              //                    ballon.changeBaskets();
+              //                    break;
+              //                case "ribbon":
+              //                    ballon.addRibbon();
+              //                    break;
+              //            }
+			
+			
+              //        }
+              //    });
+              //});
 
               
           },

@@ -5,7 +5,7 @@ function MainCurtain(canvas) {
 	I.context = canvas.getContext('2d');
 
 	I.width = 660;
-	I.height = 1060;
+	I.height = 1034;
 	I.left = 0;
 	I.top = 0;
 
@@ -15,12 +15,12 @@ function MainCurtain(canvas) {
     I.frame = 5;
 
 	I.cells = [
-		{left: 0, top: 0, width: 1303, height: 2041},
-		{ left: 1303, top: 0, width: 1303, height: 2041 },
-		{ left: 2606, top: 0, width: 1303, height: 2041 },
-		{ left: 3909, top: 0, width: 1303, height: 2041 },
-		{ left: 5212, top: 0, width: 1303, height: 2041 },
-		{ left: 6515, top: 0, width: 1303, height: 2041 },
+		{left: 0, top: 0, width: 660, height: 1034},
+		{ left: 660, top: 0, width: 660, height: 1034 },
+		{ left: 1320, top: 0, width: 660, height: 1034 },
+		{ left: 1980, top: 0, width: 660, height: 1034 },
+		{ left: 2640, top: 0, width: 660, height: 1034 },
+		{ left: 3300, top: 0, width: 660, height: 1034 },
 	];
 
 	I.sprite = new Sprite('mainCurtain', new SpriteSheetPainter('./images/sprite_curtains.png', I.cells));

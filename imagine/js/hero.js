@@ -13,6 +13,7 @@ function Hero(canvas) {
 
 	I.curtains = new Sprite('curtains', new ImagePainter('./images/curtains.png'));
 	I.spotlight = new Sprite('spotlight', new ImagePainter('./images/spotlight.png'));
+	I.blankFace = new Sprite('blankFace', new ImagePainter('./images/blankFace.png'));
 
 
 	I.feet = new Feet(canvas);
@@ -20,6 +21,7 @@ function Hero(canvas) {
     I.face = new Face(canvas);
     I.hat = new Hat(canvas);
     I.mainCurtain = new MainCurtain(canvas);
+
 
     I.arrows = [
         new Arrow(canvas, I.hat, 20, 200, 'left'),
@@ -39,6 +41,12 @@ function Hero(canvas) {
             this.spotlight.left = 112.75;
             this.spotlight.top = 50;
             this.spotlight.paint(this.context);
+
+            this.blankFace.width = 652;
+            this.blankFace.height = 431;
+            this.blankFace.left = 0;
+            this.blankFace.top = 230;
+            this.blankFace.paint(this.context);
 
 			this.feet.draw();
             this.body.draw();
