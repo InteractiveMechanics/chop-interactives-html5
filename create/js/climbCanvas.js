@@ -36,6 +36,7 @@
               this.pages[1].heatMap = this.createHeatmap(this.pages[1]);
               this.regions = this.pages[this.currentPage].regions;
               //console.log(this.pages);
+              this.changed = false;
 
               
               
@@ -64,7 +65,7 @@
               for(var i = 0; i < this.colorData.length; i++) {
                   var colorName = this.colorData[i][0];
                   var colorRGBA = [this.colorData[i][1], this.colorData[i][2], this.colorData[i][3], this.colorData[i][4]];
-                  var colorFile = 'images/btn-' + colorName + '.png';
+                  var colorFile = 'images/btn-' + colorName ;
                   var posX = this.palettePosX + (this.paletteSpacing*i);
                   var posY = this.palettePosY;
                   this.paletteColors.push(new PaletteColor(colorName, colorRGBA, colorFile, posX, posY, this.paletteRadius, this.uiCanvas));
@@ -78,13 +79,13 @@
           },
 
           createPager: function () {
-              this.pageLeft = new Button('./images/icon-arrow-left.png', 35, 970, this.uiCanvas);
-              this.pageRight = new Button('./images/icon-arrow-right.png', 104, 972, this.uiCanvas);
+              this.pageLeft = new Button('arrow-left', './images/icon-arrow-left', 35, 970, this.uiCanvas);
+              this.pageRight = new Button('arrow-right', './images/icon-arrow-right', 104, 972, this.uiCanvas);
               //console.log(this.pageLeft);
           },
 
           createClear: function () {
-              this.pageClear = new Button('./images/icon-clear.png', 1810, 979, this.uiCanvas);
+              this.pageClear = new Button('clear','./images/icon-clear', 1810, 979, this.uiCanvas);
           },
 
           createPages: function createPages() {
@@ -112,7 +113,7 @@
               context.clearRect(0, 0, 1920, 1080);
           },
 
-          isOverPaletteColor: function (mX, mY, circle) {
+          isOverCircle: function (mX, mY, circle) {
               return Math.sqrt((mX-circle.x)*(mX-circle.x) + (mY-circle.y)*(mY-circle.y)) < circle.r;
           },
 
@@ -227,15 +228,15 @@
             };
             this.uiContext.drawImage(this.droplets[this.rightHandArray[index]], mouseX +50, mouseY);
         }
-        if (hand == "left") {
-            if (this.leftHandArray[index] == null) {
-                this.leftHandArray[index] = 10;
-            }
-            this.uiContext.drawImage(this.droplets[this.leftHandArray[index]], mouseX - 50, mouseY);
-        }
-        //if (this.isOverHelpIcon(mouseX, mouseY)) {
-        //    this._instructions.paused = false;
+        //if (hand == "left") {
+        //    if (this.leftHandArray[index] == null) {
+        //        this.leftHandArray[index] = 10;
+        //    }
+        //    this.uiContext.drawImage(this.droplets[this.leftHandArray[index]], mouseX - 50, mouseY);
         //}
+        if (this.isOverHelpIcon(mouseX, mouseY)) {
+            this._instructions.paused = false;
+        }
         if (mouseY < this.uiRegion.y) {
             var heatMap = this.pages[this.currentPage].heatMap
             var mapIndex = mouseX + (mouseY * 1920);
@@ -246,71 +247,89 @@
 
                 var newImage = this.changeColor(this.regions[regionIndex].img, this.rightHandArray[index]);
                 this.regions[regionIndex].img = newImage;
-                console.log(regionIndex + ' region , color ' + this.leftHandArray[index]);
             }
-            if (regionIndex > 0 && hand == 'left' && (mouseY < this.pageAreaY) && player['confidence'] == 1 && player['status'] == 'closed') {
-                if (this.leftHandArray[index] == null) {
-                    this.leftHandArray[index] = [this.colorData[10][1], this.colorData[10][2], this.colorData[10][3], this.colorData[10][4]];
-                };
-                var newImage = this.changeColor(this.regions[regionIndex].img, this.leftHandArray[index]);
-                this.regions[regionIndex].img = newImage;
-                console.log(regionIndex + ' region , color ' + this.leftHandArray[index]);
-            }
+            //if (regionIndex > 0 && hand == 'left' && (mouseY < this.pageAreaY) && player['confidence'] == 1 && player['status'] == 'closed') {
+            //    if (this.leftHandArray[index] == null) {
+            //        this.leftHandArray[index] = [this.colorData[10][1], this.colorData[10][2], this.colorData[10][3], this.colorData[10][4]];
+            //    };
+            //    var newImage = this.changeColor(this.regions[regionIndex].img, this.leftHandArray[index]);
+            //    this.regions[regionIndex].img = newImage;
+            //    console.log(regionIndex + ' region , color ' + this.leftHandArray[index]);
+            //}
         };
+
+        //uiregion hover states
         if (mouseY > this.uiRegion.y) {
             for (var i = 0; i < this.paletteColors.length; i++) {
                 var paletteColor = this.paletteColors[i];
-                if (this.isOverPaletteColor(mouseX, mouseY, paletteColor) && player['status'] == 'closed' && player['confidence'] == 1) {
-                    if (hand == 'right') {
-                        //console.log(paletteColor.RGBA);
-                        this.rightHandArray[index] = [i];
+                if (this.isOverCircle(mouseX, mouseY, paletteColor)) {
+                    paletteColor.isHover = true;
+                    if (player['status'] == 'closed' && player['confidence'] == 1) {
+                        if (hand == 'right') {
+                            this.rightHandArray[index] = [i];
+                        }
                     }
 
-                    if (hand == 'left') {
-                        //console.log(paletteColor.RGBA);
-                        this.leftHandArray[index] = [i];
-                    }
                 } else {
-                    // alert('clicked outside paletteColor');
+                    paletteColor.isHover = false;
                 }
             }
 
 
             if (this.pageRight) {
-                var rX = mouseX - this.pageRight.x;
-                var rY = mouseY - this.pageRight.y;
-                this.hover = this.getPixelAlpha(this.pageRight.img, rX, rY);
-                if ((this.hover > 0) && player['status'] == 'closed' && player['confidence'] == 1) {
-                    this.changePageRight();
-                    //console.log(this.currentPage);
+                if (mouseX > this.pageRight.x && mouseX < (this.pageRight.x + this.pageRight.width) && mouseY > this.pageRight.y && mouseY < (this.pageRight.y + this.pageRight.height)) {
+                    this.pageRight.isHover = true;
+                    if (player['confidence'] == 1 && player['status'] == 'closed') {
+                        console.log('changed page');
+                        this.changed = true;
+                        this.changePageRight();
+
+                        setTimeout(function () {
+                            this.changed = false;
+                        }, 500);
+                    }
                 } else {
-                    //console.log(region.color);
+                    this.pageRight.isHover = false;
                 }
             }
 
             if (this.pageLeft) {
-                var rX = mouseX - this.pageLeft.x;
-                var rY = mouseY - this.pageLeft.y;
-                this.hover = this.getPixelAlpha(this.pageLeft.img, rX, rY);
-                if ((this.hover > 0) && player['status'] == 'closed' && player['confidence'] == 1) {
-                    this.changePageLeft();
-                    //console.log(this.currentPage);
+                if (mouseX > this.pageLeft.x && mouseX < (this.pageLeft.x + this.pageLeft.width) && mouseY > this.pageLeft.y && mouseY < (this.pageLeft.y + this.pageLeft.height)) {
+                    this.pageLeft.isHover = true;
+                    if (this.changed == false && player['confidence'] == 1 && player['status'] == 'closed') {
+                        console.log('changed page');
+                        this.changed = true;
+                        this.changePageLeft();
+
+                        setTimeout(function () {
+                            this.changed = false;
+                        }, 500);
+                    }
                 } else {
-                    //console.log(region.color);
+                    this.pageLeft.isHover = false;
                 }
             }
 
+
             if (this.pageClear) {
-                var rX = mouseX - this.pageClear.x;
-                var rY = mouseY - this.pageClear.y;
-                this.hover = this.getPixelAlpha(this.pageClear.img, rX, rY);
-                if ((this.hover > 0) && player['status'] == 'closed' && player['confidence'] == 1) {
-                    for (var i = 0; i < this.regions.length; i++) {
-                        this.regions[i].imgData = null;
+
+                if (this.isOverCircle(mouseX, mouseY, this.pageClear)) {
+                    this.pageClear.isHover = true;
+                    
+                    if (player['status'] == 'closed' && player['confidence'] == 1) {
+                        console.log('clear image data');
+                        for (var i = 0; i < this.regions.length; i++) {
+                            var newImage = this.changeColor(this.regions[i].img, 10);
+                            this.regions[i].img = newImage;
+                        }
                     }
+                }
+                else {
+                    this.pageClear.isHover = false;
                 }
             }
         }
+        
 
 
     },

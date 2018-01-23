@@ -5,7 +5,7 @@
         maxPlayers: 3,
         handHeight: 76,
         handWidth: 60,
-        instructionsDuration: 8000,
+        instructionsDuration: 11000,
         tooManyTimeoutDuration: 30000,
         resetTimeoutDuration: 30000
     };
@@ -72,12 +72,12 @@
                           that._climbCanvas.newPlayerAdded();
                           // console.log('Show instructions for Player ' + p);
 
-                          setTimeout(function () {
-                              that._activeAlert = false;
-                              that._instructions.paused = true;
-                              that.clearScreen(that._instructionsContext);
-                              // console.log('Clear instructions for Player ' + p);
-                          }, 6000);
+                          //setTimeout(function () {
+                          //    that._activeAlert = false;
+                          //    that._instructions.paused = true;
+                          //    that.clearScreen(that._instructionsContext);
+                          //    // console.log('Clear instructions for Player ' + p);
+                          //}, 6000);
 
                       }
                   }
@@ -107,7 +107,7 @@
                   if (players[aP]) {
                       that.drawHands(aP, players[aP], that._lastPlayers[aP]);
                       that._climbCanvas.checkRegions(aP, players[aP]['right'], that._lastPlayers[aP]['right'], 'right');
-                      that._climbCanvas.checkRegions(aP, players[aP]['left'], that._lastPlayers[aP]['left'], 'left');
+                      //that._climbCanvas.checkRegions(aP, players[aP]['left'], that._lastPlayers[aP]['left'], 'left');
                   }
               });
 
@@ -154,7 +154,7 @@
                   // console.log('Remove "too many players" alert.');
               }
 
-              //this.showInstructions();
+              this.showInstructions();
               this._lastPlayers = players;
           },
           drawHands: function (p, player, lastPlayer) {
@@ -213,6 +213,41 @@
               }
               context.restore();
           },
+
+          drawPaintbrush: function (p, player, lastPlayer) {
+              var context = this._context;
+              var rightPaintbrush = new Image();
+
+              // If the kinect is confident and is able to accurately track the hand, then use that date and store it for the future
+              // if the kinect is not confident and is not able to accurately track the hand, then use the last set of confident data that was stored
+              context.save();
+              if (player['right']['confidence'] === 1) {
+                  if (player['right']['status'] === 'closed') {
+                      rightHand.src = 'images/shared/P' + p + '_closed.png';
+                  } else {
+                      rightHand.src = 'images/shared/P' + p + '_open.png';
+                  }
+                  this._lastConfidentPlayers[p]['right'] = player['right'];
+              } else {
+                  if (this._lastConfidentPlayers[p]['right']['status'] === 'closed') {
+                      rightHand.src = 'images/shared/P' + p + '_closed.png';
+                  } else {
+                      rightHand.src = 'images/shared/P' + p + '_open.png';
+                  }
+              }
+              context.scale(-1, 1);
+              if (player['right']['trackingState'] === 2) {
+                  context.translate(-(Math.round(player['right']['pos']['x'] - constants.handWidth / 2)), Math.round(player['right']['pos']['y'] - constants.handHeight / 2));
+                  context.drawImage(rightHand, -60, 0, 60, 76);
+              } else if (player['right']['trackingState'] === 1 || 0) {
+                  context.translate(-(Math.round(this._lastConfidentPlayers[p]['right']['pos']['x'] - constants.handWidth / 2)), Math.round(this._lastConfidentPlayers[p]['right']['pos']['y'] - constants.handHeight / 2));
+                  context.globalAlpha = 0.5;
+                  context.drawImage(rightHand, -60, 0, 60, 76);
+              }
+              context.restore();
+
+              
+          },
           map_range: function (value, low1, high1, low2, high2) {
               return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
           },
@@ -221,8 +256,8 @@
               var that = this;
 
               if (this._activeAlert) {
-                  this._instructions.x = 860;
-                  this._instructions.y = 800;
+                  this._instructions.x = 1715;
+                  this._instructions.y = 775;
                   this._instructions.draw(context);
               }
           },

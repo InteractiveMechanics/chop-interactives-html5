@@ -60,6 +60,15 @@
       <SubType>Designer</SubType>
     </AppxManifest>
     <Content Include="2017-03-20_Dance_demo-screen-ani_v01.mp4" />
+    <Content Include="images\btn-play-hover.png" />
+    <Content Include="images\icon-trash-hover.png" />
+    <Content Include="images\instructions.png" />
+    <Content Include="images\timer11.png" />
+    <Content Include="images\timer12.png" />
+    <Content Include="images\timer13.png" />
+    <Content Include="images\timer14.png" />
+    <Content Include="images\timer15.png" />
+    <Content Include="images\timer16.png" />
     <Content Include="video\2017-03-20_Dance_demo-screen-ani_v01.mp4" />
     <None Include="DanceInteractive_TemporaryKey.pfx" />
     <Content Include="default.html" />
@@ -69,7 +78,6 @@
     <Content Include="images\btn-undo.png" />
     <Content Include="images\icon-thumbnail.png" />
     <Content Include="images\icon-trash.png" />
-    <Content Include="images\Instructions-Play.png" />
     <Content Include="images\logo.scale-100.png" />
     <Content Include="images\logo.scale-140.png" />
     <Content Include="images\logo.scale-180.png" />

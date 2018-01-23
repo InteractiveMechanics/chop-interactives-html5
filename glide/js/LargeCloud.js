@@ -22,7 +22,7 @@ function LargeCloud(direction, canvas) {
 
 
 	I.update = function() {
-		this.x += 1.50 * this.direction;
+		this.x += 2 * this.direction;
 
 		if(this.x > 2000) {
 			this.outofbounds = true;

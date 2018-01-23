@@ -73,12 +73,12 @@
                           that._climbCanvas.newPlayerAdded();
                           // console.log('Show instructions for Player ' + p);
 
-                          setTimeout(function () {
-                              that._activeAlert = false;
-                              that._instructions.paused = true;
-                              that.clearScreen(that._instructionsContext);
-                              // console.log('Clear instructions for Player ' + p);
-                          }, 6000);
+                          //setTimeout(function () {
+                          //    that._activeAlert = false;
+                          //    that._instructions.paused = true;
+                          //    that.clearScreen(that._instructionsContext);
+                          //    // console.log('Clear instructions for Player ' + p);
+                          //}, 6000);
 
                       }
                   }
@@ -155,7 +155,7 @@
                   // console.log('Remove "too many players" alert.');
               }
 
-              //this.showInstructions();
+              this.showInstructions();
               this._lastPlayers = players;
           },
           drawHands: function (p, player, lastPlayer) {
@@ -222,8 +222,8 @@
               var that = this;
 
               if (this._activeAlert) {
-                  this._instructions.x = 860;
-                  this._instructions.y = 800;
+                  this._instructions.x = 1715;
+                  this._instructions.y = 775;
                   this._instructions.draw(context);
               }
           },

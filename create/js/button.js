@@ -1,31 +1,45 @@
-function Button(file, x, y, canvas) {
+
+function Button(name, file, x, y, canvas) {
+
+
 
 		this.x = x;
 		this.y = y;
-
-		this.arrayIndex = 0;
-
-	  var pixels = [];
+		this.name = name;
+		this.file = file;
+		this.isHover = false;
+        
+		this.width = 80;
+		this.height = 80;
+		this.r = this.width / 2;
 
 		this.canvas = canvas;
 		this.context = canvas.getContext('2d');
 
-	  var tcanvas = document.createElement('canvas'), /// create temp canvas
-	  tctx = tcanvas.getContext('2d'); /// temp context
 
-	  this.img = new Image();
+	  this.sprite = new Sprite(name, new ImagePainter(file + '.png'));
+	  this.spriteHover = new Sprite(name + '-hover', new ImagePainter(file + '-hover.png'));
 
-	  this.img.onload = function () {
+
+
+	  this.draw = function () {
+	      this.context.save();
+	      if (!this.isHover) {
+	          this.sprite.width = this.width;
+	          this.sprite.height = this.height;
+	          this.sprite.left = this.x ;
+	          this.sprite.top = this.y ;
+	          this.sprite.paint(this.context);
+	      } else {
+	          this.spriteHover.width = this.width;
+	          this.spriteHover.height = this.height;
+	          this.spriteHover.left = this.x;
+	          this.spriteHover.top = this.y;
+	          this.spriteHover.paint(this.context);
+	      }
+	      this.context.restore();
+
 	  }
-	  this.img.crossOrigin = "Anonymous";
-	  this.img.src = file;
-
-		this.draw = function() {
-	    this.context.save();
-	    //console.log(this.img);
-	    this.context.drawImage(this.img, this.x, this.y);
-	    this.context.restore();
-		}
 
 
 		return this;

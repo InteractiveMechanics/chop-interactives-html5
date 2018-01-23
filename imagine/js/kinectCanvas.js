@@ -190,8 +190,8 @@
                       
 
                       that.drawHands(aP, players[aP], that._lastPlayers[aP], offset);
-                      that._climbCanvas.detectActivated(players[aP]['right'], hero, offset);
-                      that._climbCanvas.detectActivated(players[aP]['left'], hero, offset);
+                      that._climbCanvas.detectActivated(players[aP]['right'], hero, offset, 'right');
+                      that._climbCanvas.detectActivated(players[aP]['left'], hero, offset, 'left');
                   }
               });
 
@@ -241,13 +241,25 @@
                   // console.log('Remove "too many players" alert.');
               }
 
-              //this.showInstructions();
+              this.showInstructions();
               this._lastPlayers = players;
           },
-          drawHands: function (p, player, lastPlayer) {
+          drawHands: function (p, player, lastPlayer, panel) {
               var context = this._context;
               var rightHand = new Image();
               var leftHand = new Image();
+
+              var spineX = player['spine']['pos']['x'];
+              var minX = spineX - 320;
+              var maxX = spineX + 320;
+              var panelMinX = 640 * panel - 30;
+              var panelMaxX = 640 * (panel + 1) + 30;
+              //console.log(minX +" , "+ maxX +" , "+ panelMinX+" , "+panelMaxX);
+
+              player['right']['pos']['x'] = this.map_range(player['right']['pos']['x'], minX, maxX, panelMinX, panelMaxX);
+              player['left']['pos']['x'] = this.map_range(player['left']['pos']['x'], minX, maxX, panelMinX, panelMaxX);
+              console.log(player['right']['pos']['x']);
+              
 
               // If the kinect is confident and is able to accurately track the hand, then use that date and store it for the future
               // if the kinect is not confident and is not able to accurately track the hand, then use the last set of confident data that was stored
@@ -308,8 +320,8 @@
               var that = this;
 
               if (this._activeAlert) {
-                  this._instructions.x = 860;
-                  this._instructions.y = 800;
+                  this._instructions.x = 1715;
+                  this._instructions.y = 775;
                   this._instructions.draw(context);
               }
           },

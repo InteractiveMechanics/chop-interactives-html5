@@ -75,7 +75,7 @@
                               lastPlayers[p] = players[p];
 
                               that._activeAlert = true;
-                              //that._instructions.paused = false;
+                              that._instructions.paused = false;
                               // console.log('Show instructions for Player ' + p);
 
                               that._climbCanvas.newPlayerAdded();
@@ -122,7 +122,7 @@
                                   that._activeAlert = false;
                                   that._instructions.paused = true;
                                   that.clearScreen(that._instructionsContext);
-                                  // console.log('Clear instructions for Player ' + p);
+                                   console.log('Clear instructions for Player ' + p);
                               }, 6000);*/
                           }
                       }
@@ -233,7 +233,7 @@
                   // console.log('Remove "too many players" alert.');
               }
 
-              //this.showInstructions();
+              this.showInstructions();
 
               this._climbCanvas.showInstructions();
               this._climbCanvas.draw();
@@ -248,6 +248,7 @@
               // if the kinect is not confident and is not able to accurately track the hand, then use the last set of confident data that was stored
               context.save();
               if (player['right']['confidence'] === 1) {
+                  console.log('Kinect player ' + p + ' confident');
                   if (player['right']['status'] === 'closed') {
                       rightHand.src = 'images/shared/P' + p + '_closed.png';
                   } else {

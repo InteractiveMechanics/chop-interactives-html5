@@ -22,7 +22,7 @@ function SandBag(canvas, powerup) {
 	I.update = function() {
 		this.y += 1.5;
 
-		if(this.y > 2000) {
+		if(this.y > 1100) {
 			this.outofbounds = true;
 		}
 	}

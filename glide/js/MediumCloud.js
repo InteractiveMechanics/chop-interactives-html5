@@ -20,7 +20,7 @@ function MediumCloud(direction, canvas) {
 	
 
 	I.update = function() {
-		this.x += 2 * this.direction;
+		this.x += 2.5 * this.direction;
 
 		if(this.x > 2000) {
 			this.outofbounds = true;

@@ -23,13 +23,16 @@
               this._hero3;
               this.hero3Canvas = document.getElementById('hero3');
 
+              this._instructionsCanvas = document.getElementById('instructionsCanvas');
+              this._instructionsContext = this._instructionsCanvas.getContext('2d');
+
               this.isMouseDown = false;
               this.mousePos = {
                   x: -1,
                   y: -1
               };
 
-              //this.showInstructions();
+              this.showInstructions();
 
               this.stage = new Stage(this.stageCanvas);
 
@@ -37,44 +40,14 @@
               this._hero2 = new Hero(this.hero2Canvas);
               this._hero3 = new Hero(this.hero3Canvas);
 
-              //this.hero[0].isActive = false;
-              //this.hero[2].isActive = false;
-
-              //this.hero2Canvas.onmousedown = this.mouseDown;
-              //this.hero2Canvas.onmouseup = this.mouseUp;
-              //this.hero2Canvas.onmousemove = this.mouseMove;
           },
 
           setup: function () {
               console.log('setup () run');
           },
 
-              
 
-          //checkHands: function (index, player) {
-          //    console.log(index + "," + mouseX + ',' + mouseY);
-          //    var mouseX = player['pos']['x'] - this.hero[index].offset;
-          //    var mouseY = player['pos']['y'];
-              
-
-          //    this.hero[index].arrows.forEach(function (item, index) {
-          //        console.log(index + "," + item.x + "," + item.y);
-          //        if (mouseX > item.x && mouseX < (item.x + item.width) && mouseY > item.y && mouseY < (item.y + item.height)) {
-          //            console.log('hover');
-          //            item.isHover = true;
-          //            if (player['confidence'] == 1 && player['status'] == 'closed') {
-                          
-          //                item.changePart();
-          //            }
-          //        } else {
-          //            item.isHover = false;
-          //        }
-          //    });
-
-              
-          //},
-
-          detectActivated: function (player, Hero, index) {
+          detectActivated: function (player, Hero, index, hand) {
               var that = this;
               var mX = player['pos']['x'] - ((640 * index)-10);
               var mY = player['pos']['y'];
@@ -82,22 +55,43 @@
                   if (Hero.isActive == false) {
                       Hero.isActive = true;
                   }
-                  Hero.arrows.forEach(function (item, index) {
-                      //console.log(index + "," + item.x + "," + item.y);
-                      if (mX > item.x && mX < (item.x + item.width) && mY > item.y && mY < (item.y + item.height) && item.changed == false) {
-                          console.log('hover');
-                          item.isHover = true;
-                          if (player['confidence'] == 1 && player['status'] == 'closed') {
-                              item.changed = true;
-                              item.changePart();
-                              setTimeout ( function() {
-                                  item.changed = false;
-                              }, 500);
+                  if (hand == 'right') {
+                      Hero.arrows.forEach(function (item, index) {
+                          //console.log(index + "," + item.x + "," + item.y);
+                          if (mX > item.x && mX < (item.x + item.width) && mY > item.y && mY < (item.y + item.height)) {
+                              item.rightIsHover = true;
+                              if (item.changed == false && player['confidence'] == 1 && player['status'] == 'closed') {
+                                  item.changed = true;
+                                  item.changePart();
+
+                                  setTimeout(function () {
+                                      item.changed = false;
+                                  }, 500);
+                              }
+                          } else {
+                              item.rightIsHover = false;
                           }
-                      } else {
-                          item.isHover = false;
-                      }
-                  });
+                      });
+                  }
+                  if (hand == 'left') {
+                      Hero.arrows.forEach(function (item, index) {
+                          //console.log(index + "," + item.x + "," + item.y);
+                          if (mX > item.x && mX < (item.x + item.width) && mY > item.y && mY < (item.y + item.height)) {
+                              item.leftIsHover = true;
+                              if (item.changed == false && player['confidence'] == 1 && player['status'] == 'closed') {
+                                  item.changed = true;
+                                  item.changePart();
+
+                                  setTimeout(function () {
+                                      item.changed = false;
+                                  }, 500);
+                              }
+                          } else {
+                              item.leftIsHover = false;
+                          }
+                      });
+                  }
+                  
               }
           },
 
@@ -135,6 +129,12 @@
               this._instructions.paused = true;
           },
 
+          showInstructions: function () {
+              this._instructions.x = 1715;
+              this._instructions.y = 775;
+              this._instructions.draw(this._instructionsContext);
+          },
+
           getMousePos: function (_canvas, evt) {
       var rect = _canvas.getBoundingClientRect();
       return {
@@ -155,11 +155,15 @@
 
     mouseUp: function (e) {
       isMouseDown = false;
-  },
+    },
+
+    
 
           rightHandArray: [],
           leftHandArray: [],
-
+          _instructionsCanvas: null,
+          _instructionsContext: null,
+          _instructions: new Instructions(),
           playerAdded: false,
           randomNumber: []
 

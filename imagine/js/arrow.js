@@ -12,7 +12,8 @@ function Arrow(canvas, part, x, y, direction) {
     I.part = part;
     I.direction = direction;
 
-    I.isHover = false;
+    I.leftIsHover = false;
+    I.rightIsHover = false;
     I.changed = false;
 
 	I.sprite = new Sprite('arrow', new ImagePainter('./images/arrow-' + direction + '.png'));
@@ -20,7 +21,7 @@ function Arrow(canvas, part, x, y, direction) {
 	
 	I.draw = function(context) {
 		this.context.save();
-        if (!this.isHover){
+		if (!this.leftIsHover && !this.rightIsHover) {
             this.sprite.width = this.width;
     		this.sprite.height = this.height;
     		this.sprite.left = this.x;

@@ -23,7 +23,7 @@ function SmallCloud(direction, canvas) {
 
 
 	I.update = function() {
-		this.x += 2.75 * this.direction;
+		this.x += 3.5 * this.direction;
 
 		if(this.x > 2000) {
 			this.outofbounds = true;

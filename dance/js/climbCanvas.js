@@ -107,24 +107,27 @@
               this.createPaintings();
 
               this.timer = [];
-              this.seconds = 10;
+              this.seconds = 15;
 
               for (var i = 0; i < this.seconds +1; i++) {
                   this.timer[i] = new Image();
                   this.timer[i].src = './images/timer' + i + '.png';
               }
 
+              this.otherPlayerHover = false;
+
               
-              this.startButton = new Button('start', './images/btn-play.png', 1500, 638, 185, this.mainCanvas);
-              this.clearButton = new Button('clear', './images/btn-undo.png', 1834, 86, 86, this.veilCanvas);
+              this.startButton = new Button('start', './images/btn-play', 1500, 638, 185, this.mainCanvas);
+              this.clearButton = new Button('clear', './images/btn-undo', 1834, 86, 86, this.veilCanvas);
               this.hangThumbnails();
               this.veilOpacity = 0;
               this.bkgdOpacity = 0;
               this.mainTimerStarted = false;
-              this.seconds = 10;
+              this.seconds = 15;
               this.timer1 = 60;
               this.timer2 = this.seconds * 60;
               this.videoStart();
+              
           },
 
           createPaintings: function() {
@@ -284,7 +287,7 @@
             this.veilContext.drawImage(this.timer[this.seconds], 0, 0);
             this.clearButton.draw();
 
-            if (this.seconds == 10 && this.bkgdOpacity < 100) {
+            if (this.seconds == 15 && this.bkgdOpacity < 100) {
                 this.bkgdOpacity += 2;
                 if (this.veilOpacity < 90) {
                     this.veilOpacity += 2;
@@ -344,9 +347,26 @@
                     && mouseY < this.thumbnails[i].trashPosY + this.thumbnails[i].trashRadius
                     && mouseX > this.thumbnails[i].trashPosX - this.thumbnails[i].trashRadius
                     && mouseX < this.thumbnails[i].trashPosX + this.thumbnails[i].trashRadius
-                    && player['status'] == 'closed'
-                    && player['confidence'] == 1) {
-                    this.trashThumbnail(i);
+                    ) {
+                    if (hand == 'right') {
+                        thumbnail.trash.rightHoverArray[index] = true;
+                    }
+                    if (hand == 'left') {
+                        thumbnail.trash.leftHoverArray[index] = true;
+
+                    }
+                    if (player['status'] == 'closed' && player['confidence'] == 1) {
+                        this.trashThumbnail(i);
+                    }
+                    
+                } else {
+                    if (hand == 'right') {
+                        thumbnail.trash.rightHoverArray[index] = false;
+                    }
+                    if (hand == 'left') {
+                        thumbnail.trash.leftHoverArray[index] = false;
+                    }
+
                 }
             }
 
@@ -354,18 +374,37 @@
                 this._instructions.paused = false;
             }
 
-            if (mouseY > this.startButton.y - this.startButton.r
-                && mouseY < this.startButton.y + this.startButton.r
-                && mouseX > this.startButton.x - this.startButton.r
-                && mouseX < this.startButton.x + this.startButton.r
-                && player['status'] == 'closed'
-                && player['confidence'] == 1
-                && hand == 'right') {
-                this.ispainting = true;
-                if (this.video){
-                    this.videoStop();
-                }
+            if (mouseY > this.startButton.y
+                && mouseY < this.startButton.y + this.startButton.height
+                && mouseX > this.startButton.x 
+                && mouseX < this.startButton.x + this.startButton.height
+                ) {
 
+                if (hand == 'right') {
+                    this.startButton.rightHoverArray[index] = true;
+                }
+                if (hand == 'left') {
+                    this.startButton.leftHoverArray[index] = true;
+                 
+                }
+                
+                if(player['status'] == 'closed'
+                && player['confidence'] == 1
+                ) {
+                    this.ispainting = true;
+                    if (this.video){
+                        this.videoStop();
+                    }
+                }
+              
+            } else {
+                if (hand == 'right') {
+                    this.startButton.rightHoverArray[index] = false;
+                }
+                if (hand == 'left') {
+                    this.startButton.leftHoverArray[index] = false;
+                }
+                
             }
         }
         
@@ -374,14 +413,29 @@
             && mouseY < this.clearButton.y + this.clearButton.r
             && mouseX > this.clearButton.x - this.clearButton.r
             && mouseX < this.clearButton.x + this.clearButton.r
-            && player['status'] == 'closed'
-            && player['confidence'] == 1) {
-            this.paintings.forEach(function (painting) {
-                painting.clear();
-            });
+            ) {
+            if (hand == 'right') {
+                this.clearButton.rightHoverArray[index] = true;
+            }
+            if (hand == 'left') {
+                this.clearButton.leftHoverArray[index] = true;
+
+            }
+            if (player['status'] == 'closed' && player['confidence'] == 1) {
+                this.paintings.forEach(function (painting) {
+                    painting.clear();
+                });
+            }
+        } else {
+            if (hand == 'right') {
+                this.clearButton.rightHoverArray[index] = false;
+            }
+            if (hand == 'left') {
+                this.clearButton.leftHoverArray[index] = false;
+            }
         }
 
-      
+        
     },
 
     startPainting: function () {
@@ -397,7 +451,7 @@
 
     stopPainting: function () {
         clearInterval(this.mainTimer);
-        this.seconds = 10;
+        this.seconds = 15;
         this.ispainting = false;
         //record painting data to thumbnail
         var that = this;

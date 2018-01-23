@@ -25,7 +25,7 @@
               this._instructionsCanvas = document.getElementById('instructionsCanvas');
               this._instructionsContext = this._instructionsCanvas.getContext('2d');
 
-              this._balloon1 = new AirBallon(5, 5, 1, this.airBallonCanvas, 'blue');
+              this._balloon1 = new AirBallon(5, 5, 1, this.airBallonCanvas, 'red');
               this._balloon2 = new AirBallon(5, 5, 1, this.airBallonCanvas, 'orange');
               this._balloon3 = new AirBallon(5, 5, 1, this.airBallonCanvas, 'pink');
 
@@ -77,7 +77,7 @@
                       if (cloud) {
                           
                           var powerup = that.getPowerUp();
-                          var bag = new SandBag(that.sandbagCanvas, powerup);
+                          var bag = new SandBag(that.sandbagCanvas, 'ribbon');
                           bag.x = cloud.x + (cloud.width / 2);
                           bag.y = cloud.y + (cloud.height / 2);
                           that.sandBags.push(bag);
@@ -208,7 +208,7 @@
           },
           newPlayerAdded: function () {
               this.playerAdded = true;
-              this._instructions.paused = false;
+             this._instructions.paused = false;
           },
           newPlayerRemoved: function () {
               this.playerAdded = false;
@@ -310,7 +310,7 @@
               if (this._balloon1.isActive == true) {
                   this._balloon1.draw();
                   that.sandBags.forEach(function (sb) {
-                      if (that.collides(sb, that._balloon1)) {
+                      if (sb.outofbounds == false && that.collides(sb, that._balloon1)) {
 
                           sb.outofbounds = true;
                           switch (sb.powerUpType) {
@@ -332,7 +332,7 @@
               if (this._balloon2.isActive == true) {
                   this._balloon2.draw();
                   that.sandBags.forEach(function (sb) {
-                      if (that.collides(sb, that._balloon2)) {
+                      if (sb.outofbounds == false && that.collides(sb, that._balloon2)) {
 
                           sb.outofbounds = true;
                           switch (sb.powerUpType) {
@@ -343,6 +343,7 @@
                                   that._balloon2.changeBaskets();
                                   break;
                               case "ribbon":
+                                  console.log('ribbon drawn')
                                   that._balloon2.addRibbon();
                                   break;
                           }
@@ -350,12 +351,13 @@
 
                       }
                   });
+                  
               }
 
               if (this._balloon3.isActive == true) {
                   this._balloon3.draw();
                   that.sandBags.forEach(function (sb) {
-                      if (that.collides(sb, that._balloon3)) {
+                      if (sb.outofbounds == false && that.collides(sb, that._balloon3)) {
 
                           sb.outofbounds = true;
                           switch (sb.powerUpType) {
@@ -374,33 +376,6 @@
                       }
                   });
               }
-              
-              
-
-              //that.ballon.forEach(function (ballon, index) {
-              //    if (ballon != undefined) {
-              //        ballon.draw();
-              //    }
-              //    that.sandBags.forEach(function(sb){
-              //        if(that.collides(sb, ballon)) {
-
-              //            sb.outofbounds = true;
-              //            switch(sb.powerUpType) {
-              //                case "fire":
-              //                    ballon.setSpeedBoost();
-              //                    break;
-              //                case "basket":
-              //                    ballon.changeBaskets();
-              //                    break;
-              //                case "ribbon":
-              //                    ballon.addRibbon();
-              //                    break;
-              //            }
-			
-			
-              //        }
-              //    });
-              //});
 
               
           },

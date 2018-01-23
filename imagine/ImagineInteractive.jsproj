@@ -71,8 +71,7 @@
     <Content Include="images\face.png" />
     <Content Include="images\feet.png" />
     <Content Include="images\hat.png" />
-    <Content Include="images\Instructions-Play.png" />
-    <Content Include="images\instructions@2x.png" />
+    <Content Include="images\instructions.png" />
     <Content Include="images\logo.scale-100.png" />
     <Content Include="images\logo.scale-140.png" />
     <Content Include="images\logo.scale-180.png" />
