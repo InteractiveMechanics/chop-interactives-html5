@@ -63,6 +63,10 @@
     <Content Include="images\btn-play-hover.png" />
     <Content Include="images\icon-trash-hover.png" />
     <Content Include="images\instructions.png" />
+    <Content Include="images\intro-green.png" />
+    <Content Include="images\intro-light-outline.png" />
+    <Content Include="images\intro-red.png" />
+    <Content Include="images\intro-yellow.png" />
     <Content Include="images\timer11.png" />
     <Content Include="images\timer12.png" />
     <Content Include="images\timer13.png" />

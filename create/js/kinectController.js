@@ -112,6 +112,45 @@
 
           },
           _getPlayerData: function (i, body) {
+              //var right = this._getJointPositions(body, 11);
+              //var left = this._getJointPositions(body, 7);
+              //var spine = this._getJointPositions(body, 1);
+
+              //var zValue = spine[0].z;
+              //if (zValue < this.zIndexValue) {
+              //    var player = {};
+
+              //    // var shoulderdist = rightshoulder[0]['x'] - leftshoulder[0]['x'];
+              //    // var spinedist = spine[0]['y'] - neck[0]['y'];
+
+              //    player['spine'] = {};
+              //    player['spine']['pos'] = {};
+              //    player['spine']['pos'] = spine[0];
+              //    player['spine']['trackingState'] = spine[1];
+
+              //    player['right'] = {};
+              //    player['right']['status'] = this._getHandStatus(body, 'right');
+              //    player['right']['confidence'] = this._getHandConfidence(body, 'right');
+              //    player['right']['pos'] = {};
+              //    player['right']['pos'] = right[0];
+              //    player['right']['trackingState'] = right[1];
+              //    player['right']['pos']['x'] = (((right[0]['x'] - leftshoulder[0]['x']) * 1920) / shoulderdist) * this._movementPercentageRight;
+              //    player['right']['pos']['y'] = (((right[0]['y'] - neck[0]['y']) * 1080) / spinedist) * this._movementPercentageRight;
+
+              //    player['left'] = {};
+              //    player['left']['status'] = this._getHandStatus(body, 'left');
+              //    player['left']['confidence'] = this._getHandConfidence(body, 'left');
+              //    player['left']['pos'] = {};
+              //    player['left']['pos'] = left[0];
+              //    player['left']['trackingState'] = left[1];
+              //    player['left']['pos']['x'] = (((left[0]['x'] - leftshoulder[0]['x']) * 1920) / shoulderdist) * this._movementPercentageLeft;
+              //    player['left']['pos']['y'] = (((left[0]['y'] - neck[0]['y']) * 1080) / spinedist) * this._movementPercentageLeft;
+
+              //    return (player);
+              //} else {
+              //    return null;
+              //}
+
               var right = this._getJointPositions(body, 11);
               var left = this._getJointPositions(body, 7);
               var spine = this._getJointPositions(body, 20);
@@ -143,13 +182,15 @@
                   player['leftshoulder']['trackingState'] = leftshoulder[1];
 
                   var shoulderdist = rightshoulder[0]['x'] - leftshoulder[0]['x'];
+                  //var shoulderdist = 230;
                   var spinedist = spine[0]['y'] - neck[0]['y'];
 
                   player['right'] = {};
                   player['right']['status'] = this._getHandStatus(body, 'right');
                   player['right']['confidence'] = this._getHandConfidence(body, 'right');
                   player['right']['pos'] = {};
-                  player['right']['pos']['x'] = (((right[0]['x'] - leftshoulder[0]['x']) * 1920) / shoulderdist) * this._movementPercentageRight;
+                  player['right']['pos']['x'] = (((right[0]['x'] - spine[0]['x']+(shoulderdist / 2)) * 960) / shoulderdist);
+                  console.log(player['right']['pos']['x']);
 
                   if (player['right']['pos']['x'] < 0) {
                       player['right']['pos']['x'] = 30;
@@ -175,7 +216,8 @@
                   player['left']['status'] = this._getHandStatus(body, 'left');
                   player['left']['confidence'] = this._getHandConfidence(body, 'left');
                   player['left']['pos'] = {};
-                  player['left']['pos']['x'] = (((left[0]['x'] - leftshoulder[0]['x']) * 1920) / shoulderdist) * this._movementPercentageLeft;
+                  player['left']['pos']['x'] = (((left[0]['x'] - (spine[0]['x']+(shoulderdist/2))) * 960) / shoulderdist)+1920;
+                  console.log(player['left']['pos']['x']);
 
                   if (player['left']['pos']['x'] < 0) {
                       player['left']['pos']['x'] = 30;
@@ -203,6 +245,8 @@
               } else {
                   return null;
               }
+
+              
           },
           _getHandStatus: function (body, hand) {
               var handStatus;

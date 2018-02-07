@@ -8,6 +8,10 @@ function SandBag(canvas, powerup) {
 
 	I.width = 33;
 	I.height = 52;
+	I.colX = I.x;
+	I.colY = I.y;
+	I.collisionWidth = 33;
+	I.collisionHeight = 52;
 
 	I.outofbounds = false;
 
@@ -25,6 +29,8 @@ function SandBag(canvas, powerup) {
 		if(this.y > 1100) {
 			this.outofbounds = true;
 		}
+		this.colX = this.x;
+		this.colY = this.y;
 	}
 
 	I.draw = function() {

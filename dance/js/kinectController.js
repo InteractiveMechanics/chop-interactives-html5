@@ -143,13 +143,15 @@
                   player['leftshoulder']['trackingState'] = leftshoulder[1];
 
                   var shoulderdist = rightshoulder[0]['x'] - leftshoulder[0]['x'];
+                  //var shoulderdist = 230;
                   var spinedist = spine[0]['y'] - neck[0]['y'];
 
                   player['right'] = {};
                   player['right']['status'] = this._getHandStatus(body, 'right');
                   player['right']['confidence'] = this._getHandConfidence(body, 'right');
                   player['right']['pos'] = {};
-                  player['right']['pos']['x'] = (((right[0]['x'] - leftshoulder[0]['x']) * 1920) / shoulderdist) * this._movementPercentageRight;
+                  player['right']['pos']['x'] = (((right[0]['x'] - spine[0]['x'] + (shoulderdist / 2)) * 960) / shoulderdist);
+                  console.log(player['right']['pos']['x']);
 
                   if (player['right']['pos']['x'] < 0) {
                       player['right']['pos']['x'] = 30;
@@ -175,7 +177,8 @@
                   player['left']['status'] = this._getHandStatus(body, 'left');
                   player['left']['confidence'] = this._getHandConfidence(body, 'left');
                   player['left']['pos'] = {};
-                  player['left']['pos']['x'] = (((left[0]['x'] - leftshoulder[0]['x']) * 1920) / shoulderdist) * this._movementPercentageLeft;
+                  player['left']['pos']['x'] = (((left[0]['x'] - (spine[0]['x'] + (shoulderdist / 2))) * 960) / shoulderdist) + 1920;
+                  console.log(player['left']['pos']['x']);
 
                   if (player['left']['pos']['x'] < 0) {
                       player['left']['pos']['x'] = 30;

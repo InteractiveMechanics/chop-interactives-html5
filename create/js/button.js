@@ -1,5 +1,5 @@
 
-function Button(name, file, x, y, canvas) {
+function Button(name, file, x, y, width, height, canvas) {
 
 
 
@@ -9,8 +9,8 @@ function Button(name, file, x, y, canvas) {
 		this.file = file;
 		this.isHover = false;
         
-		this.width = 80;
-		this.height = 80;
+		this.width = width;
+		this.height = height;
 		this.r = this.width / 2;
 
 		this.canvas = canvas;

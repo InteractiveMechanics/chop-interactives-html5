@@ -12,6 +12,10 @@ function Ribbon(ribbon, width, height) {
 		
 	}
 
+	I.widthMultiplier = function (multiplier) {
+	    this.width = this.width * multiplier;
+	}
+
 	I.draw = function(context, x, y) {
 
 		if(this.active) {
@@ -26,11 +30,11 @@ function Ribbon(ribbon, width, height) {
 
 	I.activate = function() {
 		this.active = true;
-		var that = this;
+		//var that = this;
 
-		setTimeout(function() {
-			that.active = false;
-		}, this.ribbonTimer);
+		//setTimeout(function() {
+		//	that.active = false;
+		//}, this.ribbonTimer);
 	}
 	
 	return I;

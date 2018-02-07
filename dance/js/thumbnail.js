@@ -39,7 +39,7 @@ function Thumbnail(canvas, x, y, w, h, border, angle, imgData) {
   this.trashPosX = this.x + this.width;
   this.trashPosY = this.y;
 
-  this.trash = new Button('clear', './images/icon-trash', this.width, 0, this.trashRadius, this.canvas);
+  this.trash = new Button('clear', './images/icon-trash', this.width-this.trashRadius, -this.trashRadius, this.trashRadius, this.canvas);
   
   //console.log(this.trashPosX,this.trashPosY);
 

@@ -16,18 +16,21 @@
               this.fadedBallonCanvas = document.getElementById('faded-ballons-canvas');
               this.airBallonCanvas = document.getElementById('airballon-canvas');
               this.sandbagCanvas = document.getElementById('canvas2');
+              this.alienCanvas = document.getElementById('alien-canvas');
 
               this.cloudContext = this.cloudCanvas.getContext("2d");
               this.fadedBallonContext = this.fadedBallonCanvas.getContext("2d");
               this.airBallonContext = this.airBallonCanvas.getContext("2d");
               this.sandbagContext = this.sandbagCanvas.getContext("2d");
+              this.alienContext = this.alienCanvas.getContext("2d");
 
               this._instructionsCanvas = document.getElementById('instructionsCanvas');
               this._instructionsContext = this._instructionsCanvas.getContext('2d');
 
               this._balloon1 = new AirBallon(5, 5, 1, this.airBallonCanvas, 'red');
-              this._balloon2 = new AirBallon(5, 5, 1, this.airBallonCanvas, 'orange');
-              this._balloon3 = new AirBallon(5, 5, 1, this.airBallonCanvas, 'pink');
+              this._balloon2 = new AirBallon(5, 5, 2, this.airBallonCanvas, 'orange');
+              this._balloon3 = new AirBallon(5, 5, 3, this.airBallonCanvas, 'pink');
+              this._collisionPenalty = 70;
 
               this.showInstructions();
           },
@@ -77,13 +80,22 @@
                       if (cloud) {
                           
                           var powerup = that.getPowerUp();
-                          var bag = new SandBag(that.sandbagCanvas, 'ribbon');
+                          var bag = new SandBag(that.sandbagCanvas, powerup);
                           bag.x = cloud.x + (cloud.width / 2);
                           bag.y = cloud.y + (cloud.height / 2);
                           that.sandBags.push(bag);
                       }
                   }
               }, 3500);
+
+              setInterval(function () {
+                  if (!that.alien) {
+                      that.alien = new Alien(-1, that.alienCanvas);
+                  }
+               
+              }, 7000);
+
+              
           },
 
           getCloud: function () {
@@ -98,7 +110,6 @@
 
 
               if (randomNumber == 2) {
-                  console.log('newmedcloud');
                   return new MediumCloud(1, that.cloudCanvas);
               }
 
@@ -112,7 +123,6 @@
 
 
               if (randomNumber == 6) {
-                  console.log('newmedcloud');
                   return new MediumCloud(1, that.cloudCanvas);
               }
 
@@ -125,7 +135,6 @@
               }
 
               if (randomNumber == 10) {
-                  console.log('newmedcloud');s
                   return new MediumCloud(1, that.cloudCanvas);
               }
 
@@ -177,14 +186,14 @@
           //},
 
           collides: function(a, b) {
-              return a.x < b.x + (b.width) &&
-                a.x + (a.width * .25) > b.x &&
-                a.y < b.y + (b.height) &&
-                a.y + (a.height * .25) > b.y;
+              return a.colX < b.colX + (b.collisionWidth) &&
+                a.colX + (a.collisionWidth) > b.colX &&
+                a.colY < b.colY + (b.collisionHeight) &&
+                a.colY + (a.collisionHeight) > b.colY;
           },
 
           getPowerUp: function () {
-              var random = Math.floor(Math.random() * 10) + 1;
+              var random = Math.floor(Math.random() * 12) + 1;
 
               if (random < 4) {
                   return 'basket';
@@ -194,7 +203,15 @@
                   return 'fire';
               }
 
-              if (random > 6) {
+              if (random == 7 || random == 8) {
+                  return 'balloon';
+              }
+
+              if (random == 9 || random == 10) {
+                  return 'balloonSize';
+              }
+
+              if (random > 10) {
                   return 'ribbon';
               }
 
@@ -240,6 +257,18 @@
                   if (balloon.isActive == false) {
                       balloon.isActive = true;
                   }
+
+                  if (balloon.isAttacked) {
+                      console.log('balloon' + balloon + 'collided');
+                      properX = balloon.attackedX;
+                      properY = 1000;
+                  }
+
+                  if (balloon.balloonCollided) {
+                      properX = balloon.collidedX;
+                      properY = balloon.collidedY;
+                  }
+                  
                       var xDistance = properX - balloon.x;
                       var yDistance = properY - balloon.y;
                       var distance = Math.sqrt(xDistance * xDistance + yDistance * yDistance);
@@ -277,6 +306,16 @@
                   }
               }
 
+              if (this.alien) {
+                  
+                  if (this.alien.outofbounds == true) {
+                      this.alien = null;
+                  }
+                  else {
+                      this.alien.update();
+                  }
+              }
+              
               this._balloon1.update();
               this._balloon2.update();
               this._balloon3.update();
@@ -288,6 +327,7 @@
               this.fadedBallonContext.clearRect(0, 0, 1920, 1080);
               this.airBallonContext.clearRect(0, 0, 1920, 1080);
               this.sandbagContext.clearRect(0, 0, 1920, 1080);
+              this.alienContext.clearRect(0, 0, 1920, 1080);
 
               var that = this;
 
@@ -307,8 +347,15 @@
                   sb.draw();
               });
 
+              if (this.alien) {
+                  this.alien.draw();
+              };
+
               if (this._balloon1.isActive == true) {
                   this._balloon1.draw();
+                  if (!this._balloon1.isAttacked && this.alien && this.collides(this.alien, this._balloon1)) {
+                      this._balloon1.alienAttack();
+                  }
                   that.sandBags.forEach(function (sb) {
                       if (sb.outofbounds == false && that.collides(sb, that._balloon1)) {
 
@@ -323,14 +370,24 @@
                               case "ribbon":
                                   that._balloon1.addRibbon();
                                   break;
+                              case 'balloonSize':
+                                  that._balloon1.growBalloon();
+                                  break;
+                              case "balloon":
+                                  that._balloon1.changeBalloons();
+                                  break;
                           }
 
 
                       }
                   });
+                  
               };
               if (this._balloon2.isActive == true) {
                   this._balloon2.draw();
+                  if (!this._balloon2.isAttacked && this.alien && this.collides(this.alien, this._balloon2)) {
+                      this._balloon2.alienAttack();
+                  }
                   that.sandBags.forEach(function (sb) {
                       if (sb.outofbounds == false && that.collides(sb, that._balloon2)) {
 
@@ -346,6 +403,12 @@
                                   console.log('ribbon drawn')
                                   that._balloon2.addRibbon();
                                   break;
+                              case 'balloonSize':
+                                  that._balloon2.growBalloon();
+                                  break;
+                              case "balloon":
+                                  that._balloon2.changeBalloons();
+                                  break;
                           }
 
 
@@ -356,6 +419,9 @@
 
               if (this._balloon3.isActive == true) {
                   this._balloon3.draw();
+                  if (!this._balloon3.isAttacked && this.alien && this.collides(this.alien, this._balloon3)) {
+                      this._balloon3.alienAttack();
+                  }
                   that.sandBags.forEach(function (sb) {
                       if (sb.outofbounds == false && that.collides(sb, that._balloon3)) {
 
@@ -370,6 +436,12 @@
                               case "ribbon":
                                   that._balloon3.addRibbon();
                                   break;
+                              case 'balloonSize':
+                                  that._balloon3.growBalloon();
+                                  break;
+                              case "balloon":
+                                  that._balloon3.changeBalloons();
+                                  break;
                           }
 
 
@@ -377,7 +449,52 @@
                   });
               }
 
+              this.checkBalloonCollision(this._balloon1, this._balloon2, this._balloon3);
               
+          },
+
+          checkBalloonCollision: function (b1, b2, b3) {
+              //just for solo testing
+              //if (this.alien && !b2.balloonCollided && this.collides(this.alien, b2)) {
+              //    if (this.alien.x > b2.x) {
+              //        //b1.balloonCollision(this._collisionPenalty);
+              //        b2.balloonCollision(-this._collisionPenalty);
+              //    }
+              //    if (this.alien.x < b2.x) {
+              //        //b1.balloonCollision(-this._collisionPenalty);
+              //        b2.balloonCollision(this._collisionPenalty);
+              //    }
+              //}
+              if (b1.isActive && b2.isActive && !b1.balloonCollided && !b2.balloonCollided && this.collides(b1, b2)) {
+                  if (b1.x > b2.x) {
+                      b1.balloonCollision(this._collisionPenalty);
+                      b2.balloonCollision(-this._collisionPenalty);
+                  }
+                  if (b1.x < b2.x) {
+                      b1.balloonCollision(-this._collisionPenalty);
+                      b2.balloonCollision(this._collisionPenalty);
+                  }
+              }
+              if (b1.isActive && b3.isActive && !b3.balloonCollided && !b1.balloonCollided && this.collides(b3, b1)) {
+                  if (b1.x > b3.x) {
+                      b1.balloonCollision(this._collisionPenalty);
+                      b3.balloonCollision(-this._collisionPenalty);
+                  }
+                  if (b1.x < b3.x) {
+                      b1.balloonCollision(-this._collisionPenalty);
+                      b3.balloonCollision(this._collisionPenalty);
+                  }
+              }
+              if (b2.isActive && b3.isActive && !b2.balloonCollided && !b3.balloonCollided && this.collides(b2, b3)) {
+                  if (b2.x > b3.x) {
+                      b2.balloonCollision(this._collisionPenalty);
+                      b3.balloonCollision(-this._collisionPenalty);
+                  }
+                  if (b2.x < b3.x) {
+                      b2.balloonCollision(-this._collisionPenalty);
+                      b3.balloonCollision(this._collisionPenalty);
+                  }
+              }
           },
 
           checkIndex: function(index) {
@@ -406,6 +523,7 @@
           fadedBallons: [],
           sandBags: [],
           ballons: [],
+          alien: null,
           
           rightHandArray: [],
           leftHandArray: [],

@@ -23,3 +23,15 @@ body {
     z-index:3;
   pointer-events: auto;
 }
+
+.show-effects{
+    opacity:0.5;
+    -webkit-transition: opacity 0.5s ease-in-out;
+    -moz-transition: opacity 0.5s ease-in-out;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.hide-effects{
+    opacity:0;
+    
+}

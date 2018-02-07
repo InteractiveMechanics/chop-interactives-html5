@@ -33,6 +33,7 @@
               var that = this;
               setInterval(function () {
                   if (that._activePlayers.length == 0) {
+                      
                       that._climbCanvas.init();
                   }
               }, 7000);
@@ -105,9 +106,9 @@
                   that._activeReset = false;
 
                   if (players[aP]) {
-                      that.drawHands(aP, players[aP], that._lastPlayers[aP]);
+                      that.drawPaintbrush(aP, players[aP], that._lastPlayers[aP]);
                       that._climbCanvas.checkRegions(aP, players[aP]['right'], that._lastPlayers[aP]['right'], 'right');
-                      //that._climbCanvas.checkRegions(aP, players[aP]['left'], that._lastPlayers[aP]['left'], 'left');
+                      that._climbCanvas.checkRegions(aP, players[aP]['left'], that._lastPlayers[aP]['left'], 'left');
                   }
               });
 
@@ -216,36 +217,61 @@
 
           drawPaintbrush: function (p, player, lastPlayer) {
               var context = this._context;
-              var rightPaintbrush = new Image();
+              var rightPB = new Image();
+              var leftPB = new Image();
 
               // If the kinect is confident and is able to accurately track the hand, then use that date and store it for the future
               // if the kinect is not confident and is not able to accurately track the hand, then use the last set of confident data that was stored
               context.save();
               if (player['right']['confidence'] === 1) {
                   if (player['right']['status'] === 'closed') {
-                      rightHand.src = 'images/shared/P' + p + '_closed.png';
+                      rightPB.src = 'images/shared/P' + p + '_closed.png';
                   } else {
-                      rightHand.src = 'images/shared/P' + p + '_open.png';
+                      rightPB.src = 'images/shared/P' + p + '_open.png';
                   }
                   this._lastConfidentPlayers[p]['right'] = player['right'];
               } else {
                   if (this._lastConfidentPlayers[p]['right']['status'] === 'closed') {
-                      rightHand.src = 'images/shared/P' + p + '_closed.png';
+                      rightPB.src = 'images/shared/P' + p + '_closed.png';
                   } else {
-                      rightHand.src = 'images/shared/P' + p + '_open.png';
+                      rightPB.src = 'images/shared/P' + p + '_open.png';
                   }
               }
-              context.scale(-1, 1);
               if (player['right']['trackingState'] === 2) {
-                  context.translate(-(Math.round(player['right']['pos']['x'] - constants.handWidth / 2)), Math.round(player['right']['pos']['y'] - constants.handHeight / 2));
-                  context.drawImage(rightHand, -60, 0, 60, 76);
+                  context.translate((Math.round(player['right']['pos']['x'])), Math.round(player['right']['pos']['y']));
+                  context.drawImage(rightPB, 0, -76, 60, 76);
               } else if (player['right']['trackingState'] === 1 || 0) {
-                  context.translate(-(Math.round(this._lastConfidentPlayers[p]['right']['pos']['x'] - constants.handWidth / 2)), Math.round(this._lastConfidentPlayers[p]['right']['pos']['y'] - constants.handHeight / 2));
+                  context.translate((Math.round(this._lastConfidentPlayers[p]['right']['pos']['x'] )), Math.round(this._lastConfidentPlayers[p]['right']['pos']['y']));
                   context.globalAlpha = 0.5;
-                  context.drawImage(rightHand, -60, 0, 60, 76);
+                  context.drawImage(rightPB, 0, -76, 60, 76);
               }
               context.restore();
 
+              context.save();
+              if (player['left']['confidence'] === 1) {
+                  if (player['left']['status'] === 'closed') {
+                      leftPB.src = 'images/shared/P' + p + '_closed.png';
+                  } else {
+                      leftPB.src = 'images/shared/P' + p + '_open.png';
+                  }
+                  this._lastConfidentPlayers[p]['left'] = player['left'];
+              } else {
+                  if (this._lastConfidentPlayers[p]['left']['status'] === 'closed') {
+                      leftPB.src = 'images/shared/P' + p + '_closed.png';
+                  } else {
+                      leftPB.src = 'images/shared/P' + p + '_open.png';
+                  }
+              }
+              context.scale(-1, 1);
+              if (player['left']['trackingState'] === 2) {
+                  context.translate(-Math.round(player['left']['pos']['x']), Math.round(player['left']['pos']['y']));
+                  context.drawImage(leftPB, 0, -76, 60, 76);
+              } else if (player['left']['trackingState'] === 1 || 0) {
+                  context.translate(-(Math.round(this._lastConfidentPlayers[p]['left']['pos']['x'])), Math.round(this._lastConfidentPlayers[p]['left']['pos']['y']));
+                  context.globalAlpha = 0.5;
+                  context.drawImage(leftPB, 0, -76, 60, 76);
+              }
+              context.restore();
               
           },
           map_range: function (value, low1, high1, low2, high2) {

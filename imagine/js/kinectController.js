@@ -23,6 +23,7 @@
               this._sensorColourFrameDimensions = {};
               this._sensorColourFrameDimensions.width = this._sensor.colorFrameSource.frameDescription.width;
               this._sensorColourFrameDimensions.height = this._sensor.colorFrameSource.frameDescription.height;
+              //console.log(this._sensor.colorFrameSource);
               // console.log("Kinect body reader #" + index + " opened.")
           },
           getSensor: function () {
@@ -35,6 +36,18 @@
 
               this._bodies = new Array(constants.bodyCount);
               this._bodyDrawers = new Array(constants.bodyCount);
+              this._faces = new Array(constants.bodyCount);
+              this._faceSources = new Array(constants.bodyCount);
+              this._faceReaders = new Array(constants.bodyCount);
+              this._boundHandlerFaces = new Array(constants.bodyCount);
+
+              this._buffer = new ArrayBuffer(10000000);
+              this._pixelData = new Uint8Array(2332800);
+              this._pixelArray = new Array(2073600);
+
+              //this._buffer = new ArrayBuffer(30000000)
+              this._pixelData = new Uint32Array(this._buffer, 0, 2073600);
+              //console.log(this._pixelData);
 
               for (bodyCount = 0; bodyCount < constants.bodyCount; bodyCount++) {
                   this.init(bodyCount, this._sensor);
@@ -50,12 +63,30 @@
               this._reader = this._sensor.bodyFrameSource.openReader();
               this._reader.addEventListener('framearrived', this._boundHandler);
 
-              //attempted face frame reader
-              //this._faceSource = new faceFrameSource(_sensor);
-              //this._faceReader = this._faceSource.openReader();
-              //this._faceReader.FrameArrived += FaceReader_FrameArrived;
+              this._boundHandlerColor = this._onColorFrameArrived.bind(this);
+              this._colorReader = this._sensor.colorFrameSource.openReader();
+              this._colorReader.addEventListener('framearrived', this._boundHandlerColor);
+
+              
+              for (var i = 0; i < constants.bodyCount; i++) {
+                  this._boundHandlerFaces[i] = this._onFaceFrameArrived.bind(this);
+                  this._faceSources[i] = nsKinectFace.FaceFrameSource(this._sensor, 0, nsKinectFace.FaceFrameFeatures.faceEngagement
+                                                                                        | nsKinectFace.FaceFrameFeatures.boundingBoxInColorSpace
+                                                                                        | nsKinectFace.FaceFrameFeatures.rotationOrientation
+                                                                                        | nsKinectFace.FaceFrameFeatures.rightEyeClosed
+                                                                                        | nsKinectFace.FaceFrameFeatures.leftEyeClosed
+                                                                                        | nsKinectFace.FaceFrameFeatures.mouthOpen
+                                                                                        | nsKinectFace.FaceFrameFeatures.glasses
+                                                                                        | nsKinectFace.FaceFrameFeatures.faceEngagement
+                                                                                        );
+                  this._faceReaders[i] = this._faceSources[i].openReader();
+                  this._faceReaders[i].addEventListener('framearrived', this._boundHandlerFaces[i]);
+              }
+
 
               var isActive = this._sensor.bodyFrameSource.isActive;
+              
+
               if (!isActive) {
                   // If we're not able to get data from the sensor, let's refresh the page
                   // and try again...
@@ -76,6 +107,12 @@
               this._reader.removeEventListener('framearrived', this._boundHandler);
               this._reader.close();
               this._reader = null;
+
+              for (var i = 0; i < constants.bodyCount; i++) {
+                  this._faceReaders[i].removeEventListener('framearrived', this._boundHandlerFace[i]);
+                  this._faceReaders[i].close();
+                  this._faceReaders[i] = null;
+              }
           },
           releaseSensor: function () {
               this._sensor.close();
@@ -88,6 +125,7 @@
               var i = 0;
 
               if (frame) {
+                  
                   var currentTime = new Date().getTime();
                   if (currentTime - this._lastKnownTime < 3000) {
                       clearTimeout(this._kinectResetTimeout);
@@ -103,16 +141,63 @@
 
                   for (i = 0; i < constants.bodyCount; i++) {
                       if (this._bodies[i].isTracked) {
+                          if (!this._faceSources[i].isTrackingIdValid) {
+                              this._faceSources[i].trackingId = this._bodies[i].trackingId;
+                          }
                           var trackedPlayer = this._getPlayerData(i, this._bodies[i]);
                           if (trackedPlayer) {
                               players[i] = trackedPlayer;
+                              players[i].faceFrame = this._faces[i];
+                              //console.log(players[i].faceFrame);
                           }
                       }
                   }
                   this._canvas.draw(players);
-                  this._
                   frame.close();
               }
+          },
+          _onColorFrameArrived: function (e) {
+              var that = this;
+              var frame = e.frameReference.acquireFrame();
+              if (frame) {
+                  
+                  //frame.copyRawFrameDataToArray(pixelData);
+                  //if (frame.RawColorImageFormat == WindowsPreview.Kinect.ColorImageFormat.rgba) {
+                      
+                  //}
+
+                  //else {
+                  //    frame.copyConvertedFrameDataToArray(pixelData, WindowsPreview.Kinect.ColorImageFormat.rgba);
+                  //}
+                  //console.log(frame);
+                  //console.log(this._pixelData);
+                  //frame.copyRawFrameDataToArray(this._pixelData);
+                  //console.log(this._pixelData);
+                  frame.close();
+              }
+          },
+          _onFaceFrameArrived: function (e) {
+              var that = this;
+              var frame = e.frameReference.acquireFrame();
+              if (frame) {
+                  var result = frame.faceFrameResult;
+                  
+                  if (result) {
+                      for (var i = 0; i < constants.bodyCount; i++) {
+                          if (frame.trackingId == this._bodies[i].trackingId) {
+                              this._faces[i] = result;
+                              //console.log(this._faces[i])
+                          }
+                      }
+                  }
+                  
+              }
+              
+
+              
+              //has been throwing error -- needs review
+              //frame.close();
+              
           },
           _compareTime: function () {
 
@@ -120,91 +205,35 @@
           _getPlayerData: function (i, body) {
               var right = this._getJointPositions(body, 11);
               var left = this._getJointPositions(body, 7);
-              var spine = this._getJointPositions(body, 20);
-              var leftshoulder = this._getJointPositions(body, 4);
-              var rightshoulder = this._getJointPositions(body, 8);
+              var spine = this._getJointPositions(body, 1);
               var neck = this._getJointPositions(body, 3);
-              //var face = this._getFace(i);
+
+              var spinedist = spine[0]['y'] - neck[0]['y'];
 
               var zValue = spine[0].z;
               if (zValue < this.zIndexValue) {
                   var player = {};
-                  player['spine'] = {};
-                  player['spine']['pos'] = {};
-                  player['spine']['pos'] = spine[0];
-                  player['spine']['trackingState'] = spine[1];
-
-                  player['neck'] = {};
-                  player['neck']['pos'] = {};
-                  player['neck']['pos'] = neck[0];
-                  player['neck']['trackingState'] = neck[1];
-
-                  player['rightshoulder'] = {};
-                  player['rightshoulder']['pos'] = {};
-                  player['rightshoulder']['pos'] = rightshoulder[0];
-                  player['rightshoulder']['trackingState'] = rightshoulder[1];
-
-                  player['leftshoulder'] = {};
-                  player['leftshoulder']['pos'] = {};
-                  player['leftshoulder']['pos'] = leftshoulder[0];
-                  player['leftshoulder']['trackingState'] = leftshoulder[1];
-
-                  var shoulderdist = rightshoulder[0]['x'] - leftshoulder[0]['x'];
-                  var spinedist = spine[0]['y'] - neck[0]['y'];
-
                   player['right'] = {};
                   player['right']['status'] = this._getHandStatus(body, 'right');
                   player['right']['confidence'] = this._getHandConfidence(body, 'right');
                   player['right']['pos'] = {};
-                  player['right']['pos']['x'] = (((right[0]['x'] - leftshoulder[0]['x']) * 1920) / shoulderdist) * this._movementPercentageRight;
-
-                  if (player['right']['pos']['x'] < 0) {
-                      player['right']['pos']['x'] = 30;
-                  }
-
-                  if (player['right']['pos']['x'] > 1920) {
-                      player['right']['pos']['x'] = 1890;
-                  }
-
-                  player['right']['pos']['y'] = (((right[0]['y'] - neck[0]['y']) * 1080) / spinedist) * this._movementPercentageRight;
-
-                  if (player['right']['pos']['y'] < 0) {
-                      player['right']['pos']['y'] = 20;
-                  }
-
-                  if (player['right']['pos']['y'] > 1080) {
-                      player['right']['pos']['y'] = 1050;
-                  }
-
+                  player['right']['pos'] = right[0];
                   player['right']['trackingState'] = right[1];
+                  player['right']['pos']['y'] = (((right[0]['y'] - neck[0]['y']) * 1080) / spinedist) * 0.5;
 
                   player['left'] = {};
                   player['left']['status'] = this._getHandStatus(body, 'left');
                   player['left']['confidence'] = this._getHandConfidence(body, 'left');
                   player['left']['pos'] = {};
-                  player['left']['pos']['x'] = (((left[0]['x'] - leftshoulder[0]['x']) * 1920) / shoulderdist) * this._movementPercentageLeft;
-
-                  if (player['left']['pos']['x'] < 0) {
-                      player['left']['pos']['x'] = 30;
-                  }
-
-                  if (player['left']['pos']['x'] > 1920) {
-                      player['left']['pos']['x'] = 1890;
-                  }
-
-                  player['left']['pos']['y'] = (((left[0]['y'] - neck[0]['y']) * 1080) / spinedist) * this._movementPercentageLeft;
-
-                  if (player['left']['pos']['y'] < 0) {
-                      player['left']['pos']['y'] = 20;
-                  }
-
-                  if (player['left']['pos']['y'] > 1080) {
-                      player['left']['pos']['y'] = 1050;
-                  }
-
+                  player['left']['pos'] = left[0];
                   player['left']['trackingState'] = left[1];
+                  player['left']['pos']['y'] = (((left[0]['y'] - neck[0]['y']) * 1080) / spinedist) * 0.5;
 
 
+                  player['spine'] = {};
+                  player['spine']['pos'] = {};
+                  player['spine']['pos'] = spine[0];
+                  player['spine']['trackingState'] = spine[1];
 
                   return (player);
               } else {
@@ -286,12 +315,18 @@
               };
           }, 
           _boundHandler: null,
+          _boundHandlerFace: null,
+          _boundHandlerColor: null,
           _clearCanvas: null,
           _bodyDrawerFactory: null,
           _sensor: null,
           _index: -1,
           _sensorColourFrameDimensions: null,
           _reader: null,
+          _colorReader: null,
+          _faceSources: null,
+          _faceReaders: null,
+          _faces: null,
           _bodyDrawers: null,
           _bodies: null,
           _movementPercentage: .5,

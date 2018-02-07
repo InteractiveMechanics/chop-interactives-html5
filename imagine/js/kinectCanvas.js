@@ -190,6 +190,9 @@
                       
 
                       that.drawHands(aP, players[aP], that._lastPlayers[aP], offset);
+                      if (players[aP].faceFrame) {
+                          //console.log(players[aP].faceFrame);
+                      }
                       that._climbCanvas.detectActivated(players[aP]['right'], hero, offset, 'right');
                       that._climbCanvas.detectActivated(players[aP]['left'], hero, offset, 'left');
                   }
@@ -258,7 +261,6 @@
 
               player['right']['pos']['x'] = this.map_range(player['right']['pos']['x'], minX, maxX, panelMinX, panelMaxX);
               player['left']['pos']['x'] = this.map_range(player['left']['pos']['x'], minX, maxX, panelMinX, panelMaxX);
-              console.log(player['right']['pos']['x']);
               
 
               // If the kinect is confident and is able to accurately track the hand, then use that date and store it for the future

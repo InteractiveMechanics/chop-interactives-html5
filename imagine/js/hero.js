@@ -42,15 +42,15 @@ function Hero(canvas) {
             this.spotlight.top = 50;
             this.spotlight.paint(this.context);
 
-            this.blankFace.width = 652;
-            this.blankFace.height = 431;
-            this.blankFace.left = 0;
-            this.blankFace.top = 230;
-            this.blankFace.paint(this.context);
-
 			this.feet.draw();
-            this.body.draw();
+			this.body.draw();
+			this.blankFace.width = 652;
+			this.blankFace.height = 431;
+			this.blankFace.left = 0;
+			this.blankFace.top = 230;
+			this.blankFace.paint(this.context);
             this.face.draw();
+
             this.hat.draw();
             
 		}
