@@ -181,8 +181,9 @@
                   player['leftshoulder']['pos'] = leftshoulder[0];
                   player['leftshoulder']['trackingState'] = leftshoulder[1];
 
-                  var shoulderdist = rightshoulder[0]['x'] - leftshoulder[0]['x'];
-                  //var shoulderdist = 230;
+                  var shoulderdist2 = rightshoulder[0]['x'] - leftshoulder[0]['x'];
+                  console.log(shoulderdist2);
+                  var shoulderdist = 180;
                   var spinedist = spine[0]['y'] - neck[0]['y'];
 
                   player['right'] = {};

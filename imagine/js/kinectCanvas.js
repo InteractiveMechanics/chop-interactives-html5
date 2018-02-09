@@ -83,7 +83,7 @@
 
                               that._climbCanvas.newPlayerAdded();
 
-                          } else if (!that._hero1Player) {
+                          } else if (players[p]['spine']['pos']['x'] < 960 && !that._hero1Player) {
                               that._hero1Player = p;
                               //LeftPanel.pegs.forEach(function (peg) {
                               //    peg.playerHasEntered(p);
@@ -105,7 +105,7 @@
                                   that.clearScreen(that._instructionsContext);
                                   // console.log('Clear instructions for Player ' + p);
                               }, 6000);
-                          } else if (!that._hero3Player) {
+                          } else if (players[p]['spine']['pos']['x'] > 960 && !that._hero3Player) {
                               that._hero3Player = p;
                               //RightPanel.pegs.forEach(function (peg) {
                               //    peg.playerHasEntered(p);
@@ -121,12 +121,12 @@
                               that._instructions.paused = false;
                               // console.log('Show instructions for Player ' + p);
 
-                              /*setTimeout(function () {
+                              setTimeout(function () {
                                   that._activeAlert = false;
                                   that._instructions.paused = true;
                                   that.clearScreen(that._instructionsContext);
                                   // console.log('Clear instructions for Player ' + p);
-                              }, 6000);*/
+                              }, 6000);
                           }
                       }
                   }
@@ -181,8 +181,7 @@
                           var offset = 1;
                           var hero = Hero2;
                       }
-                      if (that._hero3Player3 === aP) {
-                          console.log(players[aP]);
+                      if (that._hero3Player === aP) {
                           var offset = 2;
                           var hero = Hero3;
                       }

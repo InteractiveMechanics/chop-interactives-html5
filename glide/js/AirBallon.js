@@ -30,8 +30,9 @@ function AirBallon(x, y, balllon_index, canvas, color) {
 	I.context = canvas.getContext('2d');
 
 	I.fire = new Fire(canvas, x, y);
+	I.collide = new Collide(canvas, x, y);
 	
-	I.hasSpeedBoost = true;
+	I.hasSpeedBoost = false;
 	I.isAttacked = false;
 	//Color Sprites
 	I.ribbonArray = [
@@ -123,6 +124,10 @@ function AirBallon(x, y, balllon_index, canvas, color) {
             this.fire.update(this.x+18, this.y);
             this.fire.draw();
         }
+        if (this.isAttacked ) {
+            this.collide.update(this.x, this.y);
+            this.collide.draw();
+        }
 
 		//basket
         this.basket.draw(this.context, that.x, that.y);
@@ -183,11 +188,13 @@ function AirBallon(x, y, balllon_index, canvas, color) {
 	    this.balloonCollided = true;
 	    this.collidedX = this.x + penalty;
 	    this.collidedY = this.y;
+	    
 	    this.speed = 5;
 	    setTimeout(function () {
 	        console.log('reset collision');
 	        that.balloonCollided = false;
 	        that.speed = 1;
+
 	    }, 750);
 	}
 
@@ -200,16 +207,18 @@ function AirBallon(x, y, balllon_index, canvas, color) {
 	    this.growing1 = false;
 	    this.growing2 = false;
 	    console.log('alien attack');
+	    this.basket = that.basketArray[0];
+	    this.balloon = that.balloonArray[0];
+	    this.ribbonArray.forEach(function (ribbon) {
+	        ribbon.active = false;
+	    });
 
 	    setTimeout(function () {
+	        that.collide.frame = 0;
             that.shrinking = false
 	        that.isAttacked = false;
 	        that.speed = 1.5;
-	        that.basket = that.basketArray[0];
-	        that.balloon = that.balloonArray[0];
-	        that.ribbonArray.forEach(function (ribbon) {
-	            ribbon.active = false;
-	        });
+	        
 	    }, 2000);
 	}
 	

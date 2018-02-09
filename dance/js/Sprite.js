@@ -84,8 +84,8 @@ SpriteSheetPainter.prototype = {
 
     paint: function (sprite, context) {
         var cell = this.cells[this.cellIndex];
-        context.drawImage(this.image, cell.left * 2, cell.top * 2,
-                                      cell.width * 2, cell.height * 2,
+        context.drawImage(this.image, cell.left, cell.top,
+                                      cell.width, cell.height,
                                       sprite.left, sprite.top,
                                       cell.width, cell.height);
     }

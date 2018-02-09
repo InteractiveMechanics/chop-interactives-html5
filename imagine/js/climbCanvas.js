@@ -60,7 +60,7 @@
                           //console.log(index + "," + item.x + "," + item.y);
                           if (mX > item.x && mX < (item.x + item.width) && mY > item.y && mY < (item.y + item.height)) {
                               item.rightIsHover = true;
-                              if (item.changed == false && player['confidence'] == 1 && player['status'] == 'open') {
+                              if (item.changed == false && player['confidence'] == 1) {
                                   item.changed = true;
                                   item.changePart();
 
@@ -78,7 +78,7 @@
                           //console.log(index + "," + item.x + "," + item.y);
                           if (mX > item.x && mX < (item.x + item.width) && mY > item.y && mY < (item.y + item.height)) {
                               item.leftIsHover = true;
-                              if (item.changed == false && player['confidence'] == 1 && player['status'] == 'open') {
+                              if (item.changed == false && player['confidence'] == 1 ) {
                                   item.changed = true;
                                   item.changePart();
 

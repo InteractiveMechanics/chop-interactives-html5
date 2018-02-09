@@ -282,7 +282,7 @@
               var that = this;
 
               if (this._activeAlert) {
-                  this._instructions.x = 1715;
+                  this._instructions.x = 1555;
                   this._instructions.y = 775;
                   this._instructions.draw(context);
               }

@@ -100,6 +100,13 @@ function Feet(canvas) {
 	        else {
 	            this.animating = false;
 	            this.animationFrame = 0;
+	            this.tctx.save();
+	            this.sprite.width = this.width;
+	            this.sprite.height = this.height;
+	            this.sprite.left = 0;
+	            this.sprite.top = 0;
+	            this.sprite.paint(this.tctx);
+	            this.tctx.restore();
 	        }
 	    }
 	    else {

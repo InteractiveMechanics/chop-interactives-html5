@@ -168,6 +168,7 @@
               this.timer1 = 60;
               this.timer2 = this.seconds * 60;
               this.videoStart();
+              this.canHover = true;
               
               
           },
@@ -576,7 +577,7 @@
                 this._instructions.paused = false;
             }
 
-            if (mouseY > this.startButton.y
+            if (this.canHover && mouseY > this.startButton.y
                 && mouseY < this.startButton.y + this.startButton.height
                 && mouseX > this.startButton.x
                 && mouseX < this.startButton.x + this.startButton.width
@@ -643,6 +644,7 @@
     startPainting: function () {
         var that = this;
         console.log('timerStarted');
+        this.canHover = false;
         this.mainTimer = setInterval(function () {
             if (that.ispainting == true && that.seconds > 0) {
 
@@ -689,17 +691,24 @@
         tctx = tcanvas.getContext('2d');
         tcanvas.width = 1920; /// set width = region width
         tcanvas.height = 1080;
+        var tempPainted = false;
 
         this.paintings.forEach(function (painting) {
             if (painting.painted == true) {
                 console.log(painting+"painted");
                 tctx.drawImage(painting.canvas, 0, 0);
                 painting.painted = false;
-            
+                tempPainted = true;
         }
         });
+
+        setTimeout(function () {
+            that.canHover = true
+        }, 2000);
+        if (tempPainted) {
+            var thumbImgData = this.cropImageFromCanvas(tctx);
+        }
         
-        var thumbImgData = this.cropImageFromCanvas(tctx);
 
         if (thumbImgData) {
             console.log('painting to thumbnail');
@@ -795,7 +804,7 @@
  videoLoop: function () {
      if (this.video && this.video.ended) {
          this.videoStop();
-          setTimeout(this.videoStart(), 3000);;
+          setTimeout(this.videoStart(), 3000);
       }
   },
 
