@@ -69,7 +69,7 @@
                               //    peg.player_assigned = true;
                               //});
 
-                              console.log('Player ' + p + ' assigned to Hero2.');
+                              // console.log('Player ' + p + ' assigned to Hero2.');
                               activePlayers.push(p);
                               lastConfidentPlayers[p] = players[p];
                               lastPlayers[p] = players[p];
@@ -87,7 +87,7 @@
                               //    peg.player_assigned = true;
                               //});
 
-                              console.log('Player ' + p + ' assigned to Hero1');
+                              // console.log('Player ' + p + ' assigned to Hero1');
                               activePlayers.push(p);
                               lastConfidentPlayers[p] = players[p];
                               lastPlayers[p] = players[p];
@@ -109,7 +109,7 @@
                               //    peg.player_assigned = true;
                               //});
 
-                              console.log('Player ' + p + ' assigned to Hero3');
+                              // console.log('Player ' + p + ' assigned to Hero3');
                               activePlayers.push(p);
                               lastConfidentPlayers[p] = players[p];
                               lastPlayers[p] = players[p];
@@ -248,7 +248,7 @@
               // if the kinect is not confident and is not able to accurately track the hand, then use the last set of confident data that was stored
               context.save();
               if (player['right']['confidence'] === 1) {
-                  console.log('Kinect player ' + p + ' confident');
+                  // console.log('Kinect player ' + p + ' confident');
                   if (player['right']['status'] === 'closed') {
                       rightHand.src = 'images/shared/P' + p + '_closed.png';
                   } else {
@@ -301,8 +301,8 @@
               var that = this;
 
               if (this._activeAlert) {
-                  this._instructions.x = 860;
-                  this._instructions.y = 800;
+                  this._instructions.x = 1715;
+                  this._instructions.y = 775;
                   this._instructions.draw(context);
               }
           },

@@ -151,7 +151,7 @@
                   player['right']['confidence'] = this._getHandConfidence(body, 'right');
                   player['right']['pos'] = {};
                   player['right']['pos']['x'] = (((right[0]['x'] - spine[0]['x'] + (shoulderdist / 2)) * 960) / shoulderdist);
-                  console.log(player['right']['pos']['x']);
+                  // console.log(player['right']['pos']['x']);
 
                   if (player['right']['pos']['x'] < 0) {
                       player['right']['pos']['x'] = 30;
@@ -178,7 +178,7 @@
                   player['left']['confidence'] = this._getHandConfidence(body, 'left');
                   player['left']['pos'] = {};
                   player['left']['pos']['x'] = (((left[0]['x'] - (spine[0]['x'] + (shoulderdist / 2))) * 960) / shoulderdist) + 1920;
-                  console.log(player['left']['pos']['x']);
+                  // console.log(player['left']['pos']['x']);
 
                   if (player['left']['pos']['x'] < 0) {
                       player['left']['pos']['x'] = 30;

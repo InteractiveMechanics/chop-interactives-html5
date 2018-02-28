@@ -49,7 +49,7 @@ function Body(canvas) {
 
 	    this.tctx.clearRect(0, 0, this.tcanvas.width, this.tcanvas.height);
 	    if (this.animating) {
-	        console.log(this.animatingDirection);
+	        // console.log(this.animatingDirection);
 	        if (this.animationFrame < this.width) {
 	            this.animationFrame += 82;
 	            if (this.animatingDirection == 'left') {

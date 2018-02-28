@@ -43,7 +43,7 @@
           },
 
           setup: function () {
-              console.log('setup () run');
+              // console.log('setup () run');
           },
 
 

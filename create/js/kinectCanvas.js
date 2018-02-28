@@ -38,7 +38,7 @@
                   }
               }, 7000);
 
-               console.log('Kinect canvases initialized.');
+               // console.log('Kinect canvases initialized.');
           },
           clearScreen: function (context) {
               var context = context;

@@ -279,7 +279,7 @@ function update() {
     hover = getPixelAlpha(pageRight.img, rX, rY);
     if ((hover > 0) && isMouseDown){
       changePageRight();
-      console.log(currentPage);
+      //console.log(currentPage);
     } else {
       //console.log(region.color);
     }
@@ -291,7 +291,7 @@ function update() {
     hover = getPixelAlpha(pageLeft.img, rX, rY);
     if ((hover > 0) && isMouseDown){
       changePageLeft();
-      console.log(currentPage);
+      //console.log(currentPage);
     } else {
       //console.log(region.color);
     }
@@ -402,4 +402,4 @@ uiCanvas.onmouseup = mouseUp;
 uiCanvas.onmousemove = mouseMove;
 
 main();
-console.log(pages[0].regions.length);
+//console.log(pages[0].regions.length);

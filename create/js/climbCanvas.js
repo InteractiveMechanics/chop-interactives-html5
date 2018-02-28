@@ -96,7 +96,7 @@
               this.pageRight = new Button('arrow-right', './images/icon-arrow-right', 115, 932, 98, 97, this.uiCanvas);
               this.pagerBkgr = new Image();
               this.pagerBkgr.src = './images/icon-arrow-bkgr.png';
-              console.log(this.pageLeft);
+              // console.log(this.pageLeft);
           },
 
           createClear: function () {
@@ -104,7 +104,7 @@
           },
 
           createPages: function createPages() {
-              console.log(this.pages.length);
+              // console.log(this.pages.length);
 
               for (var i = 0; i < this.pages.length; i++) {
                   if(this.pages[i].loaded){
@@ -128,7 +128,7 @@
 
                       if (!that.pages[i].heatMap) {
                           that.pages[i].regionsLoaded();
-                          console.log(that.pages[i].loaded);
+                          // console.log(that.pages[i].loaded);
                           if (that.pages[i].loaded) {
                               //console.log(that.pages[i].name);
                               that.pages[i].heatMap = that.createHeatmap(that.pages[i]);
@@ -176,7 +176,7 @@
               //make heatmap of pixeldata
               var regionMap = new Array(1920 * 1080);
               for (var i = 0; i < page.regions.length; i++) {
-                  console.log('generating regiondata');
+                  //console.log('generating regiondata');
                   var region = page.regions[i];
                   
                   var data = region.imgData;
@@ -299,7 +299,7 @@
             
             var mapIndex = mouseX + (mouseY * 1920);
             var regionIndex = heatMap[mapIndex];
-            console.log(regionIndex);
+            // console.log(regionIndex);
 
             
 
@@ -312,9 +312,9 @@
                     that.rightHandTimerArray2[index] = regionIndex;
                     
                 }, 1000, regionIndex, index);
-                console.log(this.rightHandTimerArray1[index]+ ' , ' + regionIndex);
+                //console.log(this.rightHandTimerArray1[index]+ ' , ' + regionIndex);
                 if (this.rightHandTimerArray1[index] == regionIndex && this.rightHandTimerArray2[index] == regionIndex) {
-                    console.log('timed-hover-event')
+                    //console.log('timed-hover-event')
                     this.regions[regionIndex].img = this.regions[regionIndex].color[this.rightHandArray[index]];
                 }
                 
@@ -328,9 +328,9 @@
                     that.leftHandTimerArray2[index] = regionIndex;
 
                 }, 1000, regionIndex, index);
-                console.log(this.leftHandTimerArray1[index] + ' , ' + regionIndex);
+                //console.log(this.leftHandTimerArray1[index] + ' , ' + regionIndex);
                 if (this.leftHandTimerArray1[index] == regionIndex && this.leftHandTimerArray2[index] == regionIndex) {
-                    console.log('timed-hover-event');
+                    //console.log('timed-hover-event');
                     this.regions[regionIndex].img = this.regions[regionIndex].color[this.leftHandArray[index]];
                 }
 
@@ -357,13 +357,13 @@
                     if (player['status'] == 'closed' && player['confidence'] == 1) {
                         if (hand == 'right') {
                             this.rightHandArray[index] = [i];
-                            console.log(paletteColor);
+                            //console.log(paletteColor);
                         }
                     }
                     if (player['status'] == 'closed' && player['confidence'] == 1) {
                         if (hand == 'left') {
                             this.leftHandArray[index] = [i];
-                            console.log(paletteColor);
+                            //console.log(paletteColor);
                         }
                     }
 
@@ -377,7 +377,7 @@
                 if (mouseX > this.pageRight.x && mouseX < (this.pageRight.x + this.pageRight.width) && mouseY > this.pageRight.y && mouseY < (this.pageRight.y + this.pageRight.height)) {
                     this.pageRight.isHover = true;
                     if (!this.changed && player['confidence'] == 1 && player['status'] == 'closed') {
-                        console.log('changed page');
+                        //console.log('changed page');
                         this.changePageRight();
                         this.changed = true;
 
@@ -394,7 +394,7 @@
                 if (mouseX > this.pageLeft.x && mouseX < (this.pageLeft.x + this.pageLeft.width) && mouseY > this.pageLeft.y && mouseY < (this.pageLeft.y + this.pageLeft.height)) {
                     this.pageLeft.isHover = true;
                     if (!this.changed && player['confidence'] == 1 && player['status'] == 'closed') {
-                        console.log('changed page');
+                        //console.log('changed page');
                         this.changePageLeft();
                         this.changed = true;
 
@@ -414,7 +414,7 @@
                     this.pageClear.isHover = true;
                     
                     if (player['status'] == 'closed' && player['confidence'] == 1) {
-                        console.log('clear image data');
+                        //console.log('clear image data');
                         for (var i = 0; i < this.regions.length; i++) {
                             this.regions[i].img = this.regions[i].color[10];
                         }

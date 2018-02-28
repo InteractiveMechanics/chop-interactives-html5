@@ -17,7 +17,7 @@ function Page(name, regions, canvas){
           }
           else {
               this.loaded = true;
-              console.log('regionLoaded')
+              //console.log('regionLoaded')
           }
 
       }

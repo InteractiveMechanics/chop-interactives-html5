@@ -182,7 +182,7 @@
 
 
           paint: function (player, hand, index) {
-              console.log(this.seconds);
+              // console.log(this.seconds);
               var painting = this.paintings[index];
               var properX = player['pos']['x'];
               var properY = player['pos']['y'];
@@ -210,7 +210,7 @@
                       this.rightCursorArray[index][2] += xDistance * .2;
                       this.rightCursorArray[index][3] += yDistance * .2;
                   }
-                  console.log(this.rightCursorArray[index][0], this.rightCursorArray[index][1], this.rightCursorArray[index][2], this.rightCursorArray[index][3])
+                  // console.log(this.rightCursorArray[index][0], this.rightCursorArray[index][1], this.rightCursorArray[index][2], this.rightCursorArray[index][3])
               }
 
               if (hand == 'left') {
@@ -230,7 +230,7 @@
                       this.leftCursorArray[index][2] += xDistance * .2;
                       this.leftCursorArray[index][3] += yDistance * .2;
                   }
-                  console.log(this.leftCursorArray[index][0], this.leftCursorArray[index][1], this.leftCursorArray[index][2], this.leftCursorArray[index][3])
+                  // console.log(this.leftCursorArray[index][0], this.leftCursorArray[index][1], this.leftCursorArray[index][2], this.leftCursorArray[index][3])
               }
               
 
@@ -497,7 +497,7 @@
             }
 
             if (this.seconds == 0 && this.veilOpacity > 0) {
-                console.log(this.veilOpacity);
+                // console.log(this.veilOpacity);
                 
                 this.veilOpacity -= 5;   
             }
@@ -643,7 +643,7 @@
 
     startPainting: function () {
         var that = this;
-        console.log('timerStarted');
+        // console.log('timerStarted');
         this.canHover = false;
         this.mainTimer = setInterval(function () {
             if (that.ispainting == true && that.seconds > 0) {
@@ -695,7 +695,7 @@
 
         this.paintings.forEach(function (painting) {
             if (painting.painted == true) {
-                console.log(painting+"painted");
+                // console.log(painting+"painted");
                 tctx.drawImage(painting.canvas, 0, 0);
                 painting.painted = false;
                 tempPainted = true;
@@ -711,7 +711,7 @@
         
 
         if (thumbImgData) {
-            console.log('painting to thumbnail');
+            // console.log('painting to thumbnail');
             this.paintingToThumbnail(thumbImgData);
             this.newThumbnail = true;
             this.paintings.forEach(function (painting) {
@@ -731,7 +731,7 @@
         this.bkgdOpacity = 0;
         
         //start video
-        console.log('video Started');
+        // console.log('video Started');
         this.videoStart();
         
     },
@@ -780,7 +780,7 @@
 
       w = pix.x[n] - pix.x[0];
       h = pix.y[n] - pix.y[0];
-      console.log("get image data for " +pix.x[0] + ", " + pix.y[0] + ", " + w + ", " + h);
+      // console.log("get image data for " +pix.x[0] + ", " + pix.y[0] + ", " + w + ", " + h);
       var cut = ctx.getImageData(pix.x[0], pix.y[0], w, h);
 
       return cut;
@@ -827,7 +827,7 @@
      n.classList.remove('inactive-canvas');
      o.classList.add('inactive-canvas');
      n.classList.add('active-canvas');
-     console.log('changed canvas');
+     // console.log('changed canvas');
      this.currentCanvas = n;
  },
 

@@ -37,7 +37,7 @@
                   }
               }, 7000);
 
-              console.log('Kinect canvases initialized.');
+              // console.log('Kinect canvases initialized.');
           },
           clearScreen: function (context) {
               var context = context;
@@ -72,7 +72,7 @@
                               //    peg.player_assigned = true;
                               //});
 
-                              console.log('Player ' + p + ' assigned to Hero2.');
+                              // console.log('Player ' + p + ' assigned to Hero2.');
                               activePlayers.push(p);
                               lastConfidentPlayers[p] = players[p];
                               lastPlayers[p] = players[p];
@@ -90,7 +90,7 @@
                               //    peg.player_assigned = true;
                               //});
 
-                              console.log('Player ' + p + ' assigned to Hero1');
+                              // console.log('Player ' + p + ' assigned to Hero1');
                               activePlayers.push(p);
                               lastConfidentPlayers[p] = players[p];
                               lastPlayers[p] = players[p];
@@ -112,7 +112,7 @@
                               //    peg.player_assigned = true;
                               //});
 
-                              console.log('Player ' + p + ' assigned to Hero3');
+                              // console.log('Player ' + p + ' assigned to Hero3');
                               activePlayers.push(p);
                               lastConfidentPlayers[p] = players[p];
                               lastPlayers[p] = players[p];

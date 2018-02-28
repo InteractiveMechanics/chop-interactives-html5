@@ -157,7 +157,7 @@ function AirBallon(x, y, balllon_index, canvas, color) {
 		this.hasSpeedBoost = true;
 		this.speed = 2.5;
 		var that = this;
-		console.log('speedboost');
+		// console.log('speedboost');
 		
 		setTimeout(function () {
 		    that.hasSpeedBoost = false;
@@ -171,7 +171,7 @@ function AirBallon(x, y, balllon_index, canvas, color) {
 	}
 
 	I.growBalloon = function () {
-	    console.log('growing');
+	    // console.log('growing');
 	    if (!this.growing1) {
 	        this.growing1 = true;
 	    }
@@ -183,7 +183,7 @@ function AirBallon(x, y, balllon_index, canvas, color) {
 
 
 	I.balloonCollision = function (penalty) {
-	    console.log('balloon collided');
+	    // console.log('balloon collided');
 	    var that = this;
 	    this.balloonCollided = true;
 	    this.collidedX = this.x + penalty;
@@ -191,7 +191,7 @@ function AirBallon(x, y, balllon_index, canvas, color) {
 	    
 	    this.speed = 5;
 	    setTimeout(function () {
-	        console.log('reset collision');
+	        // console.log('reset collision');
 	        that.balloonCollided = false;
 	        that.speed = 1;
 
@@ -206,7 +206,7 @@ function AirBallon(x, y, balllon_index, canvas, color) {
 	    this.shrinking = true;
 	    this.growing1 = false;
 	    this.growing2 = false;
-	    console.log('alien attack');
+	    // console.log('alien attack');
 	    this.basket = that.basketArray[0];
 	    this.balloon = that.balloonArray[0];
 	    this.ribbonArray.forEach(function (ribbon) {

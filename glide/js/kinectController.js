@@ -22,7 +22,7 @@
               this._sensorColourFrameDimensions = {};
               this._sensorColourFrameDimensions.width = this._sensor.colorFrameSource.frameDescription.width;
               this._sensorColourFrameDimensions.height = this._sensor.colorFrameSource.frameDescription.height;
-              console.log("Kinect body reader #" + index + " opened.")
+              // console.log("Kinect body reader #" + index + " opened.")
           },
           getSensor: function () {
               var that = this;

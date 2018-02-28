@@ -259,7 +259,7 @@
                   }
 
                   if (balloon.isAttacked) {
-                      console.log('balloon' + balloon + 'collided');
+                      // console.log('balloon' + balloon + 'collided');
                       properX = balloon.attackedX;
                       properY = 1000;
                   }
@@ -400,7 +400,7 @@
                                   that._balloon2.changeBaskets();
                                   break;
                               case "ribbon":
-                                  console.log('ribbon drawn')
+                                  // console.log('ribbon drawn')
                                   that._balloon2.addRibbon();
                                   break;
                               case 'balloonSize':
